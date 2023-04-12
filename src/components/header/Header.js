@@ -63,9 +63,9 @@ const Header = () => {
   return (
     <div>
       <NavLink to="/home">Home</NavLink>
-      <ShoppingCartIcon>
-        <NavLink to="/checkout">Cart</NavLink>
-      </ShoppingCartIcon>
+      <NavLink to="/checkout">
+        <ShoppingCartIcon />
+      </NavLink>
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
       {googleError && <span>{googleError}</span>}
