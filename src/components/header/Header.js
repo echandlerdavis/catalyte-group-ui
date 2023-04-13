@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { AllInclusive } from '@material-ui/icons';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 
@@ -62,7 +63,9 @@ const Header = () => {
 
   return (
     <div>
-      <NavLink to="/home">Home</NavLink>
+      <NavLink to="/">
+        <AllInclusive />
+      </NavLink>
       <NavLink to="/checkout">
         <ShoppingCartIcon />
       </NavLink>
