@@ -15,13 +15,29 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 2em;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: left;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  position: sticky;
+  font-size: calc(8px + 2vhmin);
   color: white;
+}
+
+.App-header > svg, button {
+  margin-left: 10px;
+  border: 1px solid transparent;
+}
+
+.App-header > svg, button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.App-header > svg:hover, button:hover {
+  cursor: pointer;
+  fill: gainsboro;
 }
 
 .App-link {

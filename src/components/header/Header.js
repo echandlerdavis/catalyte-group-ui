@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { AllInclusive } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 
@@ -15,6 +15,7 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
+  const history = useHistory();
 
   /**
    * @name handleGoogleLoginSuccess
@@ -61,14 +62,25 @@ const Header = () => {
     );
   };
 
+  /**
+   * @name handleLogoClick
+   * @description Redirect the page to / when clicked
+   */
+  const handleLogoClick = () => {
+    history.push('/');
+  };
+  /**
+   * @name handleCartClick
+   * @description Redirect the page to / when clicked
+   */
+  const handleCartClick = () => {
+    history.push('/checkout');
+  };
+
   return (
-    <div>
-      <NavLink to="/">
-        <AllInclusive />
-      </NavLink>
-      <NavLink to="/checkout">
-        <ShoppingCartIcon />
-      </NavLink>
+    <div id="header" className="App-header">
+      <AllInclusive onClick={handleLogoClick} />
+      <ShoppingCartIcon onClick={handleCartClick} />
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
       {googleError && <span>{googleError}</span>}
