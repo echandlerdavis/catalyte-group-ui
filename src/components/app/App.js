@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProductPage from '../product-page/ProductPage';
 import CheckoutPage from '../checkout-page/CheckoutPage';
 import ConfirmationPage from '../confirmation-page/ConfirmationPage';
+import MaintenancePage from '../maintenance/Maintenance';
 import Header from '../header/Header';
 
 /**
@@ -17,6 +18,7 @@ const App = () => (
       <Route exact path="/" render={() => <ProductPage />} />
       <Route exact path="/checkout" render={() => <CheckoutPage />} />
       <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
+      <Route exact path="/maintenance" render={() => <MaintenancePage />} />
     </Switch>
   </BrowserRouter>
 );
