@@ -79,7 +79,7 @@ const Header = () => {
 
   return (
     <div id="header" className="App-header">
-      <AllInclusive onClick={handleLogoClick} />
+      <AllInclusive className="App-logo" onClick={handleLogoClick} />
       <ShoppingCartIcon onClick={handleCartClick} />
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
