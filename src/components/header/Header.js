@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
+import { ShoppingCart } from '@material-ui/icons';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
+import iconWithBadge from './IconWithBadge';
 
 /**
  * @name Header
@@ -58,7 +60,12 @@ const Header = () => {
   return (
     <div>
       <NavLink to="/home">Home</NavLink>
-      <NavLink to="/checkout">Cart</NavLink>
+      {iconWithBadge(
+        <ShoppingCart>
+          <NavLink to="/checkout">Cart</NavLink>
+        </ShoppingCart>,
+        5
+      )}
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
       {googleError && <span>{googleError}</span>}
