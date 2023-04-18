@@ -73,6 +73,17 @@ const CheckoutPage = () => {
     makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
   };
 
+  if (products.length === 0) {
+    return (
+      <div className={styles.checkoutContainer}>
+        <div className={`${styles.step}${styles.order}`}>
+          <h3 className={styles.title}>1. Review Order</h3>
+          <div>Cart is empty. Please add your favorite items to get started!</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.checkoutContainer}>
       <div className={`${styles.step} ${styles.order}`}>
