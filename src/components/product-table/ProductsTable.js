@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MaintenanceProductsTable = ({ products }) => {
+const ProductTable = ({ products }) => {
   const productAttributes = [
     'id',
     'brand',
@@ -42,11 +42,14 @@ const MaintenanceProductsTable = ({ products }) => {
   }));
 
   return (
-    <table>
-      <tr>{tableHeaders}</tr>
-      {rowData}
-    </table>
+    <section>
+      <h2>Products</h2>
+      <table>
+        <tr>{tableHeaders}</tr>
+        {rowData}
+      </table>
+    </section>
   );
 };
 
-export default MaintenanceProductsTable;
+export default ProductTable;
