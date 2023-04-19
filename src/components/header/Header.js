@@ -103,7 +103,7 @@ const Header = () => {
           onSuccess={handleGoogleLoginSuccess}
           onFailure={handleGoogleLoginFailure}
           cookiePolicy="single_host_origin"
-          className="App-header-margins"
+          className="App-header-margin"
         />
       ) : (
         <GoogleLogout
@@ -111,7 +111,7 @@ const Header = () => {
           buttonText="Logout"
           onLogoutSuccess={handleGoogleLogoutSuccess}
           onFailure={handleGoogleLogoutFailure}
-          className="App-header-margins"
+          className="App-header-margin"
         />
       )}
     </div>
