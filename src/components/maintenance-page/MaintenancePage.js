@@ -12,8 +12,6 @@ const MaintenancePage = () => {
   const [products, setProducts] = useState([]);
   const [apiError, setApiError] = useState(false);
 
-  console.log(products, apiError);
-
   useEffect(() => {
     fetchProducts(setProducts, setApiError);
   }, []);

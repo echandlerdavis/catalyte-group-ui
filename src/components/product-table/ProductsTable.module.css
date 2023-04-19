@@ -1,0 +1,12 @@
+h2{
+    color: grey;
+    margin-bottom: 2rem; 
+}
+
+section{
+    margin: 1.5rem;
+    padding: 1.5rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 2rem;
+    box-shadow: .75rem .25rem 1rem rgb(179, 179, 179);
+}

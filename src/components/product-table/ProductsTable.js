@@ -1,4 +1,5 @@
 import React from 'react';
+import './ProductsTable.module.css';
 
 const ProductTable = ({ products }) => {
   const productAttributes = [
@@ -22,7 +23,7 @@ const ProductTable = ({ products }) => {
   ];
 
   // Map each product attribute to a table header
-  const tableHeaders = productAttributes.map((attribute) => <th>{attribute}</th>);
+  const tableHeaders = productAttributes.map((attribute) => <th key={attribute}>{attribute}</th>);
 
   // Map the row data for each product
   const rowData = products.map(((product) => {
@@ -32,7 +33,7 @@ const ProductTable = ({ products }) => {
       const data = product[attribute];
       // If the value is a boolean get the string of the boolean
       return (
-        <td>
+        <td key={`${product.id} - ${attribute}`}>
           {typeof data === 'boolean' ? data.toString() : data}
         </td>
       );
@@ -45,8 +46,12 @@ const ProductTable = ({ products }) => {
     <section>
       <h2>Products</h2>
       <table>
-        <tr>{tableHeaders}</tr>
-        {rowData}
+        <thead>
+          <tr>{tableHeaders}</tr>
+        </thead>
+        <tbody>
+          {rowData}
+        </tbody>
       </table>
     </section>
   );
