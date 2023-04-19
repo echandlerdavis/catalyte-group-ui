@@ -77,7 +77,7 @@ const ProductTable = ({ products }) => {
   return (
     <section>
       <h2>Products</h2>
-      <TableContainer style={{ maxHeight: 350 }}>
+      <TableContainer style={{ maxHeight: '75vh' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
