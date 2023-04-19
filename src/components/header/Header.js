@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
-import { ShoppingCart } from '@material-ui/icons';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { AllInclusive } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
@@ -16,6 +17,7 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
+  const history = useHistory();
   const {
     state: { products }
   } = useCart();
@@ -41,7 +43,9 @@ const Header = () => {
    * @description Function to run if google login was unsuccessful
    */
   const handleGoogleLoginFailure = () => {
-    setGoogleError('There was a problem logging in with Google. Please wait and try again later.');
+    setGoogleError(
+      'There was a problem logging in with Google. Please wait and try again later.'
+    );
   };
 
   /**
@@ -58,16 +62,33 @@ const Header = () => {
    * @description Function to run if google logout was unsuccessful
    */
   const handleGoogleLogoutFailure = () => {
-    setGoogleError('There was a problem logging out with Google. Please wait and try again later.');
+    setGoogleError(
+      'There was a problem logging out with Google. Please wait and try again later.'
+    );
+  };
+
+  /**
+   * @name handleLogoClick
+   * @description Redirect the page to / when clicked
+   */
+  const handleLogoClick = () => {
+    history.push('/');
+  };
+  /**
+   * @name handleCartClick
+   * @description Redirect the page to / when clicked
+   */
+  const handleCartClick = () => {
+    history.push('/checkout');
   };
 
   return (
-    <div>
-      <NavLink to="/home">Home</NavLink>
+    <div id="header" className="App-header Set-to-front">
+      <AllInclusive className="App-logo" onClick={handleLogoClick} />
       {iconWithBadge(
-        <ShoppingCart>
-          <NavLink to="/checkout">Cart</NavLink>
-        </ShoppingCart>,
+        <ShoppingCartIcon>
+          <ShoppingCartIcon onClick={handleCartClick} />
+        </ShoppingCartIcon>,
         products.length
       )}
       {user && <span>{user.firstName}</span>}
