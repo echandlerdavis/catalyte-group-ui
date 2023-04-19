@@ -11,6 +11,10 @@ section{
     box-shadow: .75rem .25rem 1rem rgb(179, 179, 179);
 }
 
+thead{
+    z-index: 400;
+}
+
 input[type='checkbox']{
     cursor:default;
 }

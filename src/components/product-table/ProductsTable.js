@@ -77,8 +77,8 @@ const ProductTable = ({ products }) => {
   return (
     <section>
       <h2>Products</h2>
-      <TableContainer>
-        <Table stickyHeader aria-label="sticky table">
+      <TableContainer style={{ maxHeight: 350 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               {tableHeaders}
