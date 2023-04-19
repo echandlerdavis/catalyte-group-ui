@@ -16,6 +16,9 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
+  const {
+    state: { products }
+  } = useCart();
 
   /**
    * @name handleGoogleLoginSuccess
@@ -65,7 +68,7 @@ const Header = () => {
         <ShoppingCart>
           <NavLink to="/checkout">Cart</NavLink>
         </ShoppingCart>,
-        useCart().size()
+        products.length
       )}
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
