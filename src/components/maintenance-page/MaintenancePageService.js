@@ -18,8 +18,8 @@ const fetchProducts = async (setProducts, setApiError) => {
       throw new Error(Constants.API_ERROR);
     })
     .then(setProducts)
-    .catch(() => {
-      setApiError(true);
+    .catch((e) => {
+      setApiError(e.message);
     });
 };
 export default fetchProducts;

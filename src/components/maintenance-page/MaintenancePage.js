@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
-import Constants from '../../utils/constants';
+import './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
+import ErrorAlert from '../error-alert/ErrorAlert';
 
 /**
  * Fetches products from API and displays them in a table
@@ -21,7 +21,7 @@ const MaintenancePage = () => {
   return (
     <article>
       <h1>Maintenance</h1>
-      {apiError && <p className="errMsg" data-testid="errMsg">{Constants.API_ERROR}</p>}
+      {apiError && <ErrorAlert errorMsg={apiError} />}
       <ProductTable products={products} />
     </article>
   );
