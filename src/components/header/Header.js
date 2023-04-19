@@ -84,7 +84,11 @@ const Header = () => {
 
   return (
     <div id="header" className="App-header Set-to-front">
-      <AllInclusive className="App-header-margins App-logo" onClick={handleLogoClick} />
+      <AllInclusive className="App-header-margin App-logo" onClick={handleLogoClick} />
+      {googleError && <span className="App-header-margin">{googleError}</span>}
+      {apiError && <span className="App-header-margin">Api Error</span>}
+      {<span className="App-header-margin">{user.firstName}</span>}
+      {<span className="App-header-margin">{user.lastName}</span>}
       {iconWithBadge(
         {
           baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
@@ -92,10 +96,6 @@ const Header = () => {
           styleClass: 'App-header-margin'
         }
       )}
-      {user && <span>{user.firstName}</span>}
-      {user && <span>{user.lastName}</span>}
-      {googleError && <span>{googleError}</span>}
-      {apiError && <span>Api Error</span>}
       {!user ? (
         <GoogleLogin
           clientId={constants.GOOGLE_CLIENT_ID}
