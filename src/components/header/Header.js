@@ -84,12 +84,13 @@ const Header = () => {
 
   return (
     <div id="header" className="App-header Set-to-front">
-      <AllInclusive className="App-logo" onClick={handleLogoClick} />
+      <AllInclusive className="App-header-margins App-logo" onClick={handleLogoClick} />
       {iconWithBadge(
-        <ShoppingCartIcon>
-          <ShoppingCartIcon onClick={handleCartClick} />
-        </ShoppingCartIcon>,
-        products.length
+        {
+          baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
+          displayValue: products.length,
+          styleClass: 'App-header-margin'
+        }
       )}
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
@@ -102,6 +103,7 @@ const Header = () => {
           onSuccess={handleGoogleLoginSuccess}
           onFailure={handleGoogleLoginFailure}
           cookiePolicy="single_host_origin"
+          className="App-header-margins"
         />
       ) : (
         <GoogleLogout
@@ -109,6 +111,7 @@ const Header = () => {
           buttonText="Logout"
           onLogoutSuccess={handleGoogleLogoutSuccess}
           onFailure={handleGoogleLogoutFailure}
+          className="App-header-margins"
         />
       )}
     </div>

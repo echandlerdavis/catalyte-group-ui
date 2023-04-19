@@ -7,8 +7,8 @@ import { Badge } from '@material-ui/core';
  * @param {*} displayValue - Value that will be displayed in badge
  * @returns basIcon with a badge in the upper left corner
  */
-const iconWithBadge = (baseIcon, displayValue) => (
-  <Badge badgeContent={displayValue}>
+const iconWithBadge = ({ baseIcon, displayValue, styleClass }) => (
+  <Badge className={styleClass} badgeContent={displayValue}>
     {baseIcon}
   </Badge>
 );
