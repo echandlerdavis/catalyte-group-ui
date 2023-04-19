@@ -6,8 +6,10 @@ import {
   TableContainer,
   TablePagination,
   TableHead,
-  TableRow
+  TableRow,
+  Checkbox
 } from '@material-ui/core';
+import { Lens, TripOrigin } from '@material-ui/icons';
 import './ProductsTable.module.css';
 
 const ProductTable = ({ products }) => {
@@ -44,6 +46,10 @@ const ProductTable = ({ products }) => {
     'active'
   ];
 
+  const isActiveCheckbox = (isActive) => (
+    <Checkbox checked={isActive} icon={<TripOrigin />} checkedIcon={<Lens />} />
+  );
+
   // Map each product attribute to a table header
   const tableHeaders = productAttributes.map((attribute) => {
     const firstLetter = attribute.charAt(0).toUpperCase();
@@ -60,7 +66,7 @@ const ProductTable = ({ products }) => {
       // If the value is a boolean get the string of the boolean
       return (
         <TableCell key={`${product.id} - ${attribute}`}>
-          {typeof data === 'boolean' ? data.toString() : data}
+          {typeof data === 'boolean' ? isActiveCheckbox(data) : data}
         </TableCell>
       );
     });
