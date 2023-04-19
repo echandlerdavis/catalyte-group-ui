@@ -1,32 +1,13 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-
-// TODO: Figure out if you need the button, or is this as simple as returning the snack bar only.
-// TODO: handleCLick and handleClose? Do these need to be defined elsewhere?
 // TODO: Test this somewhere. Make sure it's in the correct location and that you want the colors as they are or if they need to be styled.
-// TODO: Ask if you want to be able to click away from the toast or if the only way to do so is with the "x"
-export default function ToastComponent({ message }) {
-  const [open, setOpen] = React.useState(true);
-
-//  const handleClick = () => {
-//    setOpen(true);
-//  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+export default function Toast({ message, open, handleClose }) =>
 
   return (
-    <div>
-//      <Button onClick={handleClick}>Open simple snackbar</Button>
+    <>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
@@ -44,6 +25,6 @@ export default function ToastComponent({ message }) {
           </React.Fragment>
         }
       />
-    </div>
+    </>
   );
-}
+
