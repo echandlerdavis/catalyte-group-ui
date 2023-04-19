@@ -54,3 +54,7 @@
     transform: rotate(360deg);
   }
 }
+
+.Set-to-front {
+  z-index: 500;
+}

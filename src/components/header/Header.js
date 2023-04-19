@@ -78,7 +78,7 @@ const Header = () => {
   };
 
   return (
-    <div id="header" className="App-header">
+    <div id="header" className="App-header Set-to-front">
       <AllInclusive className="App-logo" onClick={handleLogoClick} />
       <ShoppingCartIcon onClick={handleCartClick} />
       {user && <span>{user.firstName}</span>}
