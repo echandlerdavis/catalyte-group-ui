@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -13,9 +13,18 @@ import { Lens, TripOrigin } from '@material-ui/icons';
 import './ProductsTable.module.css';
 
 const ProductTable = ({ products }) => {
+  // Use state to set the attributes of a product to be displayed in the table
+  const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  // When products are passed set the attributes of a product to be displayed
+  useEffect(() => {
+    if (products.length) {
+      setProductAttributes(Object.keys(products[0]));
+    }
+  }, [products]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -25,26 +34,6 @@ const ProductTable = ({ products }) => {
     setRowsPerPage(+target.value);
     setPage(0);
   };
-
-  const productAttributes = [
-    'id',
-    'brand',
-    'imageSrc',
-    'material',
-    'price',
-    'quantity',
-    'name',
-    'description',
-    'demographic',
-    'category',
-    'type',
-    'releaseDate',
-    'primaryColorCode',
-    'secondaryColorCode',
-    'styleNumber',
-    'globalProductCode',
-    'active'
-  ];
 
   const isActiveCheckbox = (isActive) => (
     <Checkbox checked={isActive} icon={<TripOrigin />} checkedIcon={<Lens style={{ color: 'green' }} />} />
