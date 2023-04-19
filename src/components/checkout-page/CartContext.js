@@ -11,6 +11,12 @@ function cartReducer(state, action) {
       };
     }
     case 'add': {
+      const productMap = {}; // key = product.id, val = product.qty
+      state.products.forEach((p) => {
+        console.log(Object.getOwnPropertyNames(p));
+        productMap[p.id] = p.quantity;
+      });
+      console.log(productMap);
       return {
         ...state,
         products: [...state.products, action.product]
