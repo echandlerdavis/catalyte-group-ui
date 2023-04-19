@@ -47,7 +47,7 @@ const ProductTable = ({ products }) => {
   ];
 
   const isActiveCheckbox = (isActive) => (
-    <Checkbox checked={isActive} icon={<TripOrigin />} checkedIcon={<Lens />} />
+    <Checkbox checked={isActive} icon={<TripOrigin />} checkedIcon={<Lens style={{ color: 'green' }} />} />
   );
 
   // Map each product attribute to a table header
