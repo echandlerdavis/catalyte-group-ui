@@ -5,6 +5,7 @@ import { ShoppingCart } from '@material-ui/icons';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
+import { useCart } from '../checkout-page/CartContext';
 
 /**
  * @name Header
@@ -64,7 +65,7 @@ const Header = () => {
         <ShoppingCart>
           <NavLink to="/checkout">Cart</NavLink>
         </ShoppingCart>,
-        5
+        useCart().size()
       )}
       {user && <span>{user.firstName}</span>}
       {user && <span>{user.lastName}</span>}
