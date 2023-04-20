@@ -5,6 +5,7 @@ import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
+import './Header.module.css';
 
 /**
  * @name Header
@@ -78,7 +79,7 @@ const Header = () => {
   };
 
   return (
-    <div id="header" className="App-header Set-to-front">
+    <header id="header" className="Set-to-front">
       <AllInclusive className="App-logo" onClick={handleLogoClick} />
       <ShoppingCartIcon onClick={handleCartClick} />
       {user && <span>{user.firstName}</span>}
@@ -101,7 +102,7 @@ const Header = () => {
           onFailure={handleGoogleLogoutFailure}
         />
       )}
-    </div>
+    </header>
   );
 };
 
