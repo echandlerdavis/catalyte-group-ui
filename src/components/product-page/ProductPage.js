@@ -19,16 +19,16 @@ const ProductPage = () => {
   }, []);
 
   return (
-    <div>
+    <article>
       {apiError && <ErrorAlert errorMsg={Constants.API_ERROR} />}
-      <div className={styles.app}>
+      <section className={styles.app}>
         {products.map((product) => (
           <div key={product.id}>
             <ProductCard product={product} />
           </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };
 
