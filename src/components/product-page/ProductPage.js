@@ -3,6 +3,7 @@ import ProductCard from '../product-card/ProductCard';
 import styles from './ProductPage.module.css';
 import Constants from '../../utils/constants';
 import fetchProducts from './ProductPageService';
+import ErrorAlert from '../error-alert/ErrorAlert';
 
 /**
  * @name ProductPage
@@ -19,7 +20,7 @@ const ProductPage = () => {
 
   return (
     <div>
-      {apiError && <p className={styles.errMsg} data-testid="errMsg">{Constants.API_ERROR}</p>}
+      {apiError && <ErrorAlert errorMsg={Constants.API_ERROR} />}
       <div className={styles.app}>
         {products.map((product) => (
           <div key={product.id}>
