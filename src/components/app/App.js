@@ -6,7 +6,6 @@ import CheckoutPage from '../checkout-page/CheckoutPage';
 import ConfirmationPage from '../confirmation-page/ConfirmationPage';
 import MaintenancePage from '../maintenance-page/MaintenancePage';
 import Header from '../header/Header';
-
 /**
  * @name App
  * @returns component
