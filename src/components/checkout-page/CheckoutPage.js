@@ -20,20 +20,19 @@ const CheckoutPage = () => {
   } = useCart();
 
   const [billingData, setBillingData] = React.useState({});
+  const [deliveryData, setDeliveryData] = React.useState({});
+  const [useSameAddress, setUseSameAddress] = React.useState(false);
 
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
   };
 
-  const [deliveryData, setDeliveryData] = React.useState({});
-
   const onDeliveryChange = (e) => {
     setDeliveryData({ ...deliveryData, [e.target.id]: e.target.value });
   };
 
-  const [checked, setChecked] = React.useState(false);
-  const handleCheck = () => {
-    setChecked(true);
+  const handleCheckboxChange = (e) => {
+    setUseSameAddress(e.target.checked);
   };
 
   const handlePay = () => {
@@ -48,7 +47,7 @@ const CheckoutPage = () => {
       zip: deliveryData.zip
     };
     const billingAddress = {};
-    if (checked) {
+    if (useSameAddress) {
       billingAddress.street = deliveryAddress.street;
       billingAddress.street2 = deliveryAddress.street2;
       billingAddress.city = deliveryAddress.city;
@@ -73,6 +72,17 @@ const CheckoutPage = () => {
     makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
   };
 
+  if (products.length === 0) {
+    return (
+      <div className={styles.checkoutContainer}>
+        <div className={`${styles.step}${styles.order}`}>
+          <h3 className={styles.title}>1. Review Order</h3>
+          <div>Cart is empty. Please add your favorite items to get started!</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.checkoutContainer}>
       <div className={`${styles.step} ${styles.order}`}>
@@ -86,9 +96,9 @@ const CheckoutPage = () => {
           <div className={styles.useSameAddress}>
             <input
               id="useSame"
-              onChange={handleCheck}
+              onChange={handleCheckboxChange}
               type="checkbox"
-              value={checked}
+              checked={useSameAddress}
             />
           </div>
           Same Billing Address
@@ -99,7 +109,7 @@ const CheckoutPage = () => {
         <BillingDetails
           onChange={onBillingChange}
           billingData={billingData}
-          useShippingForBilling={checked}
+          useShippingForBilling={useSameAddress}
         />
       </div>
       <div className={styles.payNow}>
