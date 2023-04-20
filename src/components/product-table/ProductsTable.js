@@ -15,7 +15,7 @@ import './ProductsTable.module.css';
 /**
  * @name ProductTable
  * @description Renders table of product data
- * @param {*} props products 
+ * @param {*} props products
  * @returns component
  */
 const ProductTable = ({ products }) => {
