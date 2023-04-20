@@ -3,10 +3,12 @@ import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
+import Toast from '../toast/Toast';
 
 /**
  * @name Header
@@ -21,6 +23,16 @@ const Header = () => {
   const {
     state: { products }
   } = useCart();
+  // Toast Example Button - To be deleted, shows how to implement a toast.
+  const [open, setOpen] = useState(false);
+
+  const handleToastClick = () => {
+    setOpen(true);
+  };
+
+  const handleToastClose = () => {
+    setOpen(false);
+  };
 
   /**
    * @name handleGoogleLoginSuccess
@@ -85,6 +97,7 @@ const Header = () => {
   return (
     <div id="header" className="App-header Set-to-front">
       <AllInclusive className="App-header-margin App-logo" onClick={handleLogoClick} />
+      <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
       {googleError && <span className="App-header-margin">{googleError}</span>}
       {apiError && <span className="App-header-margin">Api Error</span>}
       {<span className="App-header-margin">{user.firstName}</span>}
@@ -114,6 +127,7 @@ const Header = () => {
           className="App-header-margin"
         />
       )}
+      <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
     </div>
   );
 };

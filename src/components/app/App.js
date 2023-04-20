@@ -5,7 +5,6 @@ import ProductPage from '../product-page/ProductPage';
 import CheckoutPage from '../checkout-page/CheckoutPage';
 import ConfirmationPage from '../confirmation-page/ConfirmationPage';
 import Header from '../header/Header';
-
 /**
  * @name App
  * @returns component
