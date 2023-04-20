@@ -11,15 +11,41 @@ function cartReducer(state, action) {
       };
     }
     case 'add': {
-      const productMap = {}; // key = product.id, val = product.qty
-      state.products.forEach((p) => {
-        console.log(Object.getOwnPropertyNames(p));
-        productMap[p.id] = p.quantity;
-      });
-      console.log(productMap);
+      // make sure id is present on new product
+      if (action.product.id === undefined || action.product.id === null) {
+        // use the toast to display an error
+        console.log(new Error(`Product ${action.product.name} does not have a unique ID.`));
+        return { ...state, products: [...state.products] };
+      }
+      // get the current products array incase manipulation is needed
+      const currentProducts = state.products;
+      // locate if the product is a duplicate
+      const existingProducts = currentProducts.filter((p) => p.id === action.product.id);
+
+      if (existingProducts.length === 0) {
+        // toast
+        currentProducts.push(action.product);
+        return {
+          ...state,
+          products: [...currentProducts]
+        };
+      }
+      // if multiple existing products in cart, consolitate
+      if (existingProducts.length > 1) {
+        const firstIndex = state.products.findIndex((p) => p.id === action.product.id);
+        while (existingProducts.length > 1) {
+          const duplicate = existingProducts.pop();
+          const duplicateIndex = state.products.findLastIndex((p) => p.id === action.product.id);
+          currentProducts[firstIndex].quantity += duplicate.quantity;
+          currentProducts.splice(duplicateIndex, 1);
+        }
+      }
+      // add quantity from action product to now single existingProduct
+      existingProducts[0].quantity += action.product.quantity;
+      // toast
       return {
         ...state,
-        products: [...state.products, action.product]
+        products: [...currentProducts]
       };
     }
     default: {
