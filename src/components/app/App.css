@@ -18,7 +18,6 @@
   padding: 1vh;
   display: flex;
   flex-direction: row;
-  justify-content: right;
   align-items: center;
   position: sticky;
   top: 0; left: 0;
@@ -27,13 +26,15 @@
 }
 
 .App-header-margin {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 2vh;
+  margin-right: 2vh;
+  flex-basis: 10vh;
 }
 
 .App-header .App-logo {
   margin-right: auto;
   margin-left: 1vh;
+  flex-basis: 40vh;
 }
 
 .App-header > svg:hover, button:hover, span:hover {
