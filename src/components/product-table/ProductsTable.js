@@ -72,28 +72,30 @@ const ProductTable = ({ products }) => {
   return (
     <section>
       <h2>Products</h2>
-      <TableContainer style={{ maxHeight: '75vh' }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              {tableHeaders}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* Display row data for the number of rows chosen in pagination options */}
-            {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rowData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <div className="Card">
+        <TableContainer style={{ maxHeight: '75vh' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                {tableHeaders}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {/* Display row data for the number of rows chosen in pagination options */}
+              {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={rowData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
     </section>
   );
 };

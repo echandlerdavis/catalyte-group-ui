@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
 import ErrorAlert from '../error-alert/ErrorAlert';
