@@ -21,7 +21,10 @@ const MaintenancePage = () => {
     <article>
       <h1>Maintenance</h1>
       {apiError && <ErrorAlert errorMsg={apiError} />}
-      <ProductTable products={products} />
+      <section>
+        <h2>Products</h2>
+        <ProductTable products={products} />
+      </section>
     </article>
   );
 };
