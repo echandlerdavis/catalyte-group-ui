@@ -12,6 +12,12 @@ import {
 import { Lens, TripOrigin } from '@material-ui/icons';
 import './ProductsTable.module.css';
 
+/**
+ * @name ProductTable
+ * @description Renders table of product data
+ * @param {*} props products 
+ * @returns component
+ */
 const ProductTable = ({ products }) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);

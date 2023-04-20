@@ -5,7 +5,8 @@ import ProductTable from '../product-table/ProductsTable';
 import ErrorAlert from '../error-alert/ErrorAlert';
 
 /**
- * Fetches products from API and displays them in a table
+ * @name MaintenancePage
+ * @description Fetches all products from the API and displays them in a table
  * @returns component
  */
 const MaintenancePage = () => {
