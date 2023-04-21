@@ -3,9 +3,9 @@
 * Content: 
 * 21 - All elements
 * 25 - Content Tags (main, article, section)
-* 35 - Heading Tags
+* 39 - Heading Tags
 * 70 - Links
-* 102 - Reusable Classes
+* 100 - Reusable Classes
 */
 
 /*
@@ -13,7 +13,7 @@
 * grey: #808080
 * light grey: #dcdcdc
 * blue: #395aa1
-* light blue: #61dafb
+* teal: #328298
 * white: #ffffff
 * red: #ff0000 - reserved for icons and badges
 * 
@@ -67,9 +67,21 @@ h2::after{
   margin-left: 2rem;
 }
 /* Links */
-a {
-  color: #61dafb;
+a:link {
+  color: #328298;
 }
+
+a:visited{
+  color: #395aa1;
+}
+
+a:hover{
+  color:#b3b3b3
+}
+
+/* a:visited{
+  color: #395aa1;
+} */
 
 @keyframes App-logo-spin {
   from {
