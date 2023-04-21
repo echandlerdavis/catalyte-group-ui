@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,7 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
-import toastDispatcher from '../header/HeaderToastDispatcher';
+import Toast from '../toast/Toast';
 
 /**
  * @name useStyles
@@ -53,6 +53,16 @@ const useStyles = makeStyles((theme) => ({
  */
 const ProductCard = ({ product }) => {
   const classes = useStyles();
+  const [open, setOpenToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('Product added!');
+
+  const closeToast = () => {
+    setOpenToast(false);
+  };
+
+  const openToast = () => {
+    setOpenToast(true);
+  };
 
   const { dispatch } = useCart();
   const {
@@ -63,8 +73,9 @@ const ProductCard = ({ product }) => {
     // make sure id is present on new product
     if (product.id === undefined || product.id === null) {
       // use the toast to display an error
-      toastDispatcher.setMessage(`Product ${product.description} does not have a unique ID.`);
-      toastDispatcher.toggleOpen();
+      setToastMessage(`Product ${product.description} does not have a unique ID.`);
+      openToast();
+      return;
     }
     // set the success message
     const successMessage = `${product.description} added to cart!`;
@@ -88,8 +99,8 @@ const ProductCard = ({ product }) => {
           }
         }
       );
-      toastDispatcher.setMessage(successMessage);
-      toastDispatcher.statusSetter(true);
+      setToastMessage(successMessage);
+      openToast();
       return;
     }
     // if multiple existing products in cart, consolitate
@@ -105,12 +116,13 @@ const ProductCard = ({ product }) => {
     // add quantity from action product to now single existingProduct
     existingProducts[0].quantity += 1;
     // toast
-    toastDispatcher.setMessage(successMessage);
-    toastDispatcher.statusSetter(true);
+    setToastMessage(successMessage);
+    openToast();
   };
 
   return (
     <Card className={classes.root}>
+      <Toast message={toastMessage} open={open} handleClose={closeToast} />
       <CardHeader
         avatar={(
           <Avatar aria-label="demographics" className={classes.avatar}>

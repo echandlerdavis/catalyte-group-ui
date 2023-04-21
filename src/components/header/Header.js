@@ -7,8 +7,6 @@ import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
-import Toast from '../toast/Toast';
-import toastDispatcher from './HeaderToastDispatcher';
 
 /**
  * @name Header
@@ -23,13 +21,6 @@ const Header = () => {
   const {
     state: { products }
   } = useCart();
-
-  const [open, setOpen] = useState(false);
-
-  toastDispatcher.configure(open, setOpen);
-  const handleToastClose = () => {
-    setOpen(false);
-  };
 
   /**
    * @name handleGoogleLoginSuccess
@@ -126,7 +117,6 @@ const Header = () => {
           {user && `${user.firstName} ${user.lastName}`}
         </span>
       }
-      <Toast message={toastDispatcher.message} open={open} handleClose={handleToastClose} />
     </div>
   );
 };
