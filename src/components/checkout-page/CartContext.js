@@ -3,6 +3,7 @@ import toastDispatcher from '../header/HeaderToastDispatcher';
 
 // TODO: reducer can't control toast
 // TODO: logic for evaluating state should be moved
+// TODO: helper functions
 const CartContext = React.createContext();
 
 function cartReducer(state, action) {
