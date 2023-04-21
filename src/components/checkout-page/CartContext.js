@@ -1,4 +1,5 @@
 import React from 'react';
+import toastDispatcher from '../header/HeaderToastDispatcher';
 
 const CartContext = React.createContext();
 
@@ -14,17 +15,22 @@ function cartReducer(state, action) {
       // make sure id is present on new product
       if (action.product.id === undefined || action.product.id === null) {
         // use the toast to display an error
-        console.log(new Error(`Product ${action.product.name} does not have a unique ID.`));
+        toastDispatcher.setMessage(`Product ${action.product.name} does not have a unique ID.`);
+        toastDispatcher.toggleOpen();
         return { ...state, products: [...state.products] };
       }
       // get the current products array incase manipulation is needed
       const currentProducts = state.products;
+      // set the success message
+      const successMessage = `${action.product.name} added to cart!`;
       // locate if the product is a duplicate
       const existingProducts = currentProducts.filter((p) => p.id === action.product.id);
 
       if (existingProducts.length === 0) {
         // toast
         currentProducts.push(action.product);
+        toastDispatcher.setMessage(successMessage);
+        toastDispatcher.toggleOpen();
         return {
           ...state,
           products: [...currentProducts]
@@ -43,6 +49,8 @@ function cartReducer(state, action) {
       // add quantity from action product to now single existingProduct
       existingProducts[0].quantity += action.product.quantity;
       // toast
+      toastDispatcher.setMessage(successMessage);
+      toastDispatcher.toggleOpen();
       return {
         ...state,
         products: [...currentProducts]

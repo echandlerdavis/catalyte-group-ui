@@ -3,12 +3,12 @@ import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
 import Toast from '../toast/Toast';
+import toastDispatcher from './HeaderToastDispatcher';
 
 /**
  * @name Header
@@ -23,16 +23,10 @@ const Header = () => {
   const {
     state: { products }
   } = useCart();
-  // Toast Example Button - To be deleted, shows how to implement a toast.
-  const [open, setOpen] = useState(false);
 
-  const handleToastClick = () => {
-    setOpen(true);
-  };
+  const { open } = toastDispatcher;
 
-  const handleToastClose = () => {
-    setOpen(false);
-  };
+  const handleToastClose = () => { toastDispatcher.toggleOpen(); };
 
   /**
    * @name handleGoogleLoginSuccess
@@ -97,7 +91,6 @@ const Header = () => {
   return (
     <div id="header" className="App-header Set-to-front">
       <AllInclusive className="App-header-margin App-logo" onClick={handleLogoClick} />
-      <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
       {googleError && <span className="App-header-margin">{googleError}</span>}
       {apiError && <span className="App-header-margin">Api Error</span>}
       {iconWithBadge(
@@ -130,7 +123,7 @@ const Header = () => {
           {user && `${user.firstName} ${user.lastName}`}
         </span>
       }
-      <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
+      <Toast message={toastDispatcher.message} open={open} handleClose={handleToastClose} />
     </div>
   );
 };
