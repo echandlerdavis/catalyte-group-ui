@@ -26,9 +26,17 @@
 }
 
 .App-header-margin {
-  margin-left: 2vh;
-  margin-right: 2vh;
-  flex-basis: 10vh;
+  margin-left: .75vh;
+  margin-right: .75vh;
+  flex-basis: 5vh;
+}
+
+.App-header-optional-text {
+ flex-grow: 0; flex-shrink : 0;
+ flex-basis: 8vh;
+ flex-wrap: nowrap;
+ overflow: hidden;
+ font-size: 2vh;
 }
 
 .App-header .App-logo {

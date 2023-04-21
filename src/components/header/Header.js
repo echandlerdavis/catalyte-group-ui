@@ -101,10 +101,8 @@ const Header = () => {
       {googleError && <span className="App-header-margin">{googleError}</span>}
       {apiError && <span className="App-header-margin">Api Error</span>}
       {
-        <span className="App-header-margin" style={{ flexBasis: '20vh' }}>
-          {user.firstName}
-          {' '}
-          {user.lastName}
+        <span className="App-header-margin App-header-optional-text" style={{ flexBasis: '10vh' }}>
+          {user && `${user.firstName} ${user.lastName}`}
         </span>
 }
       {iconWithBadge(

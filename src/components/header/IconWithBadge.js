@@ -1,23 +1,19 @@
 import React from 'react';
 import { Badge } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import classes from '../app/App.css';
 
 /**
  * @name useStyles
  * @description Material-ui styling for ProductCard component
  * @return styling
  */
-const useStyles = makeStyles((styleClass) => {
-  const cls = classes[styleClass];
-  return (
-    {
-      anchorOriginTopRightRectangle: {
-        right: 'auto',
-        flexBasis: cls.flexBasis
-      }
-    });
-});
+const useStyles = makeStyles((
+  {
+    anchorOriginTopRightRectangle: {
+      right: 'auto',
+      left: '.5vh'
+    }
+  }));
 
 /**
  *
@@ -25,12 +21,13 @@ const useStyles = makeStyles((styleClass) => {
  * @param {*} displayValue - Value that will be displayed in badge
  * @returns basIcon with a badge in the upper left corner
  */
-const iconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
-  const muiClasses = useStyles(styleClass);
+const IconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
+  const muiClasses = useStyles();
 
   return (
     <Badge
-      lasses={{ anchorOriginTopRightRectangle: muiClasses.anchorOriginTopRightRectangle }}
+      className={styleClass}
+      classes={{ anchorOriginTopRightRectangle: muiClasses.anchorOriginTopRightRectangle }}
       badgeContent={displayValue}
     >
       {baseIcon}
@@ -38,4 +35,4 @@ const iconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
   );
 };
 
-export default iconWithBadge;
+export default IconWithBadge;
