@@ -24,9 +24,12 @@ const Header = () => {
     state: { products }
   } = useCart();
 
-  const { open } = toastDispatcher;
+  const [open, setOpen] = useState(false);
 
-  const handleToastClose = () => { toastDispatcher.toggleOpen(); };
+  toastDispatcher.configure(open, setOpen);
+  const handleToastClose = () => {
+    setOpen(false);
+  };
 
   /**
    * @name handleGoogleLoginSuccess

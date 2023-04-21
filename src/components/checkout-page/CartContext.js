@@ -15,14 +15,14 @@ function cartReducer(state, action) {
       // make sure id is present on new product
       if (action.product.id === undefined || action.product.id === null) {
         // use the toast to display an error
-        toastDispatcher.setMessage(`Product ${action.product.name} does not have a unique ID.`);
+        toastDispatcher.setMessage(`Product ${action.product.description} does not have a unique ID.`);
         toastDispatcher.toggleOpen();
         return { ...state, products: [...state.products] };
       }
       // get the current products array incase manipulation is needed
       const currentProducts = state.products;
       // set the success message
-      const successMessage = `${action.product.name} added to cart!`;
+      const successMessage = `${action.product.description} added to cart!`;
       // locate if the product is a duplicate
       const existingProducts = currentProducts.filter((p) => p.id === action.product.id);
 
@@ -30,7 +30,7 @@ function cartReducer(state, action) {
         // toast
         currentProducts.push(action.product);
         toastDispatcher.setMessage(successMessage);
-        toastDispatcher.toggleOpen();
+        toastDispatcher.statusSetter(true);
         return {
           ...state,
           products: [...currentProducts]
@@ -50,7 +50,7 @@ function cartReducer(state, action) {
       existingProducts[0].quantity += action.product.quantity;
       // toast
       toastDispatcher.setMessage(successMessage);
-      toastDispatcher.toggleOpen();
+      toastDispatcher.statusSetter(true);
       return {
         ...state,
         products: [...currentProducts]

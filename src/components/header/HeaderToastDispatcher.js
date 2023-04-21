@@ -1,8 +1,16 @@
 const toastDispatcher = {
-  open: false,
+  open: null,
+  statusSetter: null,
+  configure: null,
   message: null,
   setMessage: null,
-  toggleOpen: null
+  toggleOpen: null,
+  getOpenStatus: () => toastDispatcher.open
+};
+
+const runConfigure = (stateVariable, setter) => {
+  toastDispatcher.open = stateVariable;
+  toastDispatcher.statusSetter = (isOpen) => setter(isOpen);
 };
 
 const setMessage = (message) => {
@@ -10,14 +18,15 @@ const setMessage = (message) => {
 };
 
 const toggleOpen = () => {
-  if (toastDispatcher.open) {
-    toastDispatcher.open = false;
+  if (toastDispatcher.getOpenStatus) {
+    toastDispatcher.statusSetter(false);
   } else {
-    toastDispatcher.open = true;
+    toastDispatcher.statusSetter(true);
   }
 };
 
 toastDispatcher.setMessage = setMessage;
 toastDispatcher.toggleOpen = toggleOpen;
+toastDispatcher.configure = runConfigure;
 
 export default toastDispatcher;
