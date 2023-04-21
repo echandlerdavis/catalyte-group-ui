@@ -15,6 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
+import toastDispatcher from '../header/HeaderToastDispatcher';
 
 /**
  * @name useStyles
@@ -54,20 +55,58 @@ const ProductCard = ({ product }) => {
   const classes = useStyles();
 
   const { dispatch } = useCart();
+  const {
+    state: { products }
+  } = useCart();
 
   const onAdd = () => {
-    dispatch(
-      {
-        type: 'add',
-        product: {
-          id: product.id,
-          title: product.name,
-          price: product.price,
-          description: product.description,
-          quantity: 1
+    // make sure id is present on new product
+    if (product.id === undefined || product.id === null) {
+      // use the toast to display an error
+      toastDispatcher.setMessage(`Product ${product.description} does not have a unique ID.`);
+      toastDispatcher.toggleOpen();
+    }
+    // set the success message
+    const successMessage = `${product.description} added to cart!`;
+    // locate if the product is a duplicate
+    let existingProducts = [];
+    if (products.length > 0) {
+      existingProducts = products.filter((p) => p.id === product.id);
+    }
+
+    if (products.length === 0 || existingProducts.length === 0) {
+      // toast
+      dispatch(
+        {
+          type: 'add',
+          product: {
+            id: product.id,
+            title: product.name,
+            price: product.price,
+            description: product.description,
+            quantity: 1
+          }
         }
+      );
+      toastDispatcher.setMessage(successMessage);
+      toastDispatcher.statusSetter(true);
+      return;
+    }
+    // if multiple existing products in cart, consolitate
+    if (existingProducts.length > 1) {
+      const firstIndex = products.findIndex((p) => p.id === product.id);
+      while (existingProducts.length > 1) {
+        const duplicate = existingProducts.pop();
+        const duplicateIndex = products.findLastIndex((p) => p.id === product.id);
+        products[firstIndex].quantity += duplicate.quantity;
+        products.splice(duplicateIndex, 1);
       }
-    );
+    }
+    // add quantity from action product to now single existingProduct
+    existingProducts[0].quantity += 1;
+    // toast
+    toastDispatcher.setMessage(successMessage);
+    toastDispatcher.statusSetter(true);
   };
 
   return (

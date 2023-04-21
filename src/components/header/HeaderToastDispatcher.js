@@ -2,6 +2,7 @@
 // TODO: dispatch = action type handled by reducer. RENAME service? signaler?
 // TODO: Check with Kathleen/Chandler/Kaschae for pattern
 // TODO: Ask Kathleen if I should move logic to ProductCard onclick
+// TODO: test adding Toast component to the ProductCard
 
 const toastDispatcher = {
   open: null,

@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
  */
 const useStyles = makeStyles((
   {
-    anchorOriginTopRightRectangular: {
+    anchorOriginTopRightRectangle: {
       right: 'auto',
       left: '.5vh'
     }
@@ -26,9 +26,9 @@ const IconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
 
   return (
     <Badge
-      overlap="rectangular"
+      overlap="rectangle"
       className={styleClass}
-      classes={{ anchorOriginTopRightRectangular: muiClasses.anchorOriginTopRightRectangular }}
+      classes={{ anchorOriginTopRightRectangle: muiClasses.anchorOriginTopRightRectangle }}
       badgeContent={displayValue}
     >
       {baseIcon}
