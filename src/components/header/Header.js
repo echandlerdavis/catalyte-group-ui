@@ -100,11 +100,6 @@ const Header = () => {
       <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
       {googleError && <span className="App-header-margin">{googleError}</span>}
       {apiError && <span className="App-header-margin">Api Error</span>}
-      {
-        <span className="App-header-margin App-header-optional-text" style={{ flexBasis: '10vh' }}>
-          {user && `${user.firstName} ${user.lastName}`}
-        </span>
-}
       {iconWithBadge(
         {
           baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
@@ -130,6 +125,11 @@ const Header = () => {
           className="App-header-margin"
         />
       )}
+      {
+        <span className="App-header-margin App-header-optional-text" style={{ flexBasis: '10vh' }}>
+          {user && `${user.firstName} ${user.lastName}`}
+        </span>
+      }
       <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
     </div>
   );
