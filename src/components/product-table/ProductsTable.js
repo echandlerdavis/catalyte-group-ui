@@ -41,8 +41,32 @@ const ProductTable = ({ products }) => {
     setPage(0);
   };
 
+  /**
+   * Reads a product's active value and returns a checkbox either checked or unchecked
+   * @param {boolean} isActive products active status
+   * @returns Checkbox component
+   */
   const isActiveCheckbox = (isActive) => (
     <Checkbox checked={isActive} icon={<TripOrigin />} checkedIcon={<Lens style={{ color: 'green' }} />} />
+  );
+
+  /**
+   * Reads the color of a product and returns component with the color as the background
+   * Please note that inline style was needed in order to override MUI table cell styles
+   * @param {string} hexColor products color as hexColor string
+   * @returns div element
+   */
+  const colorBox = (hexColor) => (
+    <div style={{
+      backgroundColor: hexColor,
+      color: hexColor === '#ffffff' ? 'black' : 'white',
+      textAlign: 'center',
+      textShadow: '5rem',
+      boxShadow: '.05rem .05rem .05rem grey'
+    }}
+    >
+      {hexColor}
+    </div>
   );
 
   // Map each product attribute to a table header
@@ -51,6 +75,26 @@ const ProductTable = ({ products }) => {
     const restOfWord = attribute.slice(1);
     return <TableCell key={attribute}>{firstLetter + restOfWord}</TableCell>;
   });
+
+  /**
+   * Checks the attribute name and value of a product and formats it accordingly
+   * Prices with have $, Colors with be displayed, and booleans will be CheckBoxes
+   * @param {string} attribute the products attribute
+   * @param {*} value the value of that products attribute
+   * @returns component, or value passed
+   */
+  const formattedData = (attribute, value) => {
+    if (typeof value === 'boolean') {
+      return isActiveCheckbox(value);
+    }
+    if (attribute === 'price') {
+      return `$${value}`;
+    }
+    if (attribute.toLowerCase().includes('color')) {
+      return colorBox(value);
+    }
+    return value;
+  };
 
   // Map the row data for each product
   const rowData = products.map(((product) => {
@@ -61,7 +105,7 @@ const ProductTable = ({ products }) => {
       // If the value is a boolean get the string of the boolean
       return (
         <TableCell key={`${product.id} - ${attribute}`}>
-          {typeof data === 'boolean' ? isActiveCheckbox(data) : data}
+          {formattedData(attribute, data)}
         </TableCell>
       );
     });
@@ -70,33 +114,30 @@ const ProductTable = ({ products }) => {
   }));
 
   return (
-    <section>
-      <h2>Products</h2>
-      <div className="Card">
-        <TableContainer style={{ maxHeight: '75vh' }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {tableHeaders}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {/* Display row data for the number of rows chosen in pagination options */}
-              {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rowData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div>
-    </section>
+    <div className="Card">
+      <TableContainer style={{ maxHeight: '75vh' }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {tableHeaders}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/* Display row data for the number of rows chosen in pagination options */}
+            {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rowData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </div>
   );
 };
 

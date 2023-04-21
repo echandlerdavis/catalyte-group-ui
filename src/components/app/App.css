@@ -72,20 +72,6 @@ a {
   color: #61dafb;
 }
 
-a:hover{
-  color: #dcdcdc;
-}
-
-a:visited{
-  color: #808080;
-}
-/* Classes */
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
