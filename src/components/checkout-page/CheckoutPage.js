@@ -6,6 +6,7 @@ import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
+import AppAlert from '../alert/Alert';
 
 /**
  * @name CheckoutPage
@@ -77,7 +78,7 @@ const CheckoutPage = () => {
       <div className={styles.checkoutContainer}>
         <div className={`${styles.step}${styles.order}`}>
           <h2 className={styles.title}>1. Review Order</h2>
-          <div>Cart is empty. Please add your favorite items to get started!</div>
+          <AppAlert severity="info" title="Cart Empty" message="Cart is empty.  Please add your favorite items to get started!" />
         </div>
       </div>
     );

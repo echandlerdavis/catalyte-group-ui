@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
-import ErrorAlert from '../error-alert/ErrorAlert';
+import AppAlert from '../alert/Alert';
 
 /**
  * @name MaintenancePage
@@ -19,7 +19,7 @@ const MaintenancePage = () => {
   return (
     <article>
       <h1>Maintenance</h1>
-      {apiError && <ErrorAlert errorMsg={apiError} />}
+      {apiError && <AppAlert errorMsg={apiError} />}
       <ProductTable products={products} />
     </article>
   );
