@@ -44,6 +44,64 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500]
   }
 }));
+/**
+ * Validates the product id
+ * @param {product Object} product
+ * @returns boolean
+ */
+const productHasId = (product) => product.id !== undefined && product.id !== null && product.id > 0;
+
+/**
+ * Verify that there is enough inventory to handle the order
+ * @param {product Object} product passed from server, not state.products
+ * @param {array Product objects} orders prodcut array from state.products
+ * @returns boolean
+ */
+const haveEnoughInventory = (product, orders) => {
+  const order = orders.filter((p) => p.id === product.id);
+  if (order.length === 0 && product.quantity > 0) { return true; }
+  return order.pop().quantity + 1 <= product.quantity;
+};
+
+/**
+ * Validate that the given product is valid
+ * @param {Product object} product
+ * @returns result Object {valid: boolean, errors: [string]}
+ */
+const validateProduct = (product, order) => {
+  const result = {
+    valid: true,
+    errors: []
+  };
+  // Validate the product id
+  if (!productHasId(product)) {
+    result.valid = false;
+    result.errors.push('Product id cannot be null, undefined, and above 0.');
+  }
+  // Validate inventory
+  if (result.valid && !haveEnoughInventory(product, order)) {
+    result.valid = false;
+    result.errors.push('There is insufficient inventory for this product.');
+  }
+
+  return result;
+};
+
+/**
+ * Consolidate the given list of duplicates into a single order item with a larger quantity.
+ * @param {product Object} product the product that has duplicates
+ * @param {array products} duplicates an array of the duplicate products iin the order
+ * @param {array products} order state.products
+ */
+const consolidateOrder = (product, duplicates, order) => {
+  const firstDuplicate = order.find((p) => p.id === product.id);
+  while (duplicates.length > 1) {
+    const duplicate = duplicates.pop();
+    const duplicateIndex = order.findLastIndex((p) => p.id === product.id);
+    firstDuplicate.quantity += duplicate.quantity;
+    order.splice(duplicateIndex, 1);
+  }
+};
 
 /**
  * @name ProductCard
@@ -70,15 +128,16 @@ const ProductCard = ({ product }) => {
   } = useCart();
 
   const onAdd = () => {
-    // make sure id is present on new product
-    if (product.id === undefined || product.id === null) {
+    // validate product
+    const productErrors = validateProduct(product, products).errors;
+    if (productErrors.length > 0) {
       // use the toast to display an error
-      setToastMessage(`Product ${product.description} does not have a unique ID.`);
+      setToastMessage(`Failed to add product: ${productErrors.join('|')}`);
       openToast();
       return;
     }
     // set the success message
-    const successMessage = `${product.description} added to cart!`;
+    setToastMessage(`${product.description} added to cart!`);
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
@@ -86,7 +145,7 @@ const ProductCard = ({ product }) => {
     }
 
     if (products.length === 0 || existingProducts.length === 0) {
-      // toast
+      // add product to order
       dispatch(
         {
           type: 'add',
@@ -99,24 +158,17 @@ const ProductCard = ({ product }) => {
           }
         }
       );
-      setToastMessage(successMessage);
+      // toast
       openToast();
       return;
     }
     // if multiple existing products in cart, consolitate
     if (existingProducts.length > 1) {
-      const firstIndex = products.findIndex((p) => p.id === product.id);
-      while (existingProducts.length > 1) {
-        const duplicate = existingProducts.pop();
-        const duplicateIndex = products.findLastIndex((p) => p.id === product.id);
-        products[firstIndex].quantity += duplicate.quantity;
-        products.splice(duplicateIndex, 1);
-      }
+      consolidateOrder(product, existingProducts, products);
     }
     // add quantity from action product to now single existingProduct
     existingProducts[0].quantity += 1;
     // toast
-    setToastMessage(successMessage);
     openToast();
   };
 

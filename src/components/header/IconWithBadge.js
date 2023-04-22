@@ -26,9 +26,9 @@ const IconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
 
   return (
     <Badge
-      overlap="rectangle"
+      overlap="rectangular"
       className={styleClass}
-      classes={{ anchorOriginTopRightRectangle: muiClasses.anchorOriginTopRightRectangle }}
+      classes={{ anchorOriginTopRightRectangular: muiClasses.anchorOriginTopRightRectangular }}
       badgeContent={displayValue}
     >
       {baseIcon}
