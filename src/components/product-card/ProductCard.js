@@ -139,7 +139,7 @@ const ProductCard = ({ product }) => {
       return;
     }
     // set the success message
-    setToastMessage(Constants.ADD_PRODCUT_SUCCESS(product.description));
+    setToastMessage(Constants.ADD_PRODUCT_SUCCESS(product.description));
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
