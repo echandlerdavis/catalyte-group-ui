@@ -115,7 +115,7 @@ const Header = () => {
           onFailure={handleGoogleLogoutFailure}
         />
       )}
-      <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
+      <Toast message="Toast initiated" open={open} handleClose={handleToastClose} severity="success" />
     </header>
   );
 };
