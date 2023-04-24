@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styles from '.profilepage.module.css';
 import { useEffect } from 'react';
 
-const profilePage = () => {
+const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -29,7 +29,7 @@ const profilePage = () => {
     }
 
     return (
-        <div className={styles.profile}>
+        <div className={styles.container}>
             <h1>{user.firstName} {user.lastName}'s Profile</h1>
             <div className={styles.info}>
                 <p><strong>Email:</strong> {user.email}</p>
@@ -39,4 +39,4 @@ const profilePage = () => {
     );
 }
 
-export default profilePage;
+export default ProfilePage;

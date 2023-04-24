@@ -8,17 +8,18 @@ import Constants from '../../utils/constants';
  * @param {*} userId User ID for the profile to retrieve
  * @returns User profile data if successful, otherwise returns an error message
  */
-const fetchUser = async (userId) => {
-    try {
-        const response = await HttpHelper(`${Constants.USER_ENDPOINT}/${userId}`, 'GET');
-        if (!response.ok) {
-            throw new Error(Constants.API_ERROR);
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        return{error: error.message};
-    }
+const fetchUser = async (setUser, setApiError) => {
+    await HttpHelper(Constants.USER_ENPOINT, 'GET')
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(Constants.API_ERROR);
+    })
+    .then(setUser)
+    .catch((e) => {
+      setApiError(e.message);
+    });
 };
 
 export default fetchUser;
