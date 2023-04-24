@@ -31,7 +31,7 @@ const NewProductPage = () => {
   };
 
   return (
-    <article>
+    <section>
       <h2>New Product</h2>
       <form className="Card">
         {Object.keys(initialFormData).map((attribute) => (
@@ -43,7 +43,7 @@ const NewProductPage = () => {
           />
         ))}
       </form>
-    </article>
+    </section>
   );
 };
 

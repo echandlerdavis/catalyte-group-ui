@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
 import AppAlert from '../alert/Alert';
+import NewProductPage from './NewProductPage';
 
 /**
  * @name MaintenancePage
@@ -17,14 +19,28 @@ const MaintenancePage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
+  const mainComponent = (
+    <section>
+      <h2>Products</h2>
+      <ProductTable products={products} />
+    </section>
+  );
+
   return (
     <article>
       <h1>Maintenance</h1>
       {apiError && <AppAlert severity="error" title="Error" message={apiError} />}
-      <section>
-        <h2>Products</h2>
-        <ProductTable products={products} />
-      </section>
+      {/* add nested routes to allow for other routes
+        * in relation to the maintenance route to appear with maintenance header and error alert
+       */}
+      <Switch>
+        <Route exact path="/maintenance/new">
+          <NewProductPage />
+        </Route>
+        <Route path="">
+          {mainComponent}
+        </Route>
+      </Switch>
     </article>
   );
 };
