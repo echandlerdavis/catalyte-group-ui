@@ -65,7 +65,7 @@ export const haveEnoughInventory = (inventoryQty, orderQty) => inventoryQty >= o
  * @param {Product object} product
  * @returns result Object {valid: boolean, errors: [string]}
  */
-export const validateProduct = (product, orders) => {
+export const validateOrder = (product, orders) => {
   const result = {
     valid: true,
     errors: []
@@ -73,7 +73,7 @@ export const validateProduct = (product, orders) => {
   // Validate the product id
   if (!productHasId(product)) {
     result.valid = false;
-    result.errors.push('Product id cannot be null, undefined, and above 0.');
+    result.errors.push(Constants.PRODUCT_MISSING_ID);
   }
   // Validate inventory
   // if product has no id, can't verify inventory
@@ -82,7 +82,7 @@ export const validateProduct = (product, orders) => {
     const ordersQty = orders.filter((p) => p.id === product.id)[0].quantity + 1;
     if (!haveEnoughInventory(product.quantity, ordersQty)) {
       result.valid = false;
-      result.errors.push('There is insufficient inventory for this product.');
+      result.errors.push(Constants.INSUFFICIENT_INVENTORY);
     }
   }
 
@@ -114,7 +114,7 @@ export const consolidateOrder = (product, duplicates, order) => {
 const ProductCard = ({ product }) => {
   const classes = useStyles();
   const [open, setOpenToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('Product added!');
+  const [toastMessage, setToastMessage] = useState('');
 
   const closeToast = () => {
     setOpenToast(false);
@@ -131,15 +131,15 @@ const ProductCard = ({ product }) => {
 
   const onAdd = () => {
     // validate product
-    const productErrors = validateProduct(product, products).errors;
+    const productErrors = validateOrder(product, products).errors;
     if (productErrors.length > 0) {
       // use the toast to display an error
-      setToastMessage(`Failed to add product: ${productErrors.join('|')}`);
+      setToastMessage(Constants.ADD_PRODUCT_FAILURES(productErrors));
       openToast();
       return;
     }
     // set the success message
-    setToastMessage(`${product.description} added to cart!`);
+    setToastMessage(Constants.ADD_PRODCUT_SUCCESS(product.description));
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
