@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {product Object} product
  * @returns boolean
  */
-const productHasId = (product) => product.id !== undefined && product.id !== null && product.id > 0;
+export const productHasId = (product) => product.id !== undefined && product.id !== null;
 
 /**
  * Verify that there is enough inventory to handle the order
@@ -57,7 +57,7 @@ const productHasId = (product) => product.id !== undefined && product.id !== nul
  * @param {array Product objects} orders prodcut array from state.products
  * @returns boolean
  */
-const haveEnoughInventory = (product, orders) => {
+export const haveEnoughInventory = (product, orders) => {
   const order = orders.filter((p) => p.id === product.id);
   if (order.length === 0 && product.quantity > 0) { return true; }
   return order.pop().quantity + 1 <= product.quantity;
@@ -68,7 +68,7 @@ const haveEnoughInventory = (product, orders) => {
  * @param {Product object} product
  * @returns result Object {valid: boolean, errors: [string]}
  */
-const validateProduct = (product, order) => {
+export const validateProduct = (product, order) => {
   const result = {
     valid: true,
     errors: []
@@ -89,15 +89,15 @@ const validateProduct = (product, order) => {
 
 /**
  * Consolidate the given list of duplicates into a single order item with a larger quantity.
- * @param {product Object} product the product that has duplicates
- * @param {array products} duplicates an array of the duplicate products iin the order
- * @param {array products} order state.products
+ * @param {object} product the product that has duplicates
+ * @param {array} duplicates an array of the duplicate products iin the order
+ * @param {array} order state.products
  */
-const consolidateOrder = (product, duplicates, order) => {
+export const consolidateOrder = (product, duplicates, order) => {
   const firstDuplicate = order.find((p) => p.id === product.id);
   while (duplicates.length > 1) {
     const duplicate = duplicates.pop();
-    const duplicateIndex = order.findLastIndex((p) => p.id === product.id);
+    const duplicateIndex = order.lastIndexOf((p) => p.id === product.id);
     firstDuplicate.quantity += duplicate.quantity;
     order.splice(duplicateIndex, 1);
   }
