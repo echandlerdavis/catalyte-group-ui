@@ -38,6 +38,10 @@
   width: 75%;
 }
 
+.payButton:hover{
+  box-shadow: .75rem .25rem 1rem #b3b3b3;
+}
+
 .summary {
   grid-area: summary;
 }
