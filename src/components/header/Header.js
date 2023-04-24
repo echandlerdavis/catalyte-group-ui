@@ -89,6 +89,14 @@ const Header = () => {
     history.push('/checkout');
   };
 
+  /**
+   * @name handleProfileClick
+   * @description Redirect the page to /profilepage when clicked
+   */
+  const handleProfileClick = () => {
+    history.push('/profilepage');
+  };
+
   return (
     <div id="header" className="App-header Set-to-front">
       <AllInclusive className="App-logo" onClick={handleLogoClick} />
@@ -115,6 +123,7 @@ const Header = () => {
         />
       )}
       <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
+      {user && <Button onClick={handleProfileClick} variant="conatained" style={{ color: 'white' }}>Profile</Button>}
     </div>
   );
 };
