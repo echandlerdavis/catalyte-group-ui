@@ -15,6 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
+import styles from './ProductCard.module.css';
 
 /**
  * @name useStyles
@@ -23,7 +24,8 @@ import { useCart } from '../checkout-page/CartContext';
  */
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345
+    maxWidth: 345,
+    height: '100%'
   },
   media: {
     height: 0,
@@ -41,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  header: {
+    minHeight: 100
   }
 }));
 
@@ -72,46 +77,49 @@ const ProductCard = ({ product }) => {
 
   return (
     <Card className={classes.root}>
-      <CardHeader
-        avatar={(
-          <Avatar aria-label="demographics" className={classes.avatar}>
-            {product.demographic.charAt(0)}
-          </Avatar>
-        )}
-        action={(
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+      <div className={styles.CardContainer}>
+        <CardHeader
+          avatar={(
+            <Avatar aria-label="demographics" className={classes.avatar}>
+              {product.demographic.charAt(0)}
+            </Avatar>
+          )}
+          action={(
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          )}
+          className={classes.header}
+          title={product.name}
+          subheader={`${product.demographic} ${product.category} ${product.type}`}
+        />
+        <CardMedia
+          className={classes.media}
+          image={Constants.PLACEHOLDER_IMAGE}
+          title="placeholder"
+        />
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {product.description}
+          </Typography>
+          <br />
+          <Typography variant="body2" color="textSecondary" component="p">
+            Price: $
+            {product.price.toFixed(2)}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label="add to favorites">
+            <FavoriteIcon />
           </IconButton>
-        )}
-        title={product.name}
-        subheader={`${product.demographic} ${product.category} ${product.type}`}
-      />
-      <CardMedia
-        className={classes.media}
-        image={Constants.PLACEHOLDER_IMAGE}
-        title="placeholder"
-      />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {product.description}
-        </Typography>
-        <br />
-        <Typography variant="body2" color="textSecondary" component="p">
-          Price: $
-          {product.price.toFixed(2)}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <IconButton aria-label="add to shopping cart" onClick={onAdd}>
-          <AddShoppingCartIcon />
-        </IconButton>
-      </CardActions>
+          <IconButton aria-label="share">
+            <ShareIcon />
+          </IconButton>
+          <IconButton aria-label="add to shopping cart" onClick={onAdd}>
+            <AddShoppingCartIcon />
+          </IconButton>
+        </CardActions>
+      </div>
     </Card>
   );
 };

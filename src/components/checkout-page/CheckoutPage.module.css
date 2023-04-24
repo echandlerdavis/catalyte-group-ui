@@ -28,7 +28,7 @@
 }
 
 .payButton {
-  background: #666666;
+  background: #395aa1;
   border-radius: 20px;
   color: #EEEEEE;
   cursor: pointer;
@@ -38,21 +38,12 @@
   width: 75%;
 }
 
-.step {
-  background: #fff;
-  border-radius: 2px;
-  box-shadow: .2em .2em .2em rgba(0,0,0,0.23);
-  padding: 1em;
+.payButton:hover{
+  box-shadow: .75rem .25rem 1rem #b3b3b3;
 }
 
 .summary {
   grid-area: summary;
-}
-
-.title {
-  text-transform: uppercase;
-  color: #666666;
-  margin: 0 0 1em 0;
 }
 
 .useSameAddress {
@@ -63,4 +54,13 @@
 .sameAddressText {
   color: #666666;
   font-weight: 700;
+}
+
+.stepCard{
+  height: 87%;
+  margin-bottom: 2rem;
+}
+
+.stepCard:nth-of-type(3){
+  height: fit-content;
 }

@@ -1,55 +1,87 @@
-.App {
-  text-align: center;
+/*
+* Style sheet defines unified styles for app
+* Content: 
+* 21 - All elements
+* 25 - Content Tags (main, article, section)
+* 39 - Heading Tags
+* 70 - Links
+* 100 - Reusable Classes
+*/
+
+/*
+* Color Scheme
+* grey: #808080
+* light grey: #dcdcdc
+* blue: #395aa1
+* teal: #328298
+* white: #ffffff
+* red: #ff0000 - reserved for icons and badges
+* 
+*/
+
+*{
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
-
-.App-logo {
-  height: 40vmin;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: fit-content; /*There's a div in the GoogleLogin component that is set to a min of 20px*/
-  padding: 1vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: center;
-  position: sticky;
-  top: 0; left: 0;
-  font-size: calc(8px + 2vmin);
-  color: white;
-}
-
-.App-header > svg, button {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.App-header .App-logo {
-  margin-right: auto;
-  margin-left: 1vh;
-}
-
-.App-header > svg:hover, button:hover {
-  cursor: pointer;
-  fill: gainsboro;
-}
-
-
-.App-link {
-  color: #61dafb;
-}
-
+/* Content Tags */
 main{
   margin: 0 2rem 0 2rem;
   padding: 0 1rem 0 1rem;
   z-index: -500;
+}
+
+article{
+  margin: .5rem 0 1rem 0;
+}
+
+section{
+  margin: 1rem 0 1rem 0;
+}
+/* Heading Tags */
+h1{
+  color: #395aa1;
+}
+
+h2{
+  font-size: 1rem;
+  display: flex;
+  flex-direction: row;
+  color: #808080;
+  margin-bottom: 2rem;
+  text-transform: uppercase
+}
+
+/* h2 headings appear as -----[heading]----- */
+h2::before, h2::after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid grey;
+  margin: auto;
+  width: 5rem;
+}
+
+h2::before{
+  margin-right: 2rem;
+}
+
+h2::after{
+  margin-left: 2rem;
+}
+/* Links */
+a:link {
+  color: #328298;
+}
+
+a:visited{
+  color: #395aa1;
+}
+
+a:hover{
+  color:#b3b3b3;
+  box-shadow: .75rem .25rem 1rem #b3b3b3;
+}
+
+a:visited{
+  color: #395aa1;
 }
 
 @keyframes App-logo-spin {
@@ -60,7 +92,25 @@ main{
     transform: rotate(360deg);
   }
 }
+  
+header .App-logo {
+  margin-right: auto;
+  margin-left: 1vh;
+}
 
 .Set-to-front {
   z-index: 500;
 }
+/* A rounded corner white background with shadow */
+.Card{
+  padding: 1.75rem;
+  background-color: #ffffff;
+  border-radius: 2rem;
+  box-shadow: .75rem .25rem 1rem #b3b3b3;
+}
+
+.hoverShadow{
+  box-shadow: .75rem .25rem 1rem #b3b3b3;
+}
+
+
