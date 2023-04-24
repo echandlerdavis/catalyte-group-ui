@@ -52,23 +52,20 @@ const useStyles = makeStyles((theme) => ({
 export const productHasId = (product) => product.id !== undefined && product.id !== null;
 
 /**
+ * TODO: refactor to compare integers
  * Verify that there is enough inventory to handle the order
- * @param {product Object} product passed from server, not state.products
- * @param {array Product objects} orders prodcut array from state.products
+ * @param {int} inventoryQty quanity from product from the server; NOT state.prodcuts
+ * @param {int} orderQty quantity that the customer would like to order
  * @returns boolean
  */
-export const haveEnoughInventory = (product, orders) => {
-  const order = orders.filter((p) => p.id === product.id);
-  if (order.length === 0 && product.quantity > 0) { return true; }
-  return order.pop().quantity + 1 <= product.quantity;
-};
+export const haveEnoughInventory = (inventoryQty, orderQty) => inventoryQty >= orderQty;
 
 /**
  * Validate that the given product is valid
  * @param {Product object} product
  * @returns result Object {valid: boolean, errors: [string]}
  */
-export const validateProduct = (product, order) => {
+export const validateProduct = (product, orders) => {
   const result = {
     valid: true,
     errors: []
@@ -79,9 +76,14 @@ export const validateProduct = (product, order) => {
     result.errors.push('Product id cannot be null, undefined, and above 0.');
   }
   // Validate inventory
-  if (result.valid && !haveEnoughInventory(product, order)) {
-    result.valid = false;
-    result.errors.push('There is insufficient inventory for this product.');
+  // if product has no id, can't verify inventory
+  if (result.valid) {
+    // user has already clicked add icon, so orderQty is currenty orderQty + 1
+    const ordersQty = orders.filter((p) => p.id === product.id)[0].quantity + 1;
+    if (!haveEnoughInventory(product.quantity, ordersQty)) {
+      result.valid = false;
+      result.errors.push('There is insufficient inventory for this product.');
+    }
   }
 
   return result;

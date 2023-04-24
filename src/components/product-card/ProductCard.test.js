@@ -42,7 +42,7 @@ describe('consolidateOrder', () => {
 });
 
 describe('haveEnoughInventory', () => {
-  it('returns false if the inventory cannot cover an order of an ADDITIONAL item', () => {
+  it('returns false if the inventory cannot cover an order', () => {
     const expectedResult = false;
     const product = {
       id: 1,
@@ -52,7 +52,7 @@ describe('haveEnoughInventory', () => {
     const orders = [
       {
         id: 1,
-        quantity: 2,
+        quantity: 3,
         price: 9.99
       },
       {
@@ -61,11 +61,12 @@ describe('haveEnoughInventory', () => {
         price: 9.99
       }
     ];
-    const result = haveEnoughInventory(product, orders);
+    const result = haveEnoughInventory(product.quantity,
+      orders.filter((p) => p.id === product.id)[0].quantity);
     expect(result).toEqual(expectedResult);
   });
 
-  it('returns true if the inventory can cover an order of an ADDITIONAL item', () => {
+  it('returns true if the inventory can cover an order', () => {
     const expectedResult = true;
     const product = {
       id: 1,
@@ -75,7 +76,7 @@ describe('haveEnoughInventory', () => {
     const orders = [
       {
         id: 1,
-        quantity: 2,
+        quantity: 1,
         price: 9.99
       },
       {
@@ -84,7 +85,8 @@ describe('haveEnoughInventory', () => {
         price: 9.99
       }
     ];
-    const result = haveEnoughInventory(product, orders);
+    const result = haveEnoughInventory(product.quantity,
+      orders.filter((p) => p.id === product.id)[0].quantity);
     expect(result).toEqual(expectedResult);
   });
 });
