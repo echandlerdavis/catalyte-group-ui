@@ -4,13 +4,25 @@ import { useEffect } from 'react';
 
 const profilePage = () => {
     const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         fetch('/api/user')
-        .then(response => response.json())
-        .then(data => setUser(data))
-        .catch(error => console.error(error));
+        .then ((response) => {
+            if (response.status === 401) {
+                setIsLoggedIn(false);
+                throw new Error('User not authenticated');
+            }
+            setIsLoggedIn(true);
+            return response.json();
+        })
+        .then((data) => setUser(data))
+        .catch((error) => console.error(error));
     }, []);
+
+    if (!isLoggedIn) {
+        return <div>Please log in to continue to your user page</div>;
+    }
 
     if (!user) {
         return <div>Loading...</div>;
