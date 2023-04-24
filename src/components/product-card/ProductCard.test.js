@@ -95,29 +95,36 @@ describe('haveEnoughInventory', () => {
 });
 
 describe('validateOrder', () => {
-  const product = {
-    id: 1,
-    quantity: 2,
-    price: 9.99
-  };
+  const INVENTORY_QTY = 2;
+  const TEST_PRODUCT_ID = 1;
+  const PRICE = 9.99;
+
+  const product = {};
   const orders = [
     {
-      id: 1,
-      quantity: 2,
-      price: 9.99
     },
     {
-      id: 2,
-      quantity: 1,
-      price: 9.99
     }
   ];
+  beforeEach(() => {
+    // reset objects before each test
+    product.quantity = INVENTORY_QTY;
+    product.id = TEST_PRODUCT_ID;
+    product.price = PRICE;
+
+    orders[0].id = TEST_PRODUCT_ID;
+    orders[0].quantity = INVENTORY_QTY;
+    orders[0].price = PRICE;
+
+    orders[1].id = TEST_PRODUCT_ID + 1;
+    orders[1].quantity = INVENTORY_QTY + 1;
+    orders[1].price = PRICE + 1.00;
+  });
 
   it('returns false if product has invalid id', () => {
     const expectedResult = { valid: false, errors: [Constants.PRODUCT_MISSING_ID] };
     product.id = null;
     expect(validateOrder(product, orders)).toEqual(expectedResult);
-    product.id = 1;
   });
 
   it('returns false if order qty == inventory qty', () => {
@@ -129,5 +136,18 @@ describe('validateOrder', () => {
     orders.filter((p) => p.id === product.id)[0].quantity = (product.quantity - 1);
     const expectedResult = { valid: true, errors: [] };
     expect(validateOrder(product, orders)).toEqual(expectedResult);
+  });
+
+  it('returns true given an empty order array and qty is > 0', () => {
+    const emptyOrders = [];
+    const expectedResult = { valid: true, errors: [] };
+    expect(validateOrder(product, emptyOrders)).toEqual(expectedResult);
+  });
+
+  it('returns false givn an empty order array and inventory is 0', () => {
+    const emptyOrders = [];
+    product.quantity = 0;
+    const expectedResult = { valid: false, errors: [Constants.INSUFFICIENT_INVENTORY] };
+    expect(validateOrder(product, emptyOrders)).toEqual(expectedResult);
   });
 });

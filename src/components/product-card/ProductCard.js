@@ -52,13 +52,20 @@ const useStyles = makeStyles((theme) => ({
 export const productHasId = (product) => product.id !== undefined && product.id !== null;
 
 /**
- * TODO: refactor to compare integers
  * Verify that there is enough inventory to handle the order
  * @param {int} inventoryQty quanity from product from the server; NOT state.prodcuts
  * @param {int} orderQty quantity that the customer would like to order
  * @returns boolean
  */
 export const haveEnoughInventory = (inventoryQty, orderQty) => inventoryQty >= orderQty;
+
+/**
+ * Returns true if the given product is in the given orders
+ * @param {product} product
+ * @param {array} orders
+ * @returns boolean
+ */
+export const inOrder = (product, orders) => orders.filter((p) => p.id === product.id).length > 0;
 
 /**
  * Validate that the given product is valid
@@ -79,7 +86,9 @@ export const validateOrder = (product, orders) => {
   // if product has no id, can't verify inventory
   if (result.valid) {
     // user has already clicked add icon, so orderQty is currenty orderQty + 1
-    const ordersQty = orders.filter((p) => p.id === product.id)[0].quantity + 1;
+    const ordersQty = inOrder(product, orders)
+      ? orders.filter((p) => p.id === product.id)[0].quantity + 1
+      : 1;
     if (!haveEnoughInventory(product.quantity, ordersQty)) {
       result.valid = false;
       result.errors.push(Constants.INSUFFICIENT_INVENTORY);
