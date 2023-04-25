@@ -5,7 +5,6 @@ import ProductPage from '../product-page/ProductPage';
 import CheckoutPage from '../checkout-page/CheckoutPage';
 import ConfirmationPage from '../confirmation-page/ConfirmationPage';
 import MaintenancePage from '../maintenance-page/MaintenancePage';
-// import NewProductPage from '../new-product-page/NewProductPage';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
 /**
