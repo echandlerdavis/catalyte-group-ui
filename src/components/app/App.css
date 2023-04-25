@@ -84,9 +84,12 @@ a:visited{
   color: #395aa1;
 }
 
-/* a:visited{
-  color: #395aa1;
-} */
+.Container{
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 @keyframes App-logo-spin {
   from {

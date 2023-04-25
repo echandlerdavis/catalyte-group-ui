@@ -6,22 +6,28 @@ import CheckoutPage from '../checkout-page/CheckoutPage';
 import ConfirmationPage from '../confirmation-page/ConfirmationPage';
 import MaintenancePage from '../maintenance-page/MaintenancePage';
 import Header from '../header/Header';
+import Footer from '../footer/Footer';
 /**
  * @name App
  * @returns component
  */
 const App = () => (
-  <BrowserRouter>
-    <Header />
-    <main>
-      <Switch>
-        <Route exact path="/" render={() => <ProductPage />} />
-        <Route exact path="/checkout" render={() => <CheckoutPage />} />
-        <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
-        <Route exact path="/maintenance" render={() => <MaintenancePage />} />
-      </Switch>
-    </main>
-  </BrowserRouter>
+  <div className="App">
+    <div className="Container">
+      <BrowserRouter>
+        <Header />
+        <main>
+          <Switch>
+            <Route exact path="/" render={() => <ProductPage />} />
+            <Route exact path="/checkout" render={() => <CheckoutPage />} />
+            <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
+            <Route exact path="/maintenance" render={() => <MaintenancePage />} />
+          </Switch>
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </div>
+  </div>
 );
 
 export default App;
