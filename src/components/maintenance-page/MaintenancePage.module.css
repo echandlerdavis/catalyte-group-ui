@@ -1,14 +1,23 @@
-button{
-    background: #395aa1;
-    border-radius: 20px;
-    border-color: #EEEEEE;
-    color: #EEEEEE;
-    font-weight: 600px;
-    height: 3em;
-    justify-self: center;
-    padding: 0 .5em;
+.maintenanceHeader{
+    display: flex;
+    justify-content: space-between;
+}
+.buttonSection{
+    display: flex;
+    justify-content: center;
+    margin: .15rem;
+    padding: .15rem;
 }
 
-button:hover{
-    box-shadow: .75rem .25rem 1rem #b3b3b3;
+.buttonHeader{
+    margin: .05rem;
+}
+
+.maintenanceHeader h2{
+    margin: 0;
+    padding: 0;
+}
+
+.maintenanceHeader section{
+    margin: .05rem 0;
 }
