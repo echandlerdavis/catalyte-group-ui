@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FormItem from '../form/FormItem';
 import './NewProductPage.module.css';
 
-const NewProductPage = () => {
+const NewProductPage = ({ history }) => {
   const initialFormData = {
     brand: '',
     imageSrc: '',
@@ -43,6 +43,10 @@ const NewProductPage = () => {
             label={attribute}
           />
         ))}
+        <div>
+          <button type="button" onClick={() => history.goBack()}>Cancel</button>
+          <button type="submit">Submit</button>
+        </div>
       </form>
     </section>
   );

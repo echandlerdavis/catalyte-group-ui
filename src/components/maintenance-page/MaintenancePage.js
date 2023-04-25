@@ -45,7 +45,7 @@ const MaintenancePage = () => {
        */}
       <Switch>
         <Route exact path="/maintenance/new">
-          <NewProductPage />
+          <NewProductPage history={history} />
         </Route>
         <Route path="">
           {mainComponent}
