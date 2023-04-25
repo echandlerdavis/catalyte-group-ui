@@ -64,3 +64,12 @@
 .stepCard:nth-of-type(3){
   height: fit-content;
 }
+
+.stepCard{
+  height: 87%;
+  margin-bottom: 2rem;
+}
+
+.stepCard:nth-of-type(3){
+  height: fit-content;
+}
