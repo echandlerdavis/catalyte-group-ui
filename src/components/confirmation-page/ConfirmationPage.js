@@ -1,4 +1,5 @@
 import React from 'react';
+import AppAlert from '../alert/Alert';
 
 /**
  * @name ProductPage
@@ -6,9 +7,7 @@ import React from 'react';
  * @return component
  */
 const ProductPage = () => (
-  <div>
-    Order success!
-  </div>
+  <AppAlert severity="success" title="Success" message="Order Success!" />
 );
 
 export default ProductPage;

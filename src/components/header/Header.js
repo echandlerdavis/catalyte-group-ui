@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import Toast from '../toast/Toast';
+import './Header.module.css';
 
 /**
  * @name Header
@@ -98,7 +99,7 @@ const Header = () => {
   };
 
   return (
-    <div id="header" className="App-header Set-to-front">
+    <header id="header" className="Set-to-front">
       <AllInclusive className="App-logo" onClick={handleLogoClick} />
       <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
       <ShoppingCartIcon onClick={handleCartClick} />
@@ -123,8 +124,12 @@ const Header = () => {
         />
       )}
       <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
+<<<<<<< HEAD
       {user && <Button onClick={handleProfileClick} variant="conatained" style={{ color: 'white' }}>Profile</Button>}
     </div>
+=======
+    </header>
+>>>>>>> b9dba3d386d14482cad608c5f6d2024a8ea99771
   );
 };
 

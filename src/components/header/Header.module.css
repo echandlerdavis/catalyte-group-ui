@@ -1,0 +1,29 @@
+
+  header {
+    background-color: #282c34;
+    min-height: fit-content; /*There's a div in the GoogleLogin component that is set to a min of 20px*/
+    padding: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    font-size: calc(8px + 2vmin);
+    color: white;
+  }
+  
+  header > svg,
+  button {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  header > svg:hover,
+  button:hover {
+    cursor: pointer;
+    fill: gainsboro;
+  }
+
+  
