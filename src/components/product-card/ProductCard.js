@@ -151,7 +151,7 @@ const ProductCard = ({ product }) => {
     const productErrors = validateOrder(product, products).errors;
     if (productErrors.length > 0) {
       // use the toast to display an error
-      setToastData(Constants.ADD_PRODUCT_FAILURES(productErrors));
+      setToastData(Constants.ADD_PRODUCT_FAILURE(productErrors));
       openToast();
       return;
     }
