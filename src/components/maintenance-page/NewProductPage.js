@@ -36,8 +36,7 @@ const NewProductPage = ({ history, setApiError }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    SaveProduct(formData, setApiError);
-    // history.push('/maintenace');
+    SaveProduct(formData, setApiError, history);
   };
 
   return (
