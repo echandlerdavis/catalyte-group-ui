@@ -8,7 +8,6 @@ import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import Toast from '../toast/Toast';
 import './Header.module.css';
-import './Header.module.css';
 
 /**
  * @name Header
