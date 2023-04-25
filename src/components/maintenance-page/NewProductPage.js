@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FormItem from '../form/FormItem';
-import './NewProductPage.module.css';
+import styles from './NewProductPage.module.css';
 
 const NewProductPage = ({ history }) => {
   const initialFormData = {
@@ -35,17 +35,19 @@ const NewProductPage = ({ history }) => {
     <section>
       <h2>New Product</h2>
       <form className="Card">
-        {Object.keys(initialFormData).map((attribute) => (
-          <FormItem
-            onChange={handleFormChange}
-            value={formData[attribute]}
-            id={attribute}
-            label={attribute}
-          />
-        ))}
-        <div>
-          <button type="button" onClick={() => history.goBack()}>Cancel</button>
-          <button type="submit">Submit</button>
+        <div className={styles.fieldContainer}>
+          {Object.keys(initialFormData).map((attribute) => (
+            <FormItem
+              onChange={handleFormChange}
+              value={formData[attribute]}
+              id={attribute}
+              label={attribute}
+            />
+          ))}
+          <div className={styles.formButtonContainer}>
+            <button type="button" onClick={() => history.goBack()}>Cancel</button>
+            <button type="submit">Submit</button>
+          </div>
         </div>
       </form>
     </section>
