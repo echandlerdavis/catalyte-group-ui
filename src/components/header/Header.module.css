@@ -1,0 +1,42 @@
+
+  #header {
+    background-color: #282c34;
+    min-height: fit-content; /*There's a div in the GoogleLogin component that is set to a min of 20px*/
+    padding: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    font-size: calc(8px + 2vmin);
+    color: white;
+  }
+  
+  #header > svg,
+  button {
+    margin-left: 2vh;
+    margin-right: 2px;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  
+  #header > svg:hover,
+  button:hover, span:hover {
+    cursor: pointer;
+    fill: gainsboro;
+  }
+
+#header .appLogo {
+  margin-right: auto;
+  margin-left: 1vh;
+}
+
+#header .optionalText {
+  flex-basis: 10vh;
+  font-size: 1.75vh;
+}
+
+
+  

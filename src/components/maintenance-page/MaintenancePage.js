@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
-import ErrorAlert from '../error-alert/ErrorAlert';
+import AppAlert from '../alert/Alert';
 
 /**
  * @name MaintenancePage
@@ -20,7 +20,7 @@ const MaintenancePage = () => {
   return (
     <article>
       <h1>Maintenance</h1>
-      {apiError && <ErrorAlert errorMsg={apiError} />}
+      {apiError && <AppAlert severity="error" title="Error" message={apiError} />}
       <section>
         <h2>Products</h2>
         <ProductTable products={products} />

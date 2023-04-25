@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((
   {
     anchorOriginTopRightRectangle: {
-      right: 'auto',
-      left: '.5vh'
+      marginRight: 'auto',
+      marginLeft: '1.5vh'
     }
   }));
 
@@ -21,15 +21,17 @@ const useStyles = makeStyles((
  * @param {*} displayValue - Value that will be displayed in badge
  * @returns basIcon with a badge in the upper left corner
  */
-const IconWithBadge = ({ baseIcon, displayValue, styleClass }) => {
+const IconWithBadge = ({ baseIcon, displayValue }) => {
   const muiClasses = useStyles();
 
   return (
     <Badge
       overlap="rectangular"
-      className={styleClass}
-      classes={{ anchorOriginTopRightRectangular: muiClasses.anchorOriginTopRightRectangular }}
       badgeContent={displayValue}
+      classes={{
+        anchorOriginTopRightRectangular: muiClasses.anchorOriginTopRightRectangle
+      }}
+      color="secondary"
     >
       {baseIcon}
     </Badge>

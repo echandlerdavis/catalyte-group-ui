@@ -7,6 +7,7 @@ import loginUser from './HeaderService';
 import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
+import styles from './Header.module.css';
 
 /**
  * @name Header
@@ -83,15 +84,14 @@ const Header = () => {
   };
 
   return (
-    <div id="header" className="App-header Set-to-front">
-      <AllInclusive className="App-header-margin App-logo" onClick={handleLogoClick} />
-      {googleError && <span className="App-header-margin">{googleError}</span>}
-      {apiError && <span className="App-header-margin">Api Error</span>}
+    <div id={styles.header} className="Set-to-front">
+      <AllInclusive className={styles.appLogo} onClick={handleLogoClick} />
+      {googleError && <span>{googleError}</span>}
+      {apiError && <span>Api Error</span>}
       {iconWithBadge(
         {
           baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
-          displayValue: products.length,
-          styleClass: 'App-header-margin'
+          displayValue: products.length
         }
       )}
       {!user ? (
@@ -101,7 +101,6 @@ const Header = () => {
           onSuccess={handleGoogleLoginSuccess}
           onFailure={handleGoogleLoginFailure}
           cookiePolicy="single_host_origin"
-          className="App-header-margin"
         />
       ) : (
         <GoogleLogout
@@ -109,11 +108,10 @@ const Header = () => {
           buttonText="Logout"
           onLogoutSuccess={handleGoogleLogoutSuccess}
           onFailure={handleGoogleLogoutFailure}
-          className="App-header-margin"
         />
       )}
       {
-        <span className="App-header-margin App-header-optional-text" style={{ flexBasis: '10vh' }}>
+        <span className={styles.optionalText} style={{ flexBasis: '10vh' }}>
           {user && `${user.firstName} ${user.lastName}`}
         </span>
       }
