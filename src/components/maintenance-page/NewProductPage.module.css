@@ -21,5 +21,10 @@ form{
     justify-content: space-between!important;
     flex-basis: 90%!important;
     margin-top: 2em;
-    color: #9b2020;
+    border-color: #b00c00,
+
+}
+
+label{
+    text-transform: capitalize;
 }

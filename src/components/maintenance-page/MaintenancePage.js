@@ -37,7 +37,7 @@ const MaintenancePage = () => {
       <h2>Create New</h2>
       <div className={styles.buttonSection}>
         <Button
-          style={{ backgroundColor: '#395aa1', color: 'white' }}
+          style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
           disabled={false}
           size="small"
           variant="contained"

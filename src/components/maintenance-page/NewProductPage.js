@@ -51,16 +51,26 @@ const NewProductPage = ({ history }) => {
               type="button"
               startIcon={<Cancel />}
               onClick={() => history.goBack()}
-              variant="contained"
-              style={{ backgroundColor: '#f44336', color: 'white' }}
+              variant="outlined"
+              style={{
+                backgroundColor: '#e99393',
+                borderColor: '#b00c00',
+                color: '#b00c00',
+                borderRadius: 20
+              }}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              variant="contained"
+              variant="outlined"
               startIcon={<Save />}
-              style={{ backgroundColor: '#395aa1', color: 'white' }}
+              style={{
+                backgroundColor: '#b0e5b0',
+                borderColor: '#2f662f',
+                color: '#2f662f',
+                borderRadius: 20
+              }}
             >
               Submit
             </Button>
