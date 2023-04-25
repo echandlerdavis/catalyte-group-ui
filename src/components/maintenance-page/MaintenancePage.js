@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
@@ -19,11 +19,21 @@ const MaintenancePage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
+  const history = useHistory();
+
   const mainComponent = (
-    <section>
-      <h2>Products</h2>
-      <ProductTable products={products} />
-    </section>
+    <>
+      <section>
+        <h2>Create New</h2>
+        <div className="Card">
+          <button type="button" onClick={() => history.push('/maintenance/new')}>New Product</button>
+        </div>
+      </section>
+      <section>
+        <h2>Products</h2>
+        <ProductTable products={products} />
+      </section>
+    </>
   );
 
   return (
