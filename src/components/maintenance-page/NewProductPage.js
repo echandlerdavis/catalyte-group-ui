@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormItem from '../form/FormItem';
+import './NewProductPage.module.css';
 
 const NewProductPage = () => {
   const initialFormData = {
