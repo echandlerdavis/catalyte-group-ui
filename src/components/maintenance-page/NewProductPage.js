@@ -3,8 +3,9 @@ import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
 import FormItem from '../form/FormItem';
 import styles from './NewProductPage.module.css';
+import SaveProduct from './NewProductPageService';
 
-const NewProductPage = ({ history }) => {
+const NewProductPage = ({ history, setApiError }) => {
   const initialFormData = {
     brand: '',
     imageSrc: '',
@@ -33,10 +34,16 @@ const NewProductPage = ({ history }) => {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    SaveProduct(formData, setApiError);
+    // history.push('/maintenace');
+  };
+
   return (
     <section>
       <h2>New Product</h2>
-      <form className="Card">
+      <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
           {Object.keys(initialFormData).map((attribute) => (
             <FormItem
