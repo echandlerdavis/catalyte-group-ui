@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Button } from '@material-ui/core';
+import { Save, Cancel } from '@material-ui/icons';
 import FormItem from '../form/FormItem';
 import styles from './NewProductPage.module.css';
 
@@ -45,8 +47,23 @@ const NewProductPage = ({ history }) => {
             />
           ))}
           <div className={styles.formButtonContainer}>
-            <button type="button" onClick={() => history.goBack()}>Cancel</button>
-            <button type="submit">Submit</button>
+            <Button
+              type="button"
+              startIcon={<Cancel />}
+              onClick={() => history.goBack()}
+              variant="contained"
+              style={{ backgroundColor: '#f44336', color: 'white' }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<Save />}
+              style={{ backgroundColor: '#395aa1', color: 'white' }}
+            >
+              Submit
+            </Button>
           </div>
         </div>
       </form>
