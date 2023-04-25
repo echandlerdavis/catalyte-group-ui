@@ -7,7 +7,7 @@ import './Footer.css';
 function Copyright() {
   const copyright = String.fromCodePoint(0x00A9);
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2">
       {new Date().getFullYear()}
       {' Sports Apparel, Inc.'}
       {copyright}

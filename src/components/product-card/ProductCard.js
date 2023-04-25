@@ -128,7 +128,10 @@ export const consolidateOrder = (product, duplicates, order) => {
 const ProductCard = ({ product }) => {
   const classes = useStyles();
   const [open, setOpenToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
 
   const closeToast = () => {
     setOpenToast(false);
@@ -148,12 +151,12 @@ const ProductCard = ({ product }) => {
     const productErrors = validateOrder(product, products).errors;
     if (productErrors.length > 0) {
       // use the toast to display an error
-      setToastMessage(Constants.ADD_PRODUCT_FAILURES(productErrors));
+      setToastData(Constants.ADD_PRODUCT_FAILURES(productErrors));
       openToast();
       return;
     }
     // set the success message
-    setToastMessage(Constants.ADD_PRODUCT_SUCCESS(product.description));
+    setToastData(Constants.ADD_PRODUCT_SUCCESS(product.description));
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
@@ -191,7 +194,12 @@ const ProductCard = ({ product }) => {
   return (
     <Card className={classes.root}>
       <div className={styles.CardContainer}>
-        <Toast message={toastMessage} open={open} handleClose={closeToast} />
+        <Toast
+          message={toastData.MESSAGE}
+          open={open}
+          severity={toastData.SEVERITY}
+          handleClose={closeToast}
+        />
         <CardHeader
           avatar={(
             <Avatar aria-label="demographics" className={classes.avatar}>
