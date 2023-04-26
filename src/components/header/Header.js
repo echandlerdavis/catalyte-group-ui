@@ -125,9 +125,12 @@ const Header = () => {
         />
       )}
       <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
-      {user && <Button onClick={handleProfileClick} variant="conatained" color="primary">
-        <AccountCircleIcon /> {/* Profile icon */} 
-        </Button>}
+      {user && (
+        <Button onClick={handleProfileClick} variant="contained" color="primary">
+          <AccountCircleIcon style={{ backgroundColor: 'transparent' }} />
+          {/* Profile icon */}
+        </Button>
+      )}
     </header>
   );
 };

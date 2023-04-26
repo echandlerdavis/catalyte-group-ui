@@ -41,7 +41,10 @@ const ProfilePage = () => {
         </p>
         <p>
           <strong>Shipping Address:</strong>
-          {user.shippingAddress.street}, {user.shippingAddress.city}, {user.shippingAddress.state}, {user.shippingAddress.zip}
+          {user.shippingAddress.street}
+          {user.shippingAddress.city}
+          {user.shippingAddress.state}
+          {user.shippingAddress.zip}
         </p>
       </div>
     </div>
