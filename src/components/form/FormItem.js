@@ -21,6 +21,7 @@ const FormItem = ({
           placeholder={placeholder}
           type={type}
           value={value}
+          checked={value}
         />
       </div>
     </label>

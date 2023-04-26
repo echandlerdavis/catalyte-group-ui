@@ -7,6 +7,9 @@ import SaveProduct from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 
 const NewProductPage = ({ history, setApiError }) => {
+  const date = new Date();
+  const initialReleaseDate = date.toISOString().split('T')[0];
+
   const initialFormData = {
     brand: '',
     imageSrc: '',
@@ -18,7 +21,7 @@ const NewProductPage = ({ history, setApiError }) => {
     demographic: '',
     category: '',
     type: '',
-    releaseDate: Date.now(),
+    releaseDate: initialReleaseDate,
     styleNumber: '',
     globalProductCode: '',
     primaryColorCode: '#328298',
@@ -42,7 +45,7 @@ const NewProductPage = ({ history, setApiError }) => {
     demographic: 'text',
     category: 'text',
     type: 'text',
-    releaseDate: 'datetime-local',
+    releaseDate: 'date',
     styleNumber: 'text',
     globalProductCode: 'text',
     primaryColorCode: 'color',
@@ -51,9 +54,13 @@ const NewProductPage = ({ history, setApiError }) => {
   };
 
   const handleFormChange = ({ target }) => {
+    let { value } = target;
+    if (target.type === 'checkbox') {
+      value = !formData[target.id];
+    }
     setFormData({
       ...formData,
-      [target.id]: target.value
+      [target.id]: value
     });
   };
 
