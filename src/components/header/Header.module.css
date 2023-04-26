@@ -21,7 +21,7 @@
   }
   
   header > svg:hover,
-  button:hover {
+  button:hover, img:hover {
     cursor: pointer;
     fill: gainsboro;
   }

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, createElement } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import loginUser from './HeaderService';
-import constants from '../../utils/constants';
 import Toast from '../toast/Toast';
 import './Header.module.css';
+import constants from '../../utils/constants';
+import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
 
 /**
  * @name Header
@@ -90,9 +90,16 @@ const Header = () => {
     history.push('/checkout');
   };
 
+  const logo = createElement('img', {
+    src: javaTheHuttLogo,
+    alt: constants.LOGO_ALT,
+    className: 'App-logo',
+    onClick: handleLogoClick
+  });
+
   return (
     <header id="header" className="Set-to-front">
-      <AllInclusive className="App-logo" onClick={handleLogoClick} />
+      {logo}
       <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
       <ShoppingCartIcon onClick={handleCartClick} />
       {user && <span>{user.firstName}</span>}
