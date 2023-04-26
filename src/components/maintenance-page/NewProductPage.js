@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
-import FormItem from '../form/FormItem';
+import FormItemDataList from '../form/FormItemDataList';
 import styles from './NewProductPage.module.css';
 import SaveProduct from './NewProductPageService';
 
@@ -53,7 +53,7 @@ const NewProductPage = ({ history, setApiError }) => {
     });
   };
 
-  console.log(formData);
+  const options = ['test1', 'test2'];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,12 +66,13 @@ const NewProductPage = ({ history, setApiError }) => {
       <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
           {Object.keys(formInputTypes).map((attribute) => (
-            <FormItem
+            <FormItemDataList
               onChange={handleFormChange}
               value={formData[attribute]}
               id={attribute}
               type={formInputTypes[attribute]}
               label={attribute}
+              options={options}
             />
           ))}
           <div className={styles.formButtonContainer}>

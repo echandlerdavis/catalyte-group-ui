@@ -10,13 +10,13 @@ const FormItem = ({
   onChange, value, id, label, placeholder, type
 }) => (
 
-  <div>
+  <div key={`input${id}`}>
     <label className={styles.label} htmlFor={id}>
       {label}
       <div>
         <input
           className={styles.input}
-          id={id}
+          id={`${id}-input`}
           onChange={onChange}
           placeholder={placeholder}
           type={type}
