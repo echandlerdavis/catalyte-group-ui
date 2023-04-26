@@ -18,14 +18,33 @@ const NewProductPage = ({ history, setApiError }) => {
     category: '',
     type: '',
     releaseDate: Date.now(),
-    primaryColorCode: '',
-    secondaryColorCode: '',
     styleNumber: '',
     globalProductCode: '',
+    primaryColorCode: '#328298',
+    secondaryColorCode: '#395aa1',
     active: true
   };
 
   const [formData, setFormData] = useState(initialFormData);
+
+  const formInputTypes = {
+    brand: 'text',
+    imageSrc: 'text',
+    material: 'text',
+    price: 'number',
+    quantity: 'number',
+    name: 'text',
+    description: 'text',
+    demographic: 'text',
+    category: 'text',
+    type: 'text',
+    releaseDate: 'datetime-local',
+    styleNumber: 'text',
+    globalProductCode: 'text',
+    primaryColorCode: 'color',
+    secondaryColorCode: 'color',
+    active: 'checkbox'
+  };
 
   const handleFormChange = ({ target }) => {
     setFormData({
@@ -33,6 +52,8 @@ const NewProductPage = ({ history, setApiError }) => {
       [target.id]: target.value
     });
   };
+
+  console.log(formData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,11 +65,12 @@ const NewProductPage = ({ history, setApiError }) => {
       <h2>New Product</h2>
       <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
-          {Object.keys(initialFormData).map((attribute) => (
+          {Object.keys(formInputTypes).map((attribute) => (
             <FormItem
               onChange={handleFormChange}
               value={formData[attribute]}
               id={attribute}
+              type={formInputTypes[attribute]}
               label={attribute}
             />
           ))}
