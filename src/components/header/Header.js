@@ -128,7 +128,6 @@ const Header = () => {
       {user && <Button onClick={handleProfileClick} variant="conatained" color="primary">
         <AccountCircleIcon /> {/* Profile icon */} 
         </Button>}
-    </div>
     </header>
   );
 };
