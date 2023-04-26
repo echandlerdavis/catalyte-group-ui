@@ -40,8 +40,8 @@ const ProfilePage = () => {
           {user.email}
         </p>
         <p>
-          <strong>Role:</strong>
-          {user.role}
+          <strong>Shipping Address:</strong>
+          {user.shippingAddress.street}, {user.shippingAddress.city}, {user.shippingAddress.state}, {user.shippingAddress.zip}
         </p>
       </div>
     </div>
