@@ -77,7 +77,7 @@ const Header = () => {
   };
   /**
    * @name handleCartClick
-   * @description Redirect the page to / when clicked
+   * @description Redirect the page to /checkout when clicked
    */
   const handleCartClick = () => {
     history.push('/checkout');
