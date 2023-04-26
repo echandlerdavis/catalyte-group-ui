@@ -132,3 +132,47 @@ export const GetProductDemographics = async (setApiError, setAttribute) => {
       setApiError(true);
     });
 };
+
+/**
+ *
+ * @name GetProductPrimaryColors
+ * @description Utilizes HttpHelper to make a get request to an API
+ * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the primary color array to
+ * @returns returns the array list of distinct product primary colors
+ */
+export const GetProductPrimaryColors = async (setApiError, setAttribute) => {
+  await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(Constants.API_ERROR);
+    })
+    .then((data) => setAttribute((prev) => ({ ...prev, primaryColorCode: data })))
+    .catch(() => {
+      setApiError(true);
+    });
+};
+
+/**
+ *
+ * @name GetProductSecondaryColors
+ * @description Utilizes HttpHelper to make a get request to an API
+ * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the secondary color array to
+ * @returns returns the array list of distinct product secondary colors
+ */
+export const GetProductSecondaryColors = async (setApiError, setAttribute) => {
+  await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(Constants.API_ERROR);
+    })
+    .then((data) => setAttribute((prev) => ({ ...prev, secondaryColorCode: data })))
+    .catch(() => {
+      setApiError(true);
+    });
+};

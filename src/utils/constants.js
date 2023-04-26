@@ -16,6 +16,8 @@ module.exports = Object.freeze({
   CATEGORIES_ENDPOINT: '/products/categories',
   MATERIALS_ENDPOINT: '/products/materials',
   TYPES_ENDPOINT: '/products/types',
+  PRIMARY_COLOR_ENDPOINT: '/products/primarycolors',
+  SECONDARY_COLOR_ENDPOINT: '/products/secondarycolors',
   DEMOGRAPHICS_ENDPOINT: '/products/demographics',
   GOOGLE_CLIENT_ID: '912899852587-7996nh9mlpvpa2446q0il4f9hj5o492h.apps.googleusercontent.com', // ENTER CLIENT ID HERE
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',

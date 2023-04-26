@@ -10,7 +10,9 @@ import {
   GetProductCategories,
   GetProductDemographics,
   GetProductMaterials,
-  GetProductTypes
+  GetProductTypes,
+  GetProductPrimaryColors,
+  GetProductSecondaryColors
 } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 
@@ -49,6 +51,8 @@ const NewProductPage = ({ history, setApiError }) => {
     GetProductDemographics(setApiError, setDistinctAtrributes);
     GetProductMaterials(setApiError, setDistinctAtrributes);
     GetProductTypes(setApiError, setDistinctAtrributes);
+    GetProductPrimaryColors(setApiError, setDistinctAtrributes);
+    GetProductSecondaryColors(setApiError, setDistinctAtrributes);
   };
 
   useEffect(() => {
