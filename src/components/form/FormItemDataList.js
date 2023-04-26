@@ -10,7 +10,7 @@ const FormItemDataList = ({
   onChange, value, id, label, placeholder, type, options
 }) => (
 
-  <div>
+  <div key={id}>
     <label className={styles.label} htmlFor={id}>
       {label}
       <div>
@@ -25,7 +25,7 @@ const FormItemDataList = ({
           name={id}
         />
         <datalist id={`${id}-List`}>
-          {options.map((option, idx) => (<option value={option} id={idx} />))}
+          {options.map((option, idx) => (<option key={`${id}-${option}`} value={option} id={idx} />))}
         </datalist>
       </div>
     </label>

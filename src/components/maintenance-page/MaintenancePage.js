@@ -42,7 +42,7 @@ const MaintenancePage = () => {
           size="small"
           variant="contained"
           startIcon={<Add />}
-          onClick={() => history.push('maintenance/new')}
+          onClick={() => history.push('/maintenance/new')}
         >
           Product
         </Button>

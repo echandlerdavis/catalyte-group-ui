@@ -4,6 +4,7 @@ import { Save, Cancel } from '@material-ui/icons';
 import FormItemDataList from '../form/FormItemDataList';
 import styles from './NewProductPage.module.css';
 import SaveProduct from './NewProductPageService';
+import AppAlert from '../alert/Alert';
 
 const NewProductPage = ({ history, setApiError }) => {
   const initialFormData = {
@@ -26,6 +27,7 @@ const NewProductPage = ({ history, setApiError }) => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const [formError, setFormError] = useState(false);
 
   const formInputTypes = {
     brand: 'text',
@@ -55,18 +57,49 @@ const NewProductPage = ({ history, setApiError }) => {
 
   const options = ['test1', 'test2'];
 
+  const validateFieldsNotEmpty = () => (
+    Object.keys(formData).filter((key) => formData[key].length === 0)
+  );
+
+  const validatePriceTwoDecimals = () => {
+    const priceArray = formData.price.split('.');
+    return (priceArray.length !== 2 || priceArray[1].length !== 2);
+  };
+
+  const validateFormData = () => {
+    const emptyFields = validateFieldsNotEmpty();
+    const priceInvalid = validatePriceTwoDecimals();
+    return { emptyFields, priceInvalid };
+  };
+
+  const generateError = () => {
+    const { emptyFields, priceInvalid } = validateFormData();
+    if (emptyFields.length) {
+      const emptyFieldsString = emptyFields.join(', ');
+      setFormError(`The following fields can not be null: ${emptyFieldsString}`);
+    }
+    if (priceInvalid) {
+      setFormError((prev) => `${prev} AND Price must be a number with two decimals`);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    SaveProduct(formData, setApiError, history);
+    generateError();
+    if (formError.length === 0) {
+      SaveProduct(formData, setApiError, history);
+    }
   };
 
   return (
     <section>
       <h2>New Product</h2>
+      {formError && <AppAlert severity="error" title="Error" message={formError} />}
       <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
           {Object.keys(formInputTypes).map((attribute) => (
             <FormItemDataList
+              key={attribute}
               onChange={handleFormChange}
               value={formData[attribute]}
               id={attribute}
