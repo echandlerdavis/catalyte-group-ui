@@ -90,15 +90,6 @@ a:visited{
   display: flex;
   flex-direction: column;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
   
 header .App-logo {
   margin-right: auto;
