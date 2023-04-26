@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './profilepage.module.css';
+import fetchUser from './profilepageservice';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -15,7 +16,7 @@ const ProfilePage = () => {
         setIsLoggedIn(true);
         return response.json();
       })
-      .then((data) => setUser(data))
+      .then((data) => fetchUser(data.email, setUser, console.error))
       .catch((error) => console.error(error));
   }, []);
 
@@ -32,7 +33,6 @@ const ProfilePage = () => {
       <h1>
         {user.firstName}
         {user.lastName}
-        Profile
       </h1>
       <div className={styles.info}>
         <p>
