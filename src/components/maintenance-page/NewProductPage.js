@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
 import FormItemDataList from '../form/FormItemDataList';
+import FormItem from '../form/FormItem';
 import styles from './NewProductPage.module.css';
-import SaveProduct from './NewProductPageService';
+import {
+  SaveProduct,
+  GetProductBrands,
+  GetProductCategories,
+  GetProductDemographics,
+  GetProductMaterials,
+  GetProductTypes
+} from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 
 const NewProductPage = ({ history, setApiError }) => {
@@ -33,6 +41,20 @@ const NewProductPage = ({ history, setApiError }) => {
   const [formError, setFormError] = useState(false);
   const [emptyFields, setEmptyFields] = useState();
   const [priceIsInvalid, setPriceIsInvalid] = useState(false);
+  const [distinctAttributes, setDistinctAtrributes] = useState();
+
+  const loadProductAttributeOptions = () => {
+    GetProductBrands(setApiError, setDistinctAtrributes);
+    GetProductCategories(setApiError, setDistinctAtrributes);
+    GetProductDemographics(setApiError, setDistinctAtrributes);
+    GetProductMaterials(setApiError, setDistinctAtrributes);
+    GetProductTypes(setApiError, setDistinctAtrributes);
+  };
+
+  useEffect(() => {
+    loadProductAttributeOptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formInputTypes = {
     brand: 'text',
@@ -63,8 +85,6 @@ const NewProductPage = ({ history, setApiError }) => {
       [target.id]: value
     });
   };
-
-  const options = ['test1', 'test2'];
 
   const validateFieldsNotEmpty = () => (
     Object.keys(formData).filter((key) => formData[key].length === 0)
@@ -116,15 +136,28 @@ const NewProductPage = ({ history, setApiError }) => {
             if (attribute === 'price' && priceIsInvalid) {
               styleClass = styles.invalidField;
             }
+            if (distinctAttributes && Object.keys(distinctAttributes).includes(attribute)) {
+              return (
+                <FormItemDataList
+                  key={attribute}
+                  onChange={handleFormChange}
+                  value={formData[attribute]}
+                  id={attribute}
+                  type={formInputTypes[attribute]}
+                  label={attribute}
+                  options={distinctAttributes[attribute]}
+                  className={styleClass}
+                />
+              );
+            }
             return (
-              <FormItemDataList
+              <FormItem
                 key={attribute}
                 onChange={handleFormChange}
                 value={formData[attribute]}
                 id={attribute}
                 type={formInputTypes[attribute]}
                 label={attribute}
-                options={options}
                 className={styleClass}
               />
             );

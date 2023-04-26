@@ -14,7 +14,7 @@ export const SaveProduct = async (product, setApiError, history) => {
     .then((response) => {
       if (response.ok) {
         history.push('/maintenance');
-        return response.json();
+        return response.json;
       }
       throw new Error(Constants.API_ERROR);
     })
@@ -25,12 +25,13 @@ export const SaveProduct = async (product, setApiError, history) => {
 
 /**
  *
- * @name getProductBrands
+ * @name GetProductBrands
  * @description Utilizes HttpHelper to make a get request to an API
  * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the brands array to
  * @returns returns the array list of distinct product brands
  */
-export const getProductBrands = async (setApiError) => {
+export const GetProductBrands = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.BRANDS_ENDPOINT, 'GET')
     .then((response) => {
       if (response.ok) {
@@ -38,19 +39,21 @@ export const getProductBrands = async (setApiError) => {
       }
       throw new Error(Constants.API_ERROR);
     })
+    .then((data) => setAttribute((prev) => ({ ...prev, brand: data })))
     .catch(() => {
-      setApiError(Constants.API_ERROR);
+      setApiError(true);
     });
 };
 
 /**
  *
- * @name getProductCategories
+ * @name GetProductCategories
  * @description Utilizes HttpHelper to make a get request to an API
  * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the categories array to
  * @returns returns the array list of distinct product categories
  */
-export const getCategories = async (setApiError) => {
+export const GetProductCategories = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.CATEGORIES_ENDPOINT, 'GET')
     .then((response) => {
       if (response.ok) {
@@ -58,19 +61,21 @@ export const getCategories = async (setApiError) => {
       }
       throw new Error(Constants.API_ERROR);
     })
+    .then((data) => setAttribute((prev) => ({ ...prev, category: data })))
     .catch(() => {
-      setApiError(Constants.API_ERROR);
+      setApiError(true);
     });
 };
 
 /**
  *
- * @name getProductMaterials
+ * @name GetProductMaterials
  * @description Utilizes HttpHelper to make a get request to an API
  * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the materials array to
  * @returns returns the array list of distinct product materials
  */
-export const getProductMaterials = async (setApiError) => {
+export const GetProductMaterials = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.MATERIALS_ENDPOINT, 'GET')
     .then((response) => {
       if (response.ok) {
@@ -78,6 +83,7 @@ export const getProductMaterials = async (setApiError) => {
       }
       throw new Error(Constants.API_ERROR);
     })
+    .then((data) => setAttribute((prev) => ({ ...prev, material: data })))
     .catch(() => {
       setApiError(Constants.API_ERROR);
     });
@@ -85,12 +91,13 @@ export const getProductMaterials = async (setApiError) => {
 
 /**
  *
- * @name getProductTypes
+ * @name GetProductTypes
  * @description Utilizes HttpHelper to make a get request to an API
  * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the types array to
  * @returns returns the array list of distinct product types
  */
-export const getProductTypes = async (setApiError) => {
+export const GetProductTypes = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.TYPES_ENDPOINT, 'GET')
     .then((response) => {
       if (response.ok) {
@@ -98,19 +105,21 @@ export const getProductTypes = async (setApiError) => {
       }
       throw new Error(Constants.API_ERROR);
     })
+    .then((data) => setAttribute((prev) => ({ ...prev, type: data })))
     .catch(() => {
-      setApiError(Constants.API_ERROR);
+      setApiError(true);
     });
 };
 
 /**
  *
- * @name getProductDemographics
+ * @name GetProductDemographics
  * @description Utilizes HttpHelper to make a get request to an API
  * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the demographics array to
  * @returns returns the array list of distinct product Demographics
  */
-export const getProductDemographics = async (setApiError) => {
+export const GetProductDemographics = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
     .then((response) => {
       if (response.ok) {
@@ -118,7 +127,8 @@ export const getProductDemographics = async (setApiError) => {
       }
       throw new Error(Constants.API_ERROR);
     })
+    .then((data) => setAttribute((prev) => ({ ...prev, demographic: data })))
     .catch(() => {
-      setApiError(Constants.API_ERROR);
+      setApiError(true);
     });
 };
