@@ -28,6 +28,8 @@ const NewProductPage = ({ history, setApiError }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState(false);
+  const [emptyFields, setEmptyFields] = useState();
+  const [priceIsInvalid, setPriceIsInvalid] = useState(false);
 
   const formInputTypes = {
     brand: 'text',
@@ -67,19 +69,21 @@ const NewProductPage = ({ history, setApiError }) => {
   };
 
   const validateFormData = () => {
-    const emptyFields = validateFieldsNotEmpty();
+    const fieldsEmpty = validateFieldsNotEmpty();
     const priceInvalid = validatePriceTwoDecimals();
-    return { emptyFields, priceInvalid };
+    return { fieldsEmpty, priceInvalid };
   };
 
   const generateError = () => {
-    const { emptyFields, priceInvalid } = validateFormData();
-    if (emptyFields.length) {
-      const emptyFieldsString = emptyFields.join(', ');
+    const { fieldsEmpty, priceInvalid } = validateFormData();
+    if (fieldsEmpty.length) {
+      const emptyFieldsString = fieldsEmpty.join(', ');
       setFormError(`The following fields can not be null: ${emptyFieldsString}`);
+      setEmptyFields(fieldsEmpty);
     }
     if (priceInvalid) {
       setFormError((prev) => `${prev} AND Price must be a number with two decimals`);
+      setPriceIsInvalid(true);
     }
   };
 
@@ -97,17 +101,27 @@ const NewProductPage = ({ history, setApiError }) => {
       {formError && <AppAlert severity="error" title="Error" message={formError} />}
       <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
-          {Object.keys(formInputTypes).map((attribute) => (
-            <FormItemDataList
-              key={attribute}
-              onChange={handleFormChange}
-              value={formData[attribute]}
-              id={attribute}
-              type={formInputTypes[attribute]}
-              label={attribute}
-              options={options}
-            />
-          ))}
+          {Object.keys(formInputTypes).map((attribute) => {
+            let styleClass = null;
+            if (emptyFields && emptyFields.includes(attribute)) {
+              styleClass = styles.invalidField;
+            }
+            if (attribute === 'price' && priceIsInvalid) {
+              styleClass = styles.invalidField;
+            }
+            return (
+              <FormItemDataList
+                key={attribute}
+                onChange={handleFormChange}
+                value={formData[attribute]}
+                id={attribute}
+                type={formInputTypes[attribute]}
+                label={attribute}
+                options={options}
+                className={styleClass}
+              />
+            );
+          })}
           <div className={styles.formButtonContainer}>
             <Button
               type="button"

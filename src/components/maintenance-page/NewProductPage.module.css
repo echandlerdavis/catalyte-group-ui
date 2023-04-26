@@ -42,3 +42,7 @@ input[type="color"]{
     height: 50px;
     padding: 0;
 }
+
+.invalidField {
+    border: .05em solid red;
+}

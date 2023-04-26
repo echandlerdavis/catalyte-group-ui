@@ -7,7 +7,7 @@ import styles from './FormItem.module.css';
  * @return component
  */
 const FormItemDataList = ({
-  onChange, value, id, label, placeholder, type, options
+  onChange, value, id, label, placeholder, type, options, className
 }) => (
 
   <div key={id}>
@@ -15,7 +15,7 @@ const FormItemDataList = ({
       {label}
       <div>
         <input
-          className={styles.input}
+          className={`${styles.input} ${className}`}
           id={id}
           onChange={onChange}
           placeholder={placeholder}
