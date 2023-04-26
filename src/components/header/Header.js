@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -124,12 +125,11 @@ const Header = () => {
         />
       )}
       <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
-<<<<<<< HEAD
-      {user && <Button onClick={handleProfileClick} variant="conatained" style={{ color: 'white' }}>Profile</Button>}
+      {user && <Button onClick={handleProfileClick} variant="conatained" color="primary">
+        <AccountCircleIcon /> {/* Profile icon */} 
+        </Button>}
     </div>
-=======
     </header>
->>>>>>> b9dba3d386d14482cad608c5f6d2024a8ea99771
   );
 };
 
