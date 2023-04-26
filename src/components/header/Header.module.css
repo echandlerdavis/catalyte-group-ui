@@ -15,9 +15,9 @@
   }
   
   #header > svg,
-  button {
-    margin-left: 2vh;
-    margin-right: 2px;
+  button, span {
+    margin-left: 1vh;
+    margin-right: 1vh;
     flex-grow: 0;
     flex-shrink: 0;
   }
