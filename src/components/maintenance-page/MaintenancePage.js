@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import Toast from '../toast/Toast';
 import styles from './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
@@ -16,10 +17,31 @@ import NewProductPage from './NewProductPage';
 const MaintenancePage = () => {
   const [products, setProducts] = useState([]);
   const [apiError, setApiError] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: ''
+  });
+
+  const closeToast = () => {
+    setToastOpen(false);
+  };
+
+  const openToast = () => {
+    if (!apiError) {
+      setToastOpen(true);
+    }
+  };
 
   useEffect(() => {
     fetchProducts(setProducts, setApiError);
   }, []);
+
+  useEffect(() => {
+    if (apiError) {
+      setToastOpen(false);
+    }
+  }, [apiError]);
 
   const history = useHistory();
 
@@ -52,6 +74,12 @@ const MaintenancePage = () => {
 
   return (
     <article>
+      <Toast
+        message={toastData.MESSAGE}
+        open={toastOpen}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
       <div className={styles.maintenanceHeader}>
         <h1>Maintenance</h1>
         {headerButtons}
@@ -61,7 +89,7 @@ const MaintenancePage = () => {
         * in relation to the maintenance route to appear with maintenance header and error alert
        */}
       <Switch>
-        <Route exact path="/maintenance/new" render={() => <NewProductPage history={history} setApiError={setApiError} />} />
+        <Route exact path="/maintenance/new" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} />} />
         <Route path="" render={() => mainComponent} />
       </Switch>
     </article>
