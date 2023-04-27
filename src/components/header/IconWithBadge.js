@@ -19,7 +19,7 @@ const useStyles = makeStyles((
  *
  * @param {Component} baseIcon - The component that will have the badge on top of it
  * @param {*} displayValue - Value that will be displayed in badge
- * @returns basIcon with a badge in the upper left corner
+ * @returns baseIcon with a badge in the upper left corner
  */
 const IconWithBadge = ({ baseIcon, displayValue }) => {
   const muiClasses = useStyles();

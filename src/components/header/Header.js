@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, createElement } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
-import constants from '../../utils/constants';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './Header.module.css';
+import constants from '../../utils/constants';
+import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
 
 /**
  * @name Header
@@ -77,45 +77,54 @@ const Header = () => {
   };
   /**
    * @name handleCartClick
-   * @description Redirect the page to / when clicked
+   * @description Redirect the page to /checkout when clicked
    */
   const handleCartClick = () => {
     history.push('/checkout');
   };
 
+  const logo = createElement('img', {
+    src: javaTheHuttLogo,
+    alt: constants.LOGO_ALT,
+    className: styles.appLogo,
+    onClick: handleLogoClick
+  });
+
   return (
-    <div id={styles.header} className="Set-to-front">
-      <AllInclusive className={styles.appLogo} onClick={handleLogoClick} />
-      {googleError && <span>{googleError}</span>}
+    <header id={styles.header} className="Set-to-front">
+      <div className={styles.appLogoContainer}>{logo}</div>
+      <div>{googleError && <span>{googleError}</span>}</div>
       {apiError && <span>Api Error</span>}
-      {iconWithBadge(
-        {
-          baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
-          displayValue: products.length
-        }
-      )}
-      {!user ? (
-        <GoogleLogin
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Login"
-          onSuccess={handleGoogleLoginSuccess}
-          onFailure={handleGoogleLoginFailure}
-          cookiePolicy="single_host_origin"
-        />
-      ) : (
-        <GoogleLogout
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Logout"
-          onLogoutSuccess={handleGoogleLogoutSuccess}
-          onFailure={handleGoogleLogoutFailure}
-        />
-      )}
-      {
-        <span className={styles.optionalText} style={{ flexBasis: '10vh' }}>
-          {user && `${user.firstName} ${user.lastName}`}
-        </span>
-      }
-    </div>
+      <div>
+        {iconWithBadge(
+          {
+            baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
+            displayValue: products.length
+          }
+        )}
+      </div>
+      <div>
+        {!user ? (
+          <GoogleLogin
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Login"
+            onSuccess={handleGoogleLoginSuccess}
+            onFailure={handleGoogleLoginFailure}
+            cookiePolicy="single_host_origin"
+          />
+        ) : (
+          <GoogleLogout
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Logout"
+            onLogoutSuccess={handleGoogleLogoutSuccess}
+            onFailure={handleGoogleLogoutFailure}
+          />
+        )}
+      </div>
+      <div className={styles.optionalText}>
+        {user && `${user.firstName} ${user.lastName}`}
+      </div>
+    </header>
   );
 };
 

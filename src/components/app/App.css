@@ -89,15 +89,6 @@ a:visited{
   flex-direction: column;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-  
 .Set-to-front {
   z-index: 500;
 }

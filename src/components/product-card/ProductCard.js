@@ -151,12 +151,12 @@ const ProductCard = ({ product }) => {
     const productErrors = validateOrder(product, products).errors;
     if (productErrors.length > 0) {
       // use the toast to display an error
-      setToastData(Constants.ADD_PRODUCT_FAILURES(productErrors));
+      setToastData(Constants.ADD_PRODUCT_FAILURE(productErrors));
       openToast();
       return;
     }
     // set the success message
-    setToastData(Constants.ADD_PRODUCT_SUCCESS(product.description));
+    setToastData(Constants.ADD_PRODUCT_SUCCESS(product.name));
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
