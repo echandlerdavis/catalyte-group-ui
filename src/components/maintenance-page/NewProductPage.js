@@ -16,7 +16,9 @@ import {
 } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 
-const NewProductPage = ({ history, setApiError }) => {
+const NewProductPage = ({
+  history, setApiError, setToastData, openToast
+}) => {
   const date = new Date();
   const initialReleaseDate = date.toISOString().split('T')[0];
 
@@ -41,9 +43,9 @@ const NewProductPage = ({ history, setApiError }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState(false);
-  const [emptyFields, setEmptyFields] = useState();
+  const [emptyFields, setEmptyFields] = useState([]);
   const [priceIsInvalid, setPriceIsInvalid] = useState(false);
-  const [distinctAttributes, setDistinctAtrributes] = useState();
+  const [distinctAttributes, setDistinctAtrributes] = useState({});
 
   const loadProductAttributeOptions = () => {
     GetProductBrands(setApiError, setDistinctAtrributes);
@@ -79,17 +81,6 @@ const NewProductPage = ({ history, setApiError }) => {
     active: 'checkbox'
   };
 
-  const handleFormChange = ({ target }) => {
-    let { value } = target;
-    if (target.type === 'checkbox') {
-      value = !formData[target.id];
-    }
-    setFormData({
-      ...formData,
-      [target.id]: value
-    });
-  };
-
   const validateFieldsNotEmpty = () => (
     Object.keys(formData).filter((key) => formData[key].length === 0)
   );
@@ -116,13 +107,27 @@ const NewProductPage = ({ history, setApiError }) => {
       setFormError((prev) => `${prev} AND Price must be a number with two decimals`);
       setPriceIsInvalid(true);
     }
+    return { fieldsEmpty, priceInvalid };
+  };
+
+  const handleFormChange = ({ target }) => {
+    let { value } = target;
+    if (target.type === 'checkbox') {
+      value = !formData[target.id];
+    }
+    setFormData({
+      ...formData,
+      [target.id]: value
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    generateError();
-    if (formError.length === 0) {
+    const { fieldsEmpty, priceInvalid } = generateError();
+    if (!fieldsEmpty || !priceInvalid) {
       SaveProduct(formData, setApiError, history);
+      setToastData({ MESSAGE: 'Success', SEVERITY: 'success' });
+      openToast();
     }
   };
 
@@ -134,7 +139,7 @@ const NewProductPage = ({ history, setApiError }) => {
         <div className={styles.fieldContainer}>
           {Object.keys(formInputTypes).map((attribute) => {
             let styleClass = null;
-            if (emptyFields && emptyFields.includes(attribute)) {
+            if (emptyFields.length && emptyFields.includes(attribute)) {
               styleClass = styles.invalidField;
             }
             if (attribute === 'price' && priceIsInvalid) {
