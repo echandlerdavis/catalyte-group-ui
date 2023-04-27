@@ -104,7 +104,12 @@ const NewProductPage = ({
       setEmptyFields(fieldsEmpty);
     }
     if (priceInvalid) {
-      setFormError((prev) => `${prev} AND Price must be a number with two decimals`);
+      setFormError((prev) => {
+        if (prev) {
+          return `${prev} AND Price must be a number with two decimals`;
+        }
+        return 'Price must be a number with two decimals';
+      });
       setPriceIsInvalid(true);
     }
     return { fieldsEmpty, priceInvalid };
