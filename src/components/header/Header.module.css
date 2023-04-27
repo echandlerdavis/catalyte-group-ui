@@ -40,9 +40,12 @@
 }
 
 #header .optionalText {
+  display: flex;
   flex-basis: 7vw;
   font-size: 1.75vh;
   overflow: auto;
+  justify-content: center;
+  align-items: center;
 
 }
 
