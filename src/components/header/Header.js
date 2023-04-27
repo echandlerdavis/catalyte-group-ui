@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, createElement } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { AllInclusive } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import loginUser from './HeaderService';
+import iconWithBadge from './IconWithBadge';
+import { useCart } from '../checkout-page/CartContext';
+import styles from './Header.module.css';
 import constants from '../../utils/constants';
-import Toast from '../toast/Toast';
-import './Header.module.css';
+import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
 
 /**
  * @name Header
@@ -19,16 +19,9 @@ const Header = () => {
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
-  // Toast Example Button - To be deleted, shows how to implement a toast.
-  const [open, setOpen] = useState(false);
-
-  const handleToastClick = () => {
-    setOpen(true);
-  };
-
-  const handleToastClose = () => {
-    setOpen(false);
-  };
+  const {
+    state: { products }
+  } = useCart();
 
   /**
    * @name handleGoogleLoginSuccess
@@ -84,38 +77,53 @@ const Header = () => {
   };
   /**
    * @name handleCartClick
-   * @description Redirect the page to / when clicked
+   * @description Redirect the page to /checkout when clicked
    */
   const handleCartClick = () => {
     history.push('/checkout');
   };
 
+  const logo = createElement('img', {
+    src: javaTheHuttLogo,
+    alt: constants.LOGO_ALT,
+    className: styles.appLogo,
+    onClick: handleLogoClick
+  });
+
   return (
-    <header id="header" className="Set-to-front">
-      <AllInclusive className="App-logo" onClick={handleLogoClick} />
-      <Button onClick={handleToastClick} variant="contained">Click to Open Toast</Button>
-      <ShoppingCartIcon onClick={handleCartClick} />
-      {user && <span>{user.firstName}</span>}
-      {user && <span>{user.lastName}</span>}
-      {googleError && <span>{googleError}</span>}
+    <header id={styles.header} className="Set-to-front">
+      <div className={styles.appLogoContainer}>{logo}</div>
+      <div>{googleError && <span>{googleError}</span>}</div>
       {apiError && <span>Api Error</span>}
-      {!user ? (
-        <GoogleLogin
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Login"
-          onSuccess={handleGoogleLoginSuccess}
-          onFailure={handleGoogleLoginFailure}
-          cookiePolicy="single_host_origin"
-        />
-      ) : (
-        <GoogleLogout
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Logout"
-          onLogoutSuccess={handleGoogleLogoutSuccess}
-          onFailure={handleGoogleLogoutFailure}
-        />
-      )}
-      <Toast message="Toast initiated" open={open} handleClose={handleToastClose} />
+      <div>
+        {iconWithBadge(
+          {
+            baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
+            displayValue: products.length
+          }
+        )}
+      </div>
+      <div>
+        {!user ? (
+          <GoogleLogin
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Login"
+            onSuccess={handleGoogleLoginSuccess}
+            onFailure={handleGoogleLoginFailure}
+            cookiePolicy="single_host_origin"
+          />
+        ) : (
+          <GoogleLogout
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Logout"
+            onLogoutSuccess={handleGoogleLogoutSuccess}
+            onFailure={handleGoogleLogoutFailure}
+          />
+        )}
+      </div>
+      <div className={styles.optionalText}>
+        {user && `${user.firstName} ${user.lastName}`}
+      </div>
     </header>
   );
 };

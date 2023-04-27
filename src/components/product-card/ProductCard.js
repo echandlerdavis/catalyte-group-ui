@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,6 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
+import Toast from '../toast/Toast';
 import styles from './ProductCard.module.css';
 
 /**
@@ -48,6 +49,75 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 100
   }
 }));
+/**
+ * Validates the product id
+ * @param {product Object} product
+ * @returns boolean
+ */
+export const productHasId = (product) => product.id !== undefined && product.id !== null;
+
+/**
+ * Verify that there is enough inventory to handle the order
+ * @param {int} inventoryQty quanity from product from the server; NOT state.prodcuts
+ * @param {int} orderQty quantity that the customer would like to order
+ * @returns boolean
+ */
+export const haveEnoughInventory = (inventoryQty, orderQty) => inventoryQty >= orderQty;
+
+/**
+ * Returns true if the given product is in the given orders
+ * @param {product} product
+ * @param {array} orders
+ * @returns boolean
+ */
+export const inOrder = (product, orders) => orders.filter((p) => p.id === product.id).length > 0;
+
+/**
+ * Validate that the given product is valid
+ * @param {Product object} product
+ * @returns result Object {valid: boolean, errors: [string]}
+ */
+export const validateOrder = (product, orders) => {
+  const result = {
+    valid: true,
+    errors: []
+  };
+  // Validate the product id
+  if (!productHasId(product)) {
+    result.valid = false;
+    result.errors.push(Constants.PRODUCT_MISSING_ID);
+  }
+  // Validate inventory
+  // if product has no id, can't verify inventory
+  if (result.valid) {
+    // user has already clicked add icon, so orderQty is currenty orderQty + 1
+    const ordersQty = inOrder(product, orders)
+      ? orders.filter((p) => p.id === product.id)[0].quantity + 1
+      : 1;
+    if (!haveEnoughInventory(product.quantity, ordersQty)) {
+      result.valid = false;
+      result.errors.push(Constants.INSUFFICIENT_INVENTORY);
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Consolidate the given list of duplicates into a single order item with a larger quantity.
+ * @param {object} product the product that has duplicates
+ * @param {array} duplicates an array of the duplicate products iin the order
+ * @param {array} order state.products
+ */
+export const consolidateOrder = (product, duplicates, order) => {
+  const firstDuplicate = order.find((p) => p.id === product.id);
+  while (duplicates.length > 1) {
+    const duplicate = duplicates.pop();
+    const duplicateIndex = order.lastIndexOf((p) => p.id === product.id);
+    firstDuplicate.quantity += duplicate.quantity;
+    order.splice(duplicateIndex, 1);
+  }
+};
 
 /**
  * @name ProductCard
@@ -57,27 +127,79 @@ const useStyles = makeStyles((theme) => ({
  */
 const ProductCard = ({ product }) => {
   const classes = useStyles();
+  const [open, setOpenToast] = useState(false);
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
+
+  const closeToast = () => {
+    setOpenToast(false);
+  };
+
+  const openToast = () => {
+    setOpenToast(true);
+  };
 
   const { dispatch } = useCart();
+  const {
+    state: { products }
+  } = useCart();
 
   const onAdd = () => {
-    dispatch(
-      {
-        type: 'add',
-        product: {
-          id: product.id,
-          title: product.name,
-          price: product.price,
-          description: product.description,
-          quantity: 1
+    // validate product
+    const productErrors = validateOrder(product, products).errors;
+    if (productErrors.length > 0) {
+      // use the toast to display an error
+      setToastData(Constants.ADD_PRODUCT_FAILURE(productErrors));
+      openToast();
+      return;
+    }
+    // set the success message
+    setToastData(Constants.ADD_PRODUCT_SUCCESS(product.name));
+    // locate if the product is a duplicate
+    let existingProducts = [];
+    if (products.length > 0) {
+      existingProducts = products.filter((p) => p.id === product.id);
+    }
+
+    if (products.length === 0 || existingProducts.length === 0) {
+      // add product to order
+      dispatch(
+        {
+          type: 'add',
+          product: {
+            id: product.id,
+            title: product.name,
+            price: product.price,
+            description: product.description,
+            quantity: 1
+          }
         }
-      }
-    );
+      );
+      // toast
+      openToast();
+      return;
+    }
+    // if multiple existing products in cart, consolitate
+    if (existingProducts.length > 1) {
+      consolidateOrder(product, existingProducts, products);
+    }
+    // add quantity from action product to now single existingProduct
+    existingProducts[0].quantity += 1;
+    // toast
+    openToast();
   };
 
   return (
     <Card className={classes.root}>
       <div className={styles.CardContainer}>
+        <Toast
+          message={toastData.MESSAGE}
+          open={open}
+          severity={toastData.SEVERITY}
+          handleClose={closeToast}
+        />
         <CardHeader
           avatar={(
             <Avatar aria-label="demographics" className={classes.avatar}>

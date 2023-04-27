@@ -26,7 +26,6 @@
 main{
   margin: 0 2rem 0 2rem;
   padding: 0 1rem 0 1rem;
-  z-index: -500;
 }
 
 article{
@@ -85,29 +84,9 @@ a:visited{
 }
 
 .Container{
-  text-align: center;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-  
-header .App-logo {
-  margin-right: auto;
-  margin-left: 1vh;
-}
-  
-header .App-logo {
-  margin-right: auto;
-  margin-left: 1vh;
 }
 
 .Set-to-front {
