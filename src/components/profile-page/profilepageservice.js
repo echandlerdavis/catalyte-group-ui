@@ -5,9 +5,10 @@ import Constants from '../../utils/constants';
  *
  * @name fetchUser
  * @description Utilizes HttpHelper to make a GET request to retrieve user data for Profile Page.
- * @param {*} setUser Function to update the 'user' state with the fetched user data
- * @param {*} setApiError Function to update the 'apiError' state with an error, if necessary
- * @returns User profile data if successful, otherwise returns an error message
+ * @param {string} email User's email
+ * @param {function} setUser Function to update the 'user' state with the fetched user data
+ * @param {function} setApiError Function to update the 'apiError' state with an error, if necessary
+ * @returns {Promise<object>} User profile data if successful, otherwise returns an error message
  */
 const fetchUser = async (email, setUser, setApiError) => {
   try {
@@ -28,9 +29,9 @@ const fetchUser = async (email, setUser, setApiError) => {
     const shippingAddress = purchaseData[0]?.deliveryAddress ?? {};
 
     setUser({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
+      firstName: userData.firstName || '',
+      lastName: userData.lastName || '',
+      email: userData.email || '',
       shippingAddress: {
         street: shippingAddress.street || '',
         city: shippingAddress.city || '',
