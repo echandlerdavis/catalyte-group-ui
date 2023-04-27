@@ -42,8 +42,8 @@
 #header .optionalText {
   flex-basis: 7vw;
   font-size: 1.75vh;
-  flex-wrap: nowrap;
-  justify-content: center;
+  overflow: auto;
+
 }
 
 .appLogoContainer{

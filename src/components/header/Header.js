@@ -122,9 +122,7 @@ const Header = () => {
         )}
       </div>
       <div className={styles.optionalText}>
-        <span>
-          {user && `${user.firstName} ${user.lastName}`}
-        </span>
+        {user && `${user.firstName} ${user.lastName}`}
       </div>
     </header>
   );
