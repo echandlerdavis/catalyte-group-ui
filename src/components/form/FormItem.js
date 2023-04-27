@@ -25,7 +25,7 @@ const FormItem = ({
   const inputBox = (
     <input
       className={`${styles.input} ${className}`}
-      id={`${id}-input`}
+      id={id}
       onChange={onChange}
       placeholder={placeholder}
       type={type}
