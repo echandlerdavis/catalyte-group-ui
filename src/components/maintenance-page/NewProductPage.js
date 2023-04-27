@@ -15,6 +15,7 @@ import {
   GetProductSecondaryColors
 } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
+import constants from '../../utils/constants';
 
 const NewProductPage = ({
   history, setApiError, setToastData, openToast
@@ -99,16 +100,16 @@ const NewProductPage = ({
   const generateError = () => {
     const { fieldsEmpty, priceInvalid } = validateFormData();
     if (fieldsEmpty.length) {
-      const emptyFieldsString = fieldsEmpty.join(', ');
-      setFormError(`The following fields can not be null: ${emptyFieldsString}`);
+      setFormError(constants.FORM_FIELDS_EMPTY(fieldsEmpty));
       setEmptyFields(fieldsEmpty);
     }
     if (priceInvalid) {
+      const errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
       setFormError((prev) => {
         if (prev) {
-          return `${prev} AND Price must be a number with two decimals`;
+          return prev.concat(' AND ', errorMessage);
         }
-        return 'Price must be a number with two decimals';
+        return errorMessage;
       });
       setPriceIsInvalid(true);
     }
@@ -131,7 +132,7 @@ const NewProductPage = ({
     const { fieldsEmpty, priceInvalid } = generateError();
     if (!fieldsEmpty || !priceInvalid) {
       SaveProduct(formData, setApiError, history);
-      setToastData({ MESSAGE: 'Success', SEVERITY: 'success' });
+      setToastData(constants.SAVE_PRODUCT_SUCCESS);
       openToast();
     }
   };
