@@ -2,6 +2,7 @@ import React, { useState, createElement } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PersonIcon from '@material-ui/icons/Person';
+import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
 import iconWithBadge from './IconWithBadge';

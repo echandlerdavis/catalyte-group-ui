@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import styles from './profilepage.module.css';
 import fetchUser from './profilepageservice';
+import Constants from '../../utils/constants';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    fetch('/api/user')
+    const accessToken = window.localStorage.getItem('access_token');
+
+    fetch(Constants.USER_ENDPOINT, {
+      headers: {
+        Authorization: `Bearer ${accessToken}` // replace accessToken with actual token
+      }
+    })
       .then((response) => {
         if (response.status === 401) {
           setIsLoggedIn(false);

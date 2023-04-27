@@ -11,8 +11,13 @@ import Constants from '../../utils/constants';
  */
 const fetchUser = async (email, setUser, setApiError) => {
   try {
-    const userResponse = await HttpHelper(`${Constants.USER_ENPOINT}?email=${email}`, 'GET');
-    const purchaseResponse = await HttpHelper(`${Constants.PURCHASE_ENDPOINT}?email=${email}`, 'GET');
+    const accessToken = localStorage.getItem('access_token');
+    const userResponse = await HttpHelper(`${Constants.USER_ENDPOINT}?userEmail=${email}`, 'GET', {
+      Authorization: `Bearer ${accessToken}`
+    });
+    const purchaseResponse = await HttpHelper(`${Constants.PURCHASE_ENDPOINT}?userEmail=${email}`, 'GET', {
+      Authorization: `Bearer ${accessToken}`
+    });
 
     if (!userResponse.ok || !purchaseResponse.ok) {
       throw new Error(Constants.API_ERROR);
