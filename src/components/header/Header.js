@@ -8,6 +8,7 @@ import { useCart } from '../checkout-page/CartContext';
 import styles from './Header.module.css';
 import constants from '../../utils/constants';
 import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
+import useLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name Header
@@ -15,13 +16,15 @@ import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
  * @return component
  */
 const Header = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState(null);
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
   const {
     state: { products }
   } = useCart();
+  // boolean, when true fire api call, api call switch back to false
+  const { setLastActivityTime } = useLastActive(false);
 
   /**
    * @name handleGoogleLoginSuccess
@@ -36,6 +39,7 @@ const Header = () => {
       lastName: response.profileObj.familyName
     };
     loginUser(googleUser, setUser, setApiError);
+    setLastActivityTime(true);
     setGoogleError('');
   };
 
@@ -54,7 +58,8 @@ const Header = () => {
    * @description Function to run if google logout was successful
    */
   const handleGoogleLogoutSuccess = () => {
-    setUser('');
+    setLastActivityTime(true);
+    setUser(null);
     setGoogleError('');
   };
 
