@@ -88,7 +88,7 @@ const Header = () => {
   const logo = createElement('img', {
     src: javaTheHuttLogo,
     alt: constants.LOGO_ALT,
-    className: 'App-logo',
+    className: styles.appLogo,
     onClick: handleLogoClick
   });
 
@@ -102,36 +102,38 @@ const Header = () => {
 
   return (
     <header id={styles.header} className="Set-to-front">
-      {logo}
-      {googleError && <span>{googleError}</span>}
+      <div className={styles.appLogoContainer}>{logo}</div>
+      <div>{googleError && <span>{googleError}</span>}</div>
       {apiError && <span>Api Error</span>}
-      {iconWithBadge(
-        {
-          baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
-          displayValue: products.length
-        }
-      )}
-      {!user ? (
-        <GoogleLogin
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Login"
-          onSuccess={handleGoogleLoginSuccess}
-          onFailure={handleGoogleLoginFailure}
-          cookiePolicy="single_host_origin"
-        />
-      ) : (
-        <GoogleLogout
-          clientId={constants.GOOGLE_CLIENT_ID}
-          buttonText="Logout"
-          onLogoutSuccess={handleGoogleLogoutSuccess}
-          onFailure={handleGoogleLogoutFailure}
-        />
-      )}
-      {
-        <span className={styles.optionalText} style={{ flexBasis: '10vh' }}>
-          {user && `${user.firstName} ${user.lastName}`}
-        </span>
-      }
+      <div>
+        {iconWithBadge(
+          {
+            baseIcon: <ShoppingCartIcon onClick={handleCartClick} />,
+            displayValue: products.length
+          }
+        )}
+      </div>
+      <div>
+        {!user ? (
+          <GoogleLogin
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Login"
+            onSuccess={handleGoogleLoginSuccess}
+            onFailure={handleGoogleLoginFailure}
+            cookiePolicy="single_host_origin"
+          />
+        ) : (
+          <GoogleLogout
+            clientId={constants.GOOGLE_CLIENT_ID}
+            buttonText="Logout"
+            onLogoutSuccess={handleGoogleLogoutSuccess}
+            onFailure={handleGoogleLogoutFailure}
+          />
+        )}
+      </div>
+      <div className={styles.optionalText}>
+        {user && `${user.firstName} ${user.lastName}`}
+      </div>
       {user && (
         <Button onClick={handleProfileClick} variant="contained" color="primary">
           <PersonIcon style={{ backgroundColor: 'transparent' }} />
