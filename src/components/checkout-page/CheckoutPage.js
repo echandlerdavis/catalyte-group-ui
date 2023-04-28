@@ -7,6 +7,7 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
+import useLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name CheckoutPage
@@ -23,6 +24,7 @@ const CheckoutPage = () => {
   const [billingData, setBillingData] = React.useState({});
   const [deliveryData, setDeliveryData] = React.useState({});
   const [useSameAddress, setUseSameAddress] = React.useState(false);
+  const { setLastActivityTime } = useLastActive();
 
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
@@ -70,7 +72,9 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
-    makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
+    makePurchase(productData, deliveryAddress, billingAddress, creditCard)
+      .then(() => setLastActivityTime(true))
+      .then(() => history.push('/confirmation'));
   };
 
   if (products.length === 0) {

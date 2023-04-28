@@ -16,7 +16,7 @@ import useLastActive from '../../utils/UpdateLastActive';
  * @return component
  */
 const Header = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState('');
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
@@ -58,8 +58,7 @@ const Header = () => {
    * @description Function to run if google logout was successful
    */
   const handleGoogleLogoutSuccess = () => {
-    setLastActivityTime(true);
-    setUser(null);
+    setUser('');
     setGoogleError('');
   };
 

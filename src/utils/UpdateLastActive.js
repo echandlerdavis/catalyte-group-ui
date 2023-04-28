@@ -40,9 +40,10 @@ const parseCookies = () => {
   return dict;
 };
 
-const mySetter = (string) => {
-  console.log(string);
-};
+/**
+ * Error handler. Doesn't do anything per PO request.
+ */
+const errorSetter = () => null;
 
 /**
  * Custom hook to update the lastActive time on a user.
@@ -58,7 +59,7 @@ const useLastActive = (initialValue) => {
     // get user from cookies set in HeaderService.js
     const user = JSON.parse(parseCookies().user);
     if (updateLastActivityTime.current && user !== {} && user !== null && user !== undefined) {
-      updateLastActive(user, mySetter, setLastActivityTime);
+      updateLastActive(user, errorSetter, setLastActivityTime);
     }
   };
   return { updateLastActivityTime, setLastActivityTime };
