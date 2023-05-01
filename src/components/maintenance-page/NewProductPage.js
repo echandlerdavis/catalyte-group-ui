@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
 import FormItemDataList from '../form/FormItemDataList';
@@ -43,9 +43,10 @@ const NewProductPage = ({
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [formError, setFormError] = useState(false);
-  const [emptyFields, setEmptyFields] = useState([]);
-  const [priceIsInvalid, setPriceIsInvalid] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState(null);
+  const formHasError = useRef(false);
+  const emptyFields = useRef([]);
+  const priceIsInvalid = useRef(false);
   const [distinctAttributes, setDistinctAtrributes] = useState({});
 
   const loadProductAttributeOptions = () => {
@@ -92,28 +93,30 @@ const NewProductPage = ({
   };
 
   const validateFormData = () => {
-    const fieldsEmpty = validateFieldsNotEmpty();
-    const priceInvalid = validatePriceTwoDecimals();
-    return { fieldsEmpty, priceInvalid };
+    emptyFields.current = validateFieldsNotEmpty();
+    priceIsInvalid.current = validatePriceTwoDecimals();
+    if (emptyFields.current.length || priceIsInvalid.current) {
+      formHasError.current = true;
+    } else {
+      formHasError.current = false;
+    }
   };
 
   const generateError = () => {
-    const { fieldsEmpty, priceInvalid } = validateFormData();
-    if (fieldsEmpty.length) {
-      setFormError(constants.FORM_FIELDS_EMPTY(fieldsEmpty));
-      setEmptyFields(fieldsEmpty);
+    setFormErrorMessage(null);
+    validateFormData();
+    if (emptyFields.current.length) {
+      setFormErrorMessage(constants.FORM_FIELDS_EMPTY(emptyFields.current));
     }
-    if (priceInvalid) {
+    if (priceIsInvalid.current) {
       const errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
-      setFormError((prev) => {
+      setFormErrorMessage((prev) => {
         if (prev) {
           return prev.concat(' AND ', errorMessage);
         }
         return errorMessage;
       });
-      setPriceIsInvalid(true);
     }
-    return { fieldsEmpty, priceInvalid };
   };
 
   const handleFormChange = ({ target }) => {
@@ -129,8 +132,8 @@ const NewProductPage = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { fieldsEmpty, priceInvalid } = generateError();
-    if (!fieldsEmpty || !priceInvalid) {
+    generateError();
+    if (!formHasError.current) {
       SaveProduct(formData, setApiError, history);
       setToastData(constants.SAVE_PRODUCT_SUCCESS);
       openToast();
@@ -140,15 +143,15 @@ const NewProductPage = ({
   return (
     <section>
       <h2>New Product</h2>
-      {formError && <AppAlert severity="error" title="Error" message={formError} />}
+      {formHasError.current && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
       <form className="Card" onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.fieldContainer}>
           {Object.keys(formInputTypes).map((attribute) => {
             let styleClass = null;
-            if (emptyFields.length && emptyFields.includes(attribute)) {
+            if (emptyFields.current.length && emptyFields.current.includes(attribute)) {
               styleClass = styles.invalidField;
             }
-            if (attribute === 'price' && priceIsInvalid) {
+            if (attribute === 'price' && priceIsInvalid.current) {
               styleClass = styles.invalidField;
             }
             if (distinctAttributes && Object.keys(distinctAttributes).includes(attribute)) {
