@@ -1,3 +1,6 @@
+import HttpHelper from './HttpHelper';
+import constants from './constants';
+
 /**
  * update the lastActive field for user in the database to now
  * @param {Object} user
@@ -14,7 +17,6 @@ const updateLastActive = async (user, setApiError) => {
         }
         throw new Error(constants.API_ERROR);
       })
-      .then(() => setter(false))
       .catch((er) => {
         setApiError(er.message);
       });
@@ -49,6 +51,6 @@ const setLastActive = () => {
   if (user !== {} && user !== null && user !== undefined) {
     updateLastActive(user, errorSetter);
   }
-  };
+};
 
 export default setLastActive;
