@@ -13,6 +13,8 @@ import constants from '../../utils/constants';
 /**
  * @name MaintenancePage
  * @description Fetches all products from the API and displays them in a table
+ *
+ * Additionally Contains nested routes for all pages viewed by admin
  * @returns component
  */
 const MaintenancePage = () => {
