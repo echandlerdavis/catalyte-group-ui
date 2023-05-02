@@ -9,18 +9,10 @@ import Constants from '../../utils/constants';
  * @param {*} setApiError sets error if response other than 200 is returned
  * @returns returns the product object that was saved
  */
-export const SaveProduct = async (product, setApiError, history) => {
+export const SaveProduct = async (product, setApiError) => {
   await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product)
-    .then((response) => {
-      if (response.ok) {
-        history.push('/maintenance');
-        return response.json;
-      }
-      throw new Error(Constants.API_ERROR);
-    })
-    .catch((e) => {
-      setApiError(e.message);
-    });
+    .then((response) => response.json())
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -33,16 +25,9 @@ export const SaveProduct = async (product, setApiError, history) => {
  */
 export const GetProductBrands = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.BRANDS_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, brand: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -55,16 +40,9 @@ export const GetProductBrands = async (setApiError, setAttribute) => {
  */
 export const GetProductCategories = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.CATEGORIES_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
-    .then((data) => setAttribute((prev) => ({ ...prev, category: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .then((response) => response.json())
+    .then((data) => setAttribute((prev) => ({ ...prev, catgory: data })))
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -77,16 +55,9 @@ export const GetProductCategories = async (setApiError, setAttribute) => {
  */
 export const GetProductMaterials = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.MATERIALS_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, material: data })))
-    .catch(() => {
-      setApiError(Constants.API_ERROR);
-    });
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -99,16 +70,9 @@ export const GetProductMaterials = async (setApiError, setAttribute) => {
  */
 export const GetProductTypes = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.TYPES_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, type: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -121,16 +85,9 @@ export const GetProductTypes = async (setApiError, setAttribute) => {
  */
 export const GetProductDemographics = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, demographic: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -143,16 +100,9 @@ export const GetProductDemographics = async (setApiError, setAttribute) => {
  */
 export const GetProductPrimaryColors = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, primaryColorCode: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .catch(() => setApiError(true));
 };
 
 /**
@@ -165,14 +115,24 @@ export const GetProductPrimaryColors = async (setApiError, setAttribute) => {
  */
 export const GetProductSecondaryColors = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(Constants.API_ERROR);
-    })
+    .then((response) => response.json())
     .then((data) => setAttribute((prev) => ({ ...prev, secondaryColorCode: data })))
-    .catch(() => {
-      setApiError(true);
-    });
+    .catch(() => setApiError(true));
+};
+
+/**
+ *
+ * @name GetAllDistinctLists
+ * @description Call each product distinct list getter
+ * @param {*} setApiError sets error if response other than 200 is returned
+ * @param {*} setAttribute the react setter to set the attributes
+ * @returns returns each list of distinct properties for each attributes
+ */
+export const GetAllDistinctLists = (setApiError, setAttribute) => {
+  GetProductBrands(setApiError, setAttribute);
+  GetProductCategories(setApiError, setAttribute);
+  GetProductDemographics(setApiError, setAttribute);
+  GetProductMaterials(setApiError, setAttribute);
+  GetProductPrimaryColors(setApiError, setAttribute);
+  GetProductSecondaryColors(setApiError, setAttribute);
 };

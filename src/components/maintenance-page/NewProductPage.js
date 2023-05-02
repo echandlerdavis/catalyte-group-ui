@@ -4,16 +4,7 @@ import { Save, Cancel } from '@material-ui/icons';
 import FormItemDataList from '../form/FormItemDataList';
 import FormItem from '../form/FormItem';
 import styles from './NewProductPage.module.css';
-import {
-  SaveProduct,
-  GetProductBrands,
-  GetProductCategories,
-  GetProductDemographics,
-  GetProductMaterials,
-  GetProductTypes,
-  GetProductPrimaryColors,
-  GetProductSecondaryColors
-} from './NewProductPageService';
+import { GetAllDistinctLists, SaveProduct } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 
@@ -60,20 +51,9 @@ const NewProductPage = ({
   const emptyFields = useRef([]);
   const priceIsInvalid = useRef(false);
 
-  const loadProductAttributeOptions = () => {
-    GetProductBrands(setApiError, setDistinctAtrributes);
-    GetProductCategories(setApiError, setDistinctAtrributes);
-    GetProductDemographics(setApiError, setDistinctAtrributes);
-    GetProductMaterials(setApiError, setDistinctAtrributes);
-    GetProductTypes(setApiError, setDistinctAtrributes);
-    GetProductPrimaryColors(setApiError, setDistinctAtrributes);
-    GetProductSecondaryColors(setApiError, setDistinctAtrributes);
-  };
-
   useEffect(() => {
-    loadProductAttributeOptions();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    GetAllDistinctLists(setApiError, setDistinctAtrributes);
+  }, [setApiError]);
 
   // Declare input types for the product attribute fields
   const formInputTypes = {
@@ -178,7 +158,8 @@ const NewProductPage = ({
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      SaveProduct(formData, setApiError, history);
+      SaveProduct(formData, setApiError);
+      history.push('/maintenance');
       setToastData(constants.SAVE_PRODUCT_SUCCESS);
       openToast();
     }
