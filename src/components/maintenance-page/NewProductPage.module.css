@@ -16,13 +16,11 @@ form{
     display: flex;
     flex-direction: column;
     margin-bottom: 1em;
-    flex-basis: 50em;
+    flex-basis: 45%;
 }
 
-.fieldContainer > div:nth-child(14), 
-.fieldContainer > div:nth-child(15),
-.fieldContainer > div:nth-child(16) {
-    flex-basis: 10em;
+.fieldContainer > div:where(:nth-child(14), :nth-child(15), :nth-child(16)) {
+    flex-basis: 5%;
 }
 
 .formButtonContainer{
@@ -45,4 +43,17 @@ input[type="color"]{
 
 .invalidField {
     border: .05em solid red;
+}
+
+/** 
+* Make form items responsive on smaller screens
+*/
+@media screen and (max-width: 768px) {
+    .fieldContainer > div {
+        flex-basis: 100%;
+    }
+
+    .formButtonContainer{
+        flex-direction: column!important;
+    }
 }
