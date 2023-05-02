@@ -91,7 +91,7 @@ const MaintenancePage = () => {
         * in relation to the maintenance route to appear with maintenance header and error alert
        */}
       <Switch>
-        <Route exact path="/maintenance/new/product" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} />} />
+        <Route exact path="/maintenance/new/product" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} setProducts={setProducts} />} />
         <Route path="" render={() => mainComponent} />
       </Switch>
     </article>

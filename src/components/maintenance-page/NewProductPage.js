@@ -18,7 +18,7 @@ import constants from '../../utils/constants';
  * @returns JSX element, form with fields for product data
  */
 const NewProductPage = ({
-  history, setApiError, setToastData, openToast
+  history, setApiError, setToastData, openToast, setProducts
 }) => {
   const date = new Date();
   // Get today's date in format "YYYY-MM-DD"
@@ -158,7 +158,7 @@ const NewProductPage = ({
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      SaveProduct(formData, setApiError);
+      SaveProduct(formData, setApiError, setProducts);
       history.push('/maintenance');
       setToastData(constants.SAVE_PRODUCT_SUCCESS);
       openToast();
