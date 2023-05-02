@@ -26,6 +26,7 @@ module.exports = Object.freeze({
   FORM_FIELDS_EMPTY: (emptyFields) => `The following fields can not be empty: ${emptyFields.join(', ')}`,
   PRODUCT_FORM_INVALID_PRICE: 'Price must be a number with 2 digits after the decimal place',
   SAVE_PRODUCT_SUCCESS: { MESSAGE: 'Product Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
+  SAVE_PRODUCT_FAILURE: { MESSAGE: 'Connection to Database Failed', SEVERITY: SEVERITY_LEVELS.ERROR },
   ADD_PRODUCT_FAILURE: (stringList) => ({
     MESSAGE: `Failed to add product: ${stringList.join('|')}`,
     SEVERITY: SEVERITY_LEVELS.ERROR

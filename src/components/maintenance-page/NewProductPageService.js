@@ -10,10 +10,9 @@ import Constants from '../../utils/constants';
  * sets error if response other than 200 is returned
  * @returns {Promise<objec>}returns the product object that was saved
  */
-export const SaveProduct = async (product, setApiError, setProducts) => {
+export const SaveProduct = async (product, setApiError) => {
   await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product)
     .then((response) => response.json())
-    .then((newProduct) => setProducts((prev) => [...prev, newProduct]))
     .catch(() => setApiError(true));
 };
 

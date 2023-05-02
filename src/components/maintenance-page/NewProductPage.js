@@ -154,13 +154,18 @@ const NewProductPage = ({
    * Generates the errors and saves the product if no errors present
    * @param {Event} e
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      SaveProduct(formData, setApiError, setProducts);
-      history.push('/maintenance');
-      setToastData(constants.SAVE_PRODUCT_SUCCESS);
+      const newProduct = await SaveProduct(formData, setApiError);
+      if (newProduct) {
+        setProducts((products) => [...products, newProduct]);
+        setToastData(constants.SAVE_PRODUCT_SUCCESS);
+        history.push('/maintenance');
+      } else {
+        setToastData(constants.SAVE_PRODUCT_FAILURE);
+      }
       openToast();
     }
   };
