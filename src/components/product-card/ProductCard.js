@@ -17,7 +17,7 @@ import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import Toast from '../toast/Toast';
 import styles from './ProductCard.module.css';
-import useLastActive from '../../utils/UpdateLastActive';
+import setLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name useStyles
@@ -133,7 +133,6 @@ const ProductCard = ({ product }) => {
     MESSAGE: '',
     SEVERITY: Constants.SEVERITY_LEVELS.INFO
   });
-  const { setLastActivityTime } = useLastActive(false);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -160,7 +159,7 @@ const ProductCard = ({ product }) => {
     // set the success message
     setToastData(Constants.ADD_PRODUCT_SUCCESS(product.name));
     // update activity time
-    setLastActivityTime(true);
+    setLastActive();
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {

@@ -8,7 +8,7 @@ import { useCart } from '../checkout-page/CartContext';
 import styles from './Header.module.css';
 import constants from '../../utils/constants';
 import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
-import useLastActive from '../../utils/UpdateLastActive';
+import setLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name Header
@@ -23,8 +23,6 @@ const Header = () => {
   const {
     state: { products }
   } = useCart();
-  // boolean, when true fire api call, api call switch back to false
-  const { setLastActivityTime } = useLastActive(false);
 
   /**
    * @name handleGoogleLoginSuccess
@@ -39,7 +37,7 @@ const Header = () => {
       lastName: response.profileObj.familyName
     };
     loginUser(googleUser, setUser, setApiError);
-    setLastActivityTime(true);
+    setLastActive();
     setGoogleError('');
   };
 
