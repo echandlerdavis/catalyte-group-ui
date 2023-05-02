@@ -157,14 +157,15 @@ const NewProductPage = ({
    */
   const handleFormChange = ({ target }) => {
     let { value } = target;
+    const { type, id } = target;
     // If targe input was a checkbox set the value to be opposite of its current value
-    if (target.type === 'checkbox') {
-      value = !formData[target.id];
+    if (type === 'checkbox') {
+      value = !formData[id];
     }
     // Update form data with the targets new value
     setFormData({
       ...formData,
-      [target.id]: value
+      [id]: value
     });
   };
 
