@@ -1,9 +1,3 @@
-import { useRef } from 'react';
-import constants from './constants';
-import HttpHelper from './HttpHelper';
-
-// TODO: Backend should handle time generation
-
 /**
  * update the lastActive field for user in the database to now
  * @param {Object} user
