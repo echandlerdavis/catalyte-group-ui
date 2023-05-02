@@ -8,6 +8,7 @@ import fetchProducts from './MaintenancePageService';
 import ProductTable from '../product-table/ProductsTable';
 import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
+import constants from '../../utils/constants';
 
 /**
  * @name MaintenancePage
@@ -18,33 +19,27 @@ const MaintenancePage = () => {
   const [products, setProducts] = useState([]);
   const [apiError, setApiError] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
-  const [toastData, setToastData] = useState({
-    MESSAGE: '',
-    SEVERITY: ''
-  });
+  const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
 
   const closeToast = () => {
     setToastOpen(false);
   };
 
   const openToast = () => {
-    if (!apiError) {
-      setToastOpen(true);
-    }
+    setToastOpen(true);
   };
 
   useEffect(() => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
-  useEffect(() => {
-    if (apiError) {
-      setToastOpen(false);
-    }
-  }, [apiError]);
-
   const history = useHistory();
 
+  /**
+   * Elements viewed on the main maintenance route
+   *
+   * Section with Products Table
+   */
   const mainComponent = (
     <>
       <section>
@@ -54,6 +49,11 @@ const MaintenancePage = () => {
     </>
   );
 
+  /**
+   * Buttons placed on right side of maintenance header
+   *
+   * Section Labled Create New with horizontal list of buttons
+   */
   const headerButtons = (
     <section>
       <h2>Create New</h2>
@@ -64,7 +64,7 @@ const MaintenancePage = () => {
           size="small"
           variant="contained"
           startIcon={<Add />}
-          onClick={() => history.push('/maintenance/new')}
+          onClick={() => history.push('/maintenance/new/product')}
         >
           Product
         </Button>
@@ -84,12 +84,12 @@ const MaintenancePage = () => {
         <h1>Maintenance</h1>
         {headerButtons}
       </div>
-      {apiError && <AppAlert severity="error" title="Error" message={apiError} />}
+      {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
       {/* add nested routes to allow for other routes
         * in relation to the maintenance route to appear with maintenance header and error alert
        */}
       <Switch>
-        <Route exact path="/maintenance/new" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} />} />
+        <Route exact path="/maintenance/new/product" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} />} />
         <Route path="" render={() => mainComponent} />
       </Switch>
     </article>

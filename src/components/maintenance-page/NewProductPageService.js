@@ -4,10 +4,11 @@ import Constants from '../../utils/constants';
 /**
  *
  * @name SaveProduct
- * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} product the product object to be saved to the database
- * @param {*} setApiError sets error if response other than 200 is returned
- * @returns returns the product object that was saved
+ * @description Utilizes HttpHelper to make a POST request to an API
+ * @param {object} product the product object to be saved to the database
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @returns {Promise<objec>}returns the product object that was saved
  */
 export const SaveProduct = async (product, setApiError) => {
   await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product)
@@ -19,9 +20,11 @@ export const SaveProduct = async (product, setApiError) => {
  *
  * @name GetProductBrands
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the brands array to
- * @returns returns the array list of distinct product brands
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the brands array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductBrands = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.BRANDS_ENDPOINT, 'GET')
@@ -34,9 +37,11 @@ export const GetProductBrands = async (setApiError, setAttribute) => {
  *
  * @name GetProductCategories
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the categories array to
- * @returns returns the array list of distinct product categories
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the categories array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductCategories = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.CATEGORIES_ENDPOINT, 'GET')
@@ -49,9 +54,11 @@ export const GetProductCategories = async (setApiError, setAttribute) => {
  *
  * @name GetProductMaterials
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the materials array to
- * @returns returns the array list of distinct product materials
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the materials array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductMaterials = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.MATERIALS_ENDPOINT, 'GET')
@@ -64,9 +71,11 @@ export const GetProductMaterials = async (setApiError, setAttribute) => {
  *
  * @name GetProductTypes
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the types array to
- * @returns returns the array list of distinct product types
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the types array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductTypes = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.TYPES_ENDPOINT, 'GET')
@@ -79,9 +88,11 @@ export const GetProductTypes = async (setApiError, setAttribute) => {
  *
  * @name GetProductDemographics
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the demographics array to
- * @returns returns the array list of distinct product Demographics
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the demographics array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductDemographics = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
@@ -94,9 +105,11 @@ export const GetProductDemographics = async (setApiError, setAttribute) => {
  *
  * @name GetProductPrimaryColors
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the primary color array to
- * @returns returns the array list of distinct product primary colors
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the primary color array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductPrimaryColors = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
@@ -109,9 +122,11 @@ export const GetProductPrimaryColors = async (setApiError, setAttribute) => {
  *
  * @name GetProductSecondaryColors
  * @description Utilizes HttpHelper to make a get request to an API
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the secondary color array to
- * @returns returns the array list of distinct product secondary colors
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the secondary color array to
+ * @returns sets state for the products attributes distinct list
  */
 export const GetProductSecondaryColors = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.DEMOGRAPHICS_ENDPOINT, 'GET')
@@ -124,9 +139,11 @@ export const GetProductSecondaryColors = async (setApiError, setAttribute) => {
  *
  * @name GetAllDistinctLists
  * @description Call each product distinct list getter
- * @param {*} setApiError sets error if response other than 200 is returned
- * @param {*} setAttribute the react setter to set the attributes
- * @returns returns each list of distinct properties for each attributes
+ * @param {React.Dispatch<React.SetStateAction>} setApiError
+ * sets error if response other than 200 is returned
+ * @param {React.Dispatch<React.SetStateAction>} setAttribute
+ * the react setter to set the attributes
+ * @returns sets state for the products attributes distinct list
  */
 export const GetAllDistinctLists = (setApiError, setAttribute) => {
   GetProductBrands(setApiError, setAttribute);
