@@ -101,7 +101,7 @@ const NewProductPage = ({
    * Generates a list of empty fields
    * @returns array of field names that are empty
    */
-  const validateFieldsNotEmpty = () => (
+  const getFieldsNotEmpty = () => (
     Object.keys(formData).filter((key) => formData[key].length === 0)
   );
 
@@ -119,7 +119,7 @@ const NewProductPage = ({
    * reassigns the current reference value for the form error boolean
    */
   const validateFormData = () => {
-    emptyFields.current = validateFieldsNotEmpty();
+    emptyFields.current = getFieldsNotEmpty();
     priceIsInvalid.current = validatePriceTwoDecimals();
     if (emptyFields.current.length || priceIsInvalid.current) {
       formHasError.current = true;
