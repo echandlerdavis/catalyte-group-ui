@@ -24,7 +24,7 @@ module.exports = Object.freeze({
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',
   SEVERITY_LEVELS,
   FORM_FIELDS_EMPTY: (emptyFields) => `The following fields can not be empty: ${emptyFields.join(', ')}`,
-  PRODUCT_FORM_INVALID_PRICE: 'Price must be a number with 2 digits',
+  PRODUCT_FORM_INVALID_PRICE: 'Price must be a number with 2 digits after the decimal place',
   SAVE_PRODUCT_SUCCESS: { MESSAGE: 'Product Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
   ADD_PRODUCT_FAILURE: (stringList) => ({
     MESSAGE: `Failed to add product: ${stringList.join('|')}`,
