@@ -47,6 +47,7 @@ const NewProductPage = ({
   const [formData, setFormData] = useState(initialFormData);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const [distinctAttributes, setDistinctAtrributes] = useState({});
+  const [newProduct, setNewProduct] = useState({});
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
   const priceIsInvalid = useRef(false);
@@ -173,11 +174,11 @@ const NewProductPage = ({
    * Generates the errors and saves the product if no errors present
    * @param {Event} e
    */
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      const newProduct = await SaveProduct(formData, setApiError);
+      setNewProduct(SaveProduct(formData, setApiError));
       if (newProduct) {
         setProducts((products) => [...products, newProduct]);
         setToastData(constants.SAVE_PRODUCT_SUCCESS);
@@ -193,7 +194,7 @@ const NewProductPage = ({
     <section>
       <h2>New Product</h2>
       {formHasError.current && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
-      <form className="Card" onSubmit={(e) => handleSubmit(e)}>
+      <form className="Card" onSubmit={handleSubmit}>
         <div className={styles.fieldContainer}>
           { // Map the form inputs to form items
           Object.keys(formInputTypes).map((attribute) => {
