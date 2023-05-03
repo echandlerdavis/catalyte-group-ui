@@ -3,6 +3,7 @@ import { useCart } from './CartContext';
 import OrderItem from './OrderItem';
 import { getSubtotal } from './ReviewOrderWidgetService';
 import styles from './ReviewOrderWidget.module.css';
+import PromoCodeWidget from './PromoCodeWidget';
 
 /**
  * @name ReviewOrderWidget
@@ -26,6 +27,7 @@ const ReviewOrderWidget = () => {
           quantity={quantity}
         />
       ))}
+      <PromoCodeWidget />
       <hr />
       <div className={styles.subtotal}>
         <div>
