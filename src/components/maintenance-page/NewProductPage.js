@@ -50,6 +50,7 @@ const NewProductPage = ({
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
   const priceIsInvalid = useRef(false);
+  const quantityInvalid = useRef(false);
 
   useEffect(() => {
     GetAllDistinctLists(setApiError, setDistinctAtrributes);
@@ -91,7 +92,16 @@ const NewProductPage = ({
    */
   const validatePriceTwoDecimals = () => {
     const priceArray = formData.price.split('.');
-    return (priceArray.length !== 2 || priceArray[1].length !== 2);
+    return (priceArray.length !== 2 || priceArray[1].length !== 2 || formData.price <= 0);
+  };
+
+  /**
+   * Validates quantity is not a negative number
+   * @returns {boolean}
+   */
+  const validateQuantityNotNegative = () => {
+    const { quantity } = formData;
+    return (quantity <= 0);
   };
 
   /**
@@ -101,7 +111,8 @@ const NewProductPage = ({
   const validateFormData = () => {
     emptyFields.current = getFieldsNotEmpty();
     priceIsInvalid.current = validatePriceTwoDecimals();
-    if (emptyFields.current.length || priceIsInvalid.current) {
+    quantityInvalid.current = validateQuantityNotNegative();
+    if (emptyFields.current.length || priceIsInvalid.current || quantityInvalid.current) {
       formHasError.current = true;
     } else {
       formHasError.current = false;
@@ -115,20 +126,28 @@ const NewProductPage = ({
     // Start with blank form error message to remove previous errors
     setFormErrorMessage(null);
     validateFormData();
+    let errorMessage = null;
     // If fields are empty get list with empty fields and join the list in a string
     if (emptyFields.current.length) {
-      setFormErrorMessage(constants.FORM_FIELDS_EMPTY(emptyFields.current));
+      errorMessage = constants.FORM_FIELDS_EMPTY(emptyFields.current);
     }
+    // Build the error message string checking if error message has a previous error
+    // If previous error join the prev error message with the next error
     if (priceIsInvalid.current) {
-      const errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
-      // if the price is invalid check the form error message has the set empty fields string
-      setFormErrorMessage((prev) => {
-        if (prev) {
-          return prev.concat(' AND ', errorMessage);
-        }
-        return errorMessage;
-      });
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_PRICE);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
+      }
     }
+    if (quantityInvalid.current) {
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_QUANTITY);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_QUANTITY;
+      }
+    }
+    setFormErrorMessage(errorMessage);
   };
 
   /**
