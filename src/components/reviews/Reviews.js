@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import SingleReview from './SingleReview';
 import fetchReviews from './ReviewService';
+import AppAlert from '../alert/Alert';
+import constants from '../../utils/constants';
 
 export default function Reviews({ productId }) {
   const [reviews, setReviews] = useState([]);
@@ -12,6 +14,7 @@ export default function Reviews({ productId }) {
   }, []);
   return (
     <>
+      {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
       <Grid
         container
         direction="column"

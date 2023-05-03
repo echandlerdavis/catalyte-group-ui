@@ -9,13 +9,20 @@ export default function SingleReview({ review }) {
     <Paper>
       <Grid container spacing={2}>
         <Grid item>
-          <Avatar>N</Avatar>
+          <Avatar>
+            {/* Make sure this attribute works */}
+            {/* {review.user.firstName.charAt(0)} */}
+            N
+          </Avatar>
         </Grid>
         <Grid item>
-          <Typography>What it is going to say</Typography>
+          <Typography>
+            {/* {review.review} */}
+            Hard-coding a review for now. 
+          </Typography>
         </Grid>
         <Grid item>
-          <Rating name="read-only" value={5} readOnly />
+          <Rating name="read-only" value={5} size='small' readOnly />
         </Grid>
       </Grid>
     </Paper>
