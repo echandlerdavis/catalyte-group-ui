@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import Toast from '../toast/Toast';
@@ -36,6 +41,7 @@ const MaintenancePage = () => {
   }, []);
 
   const history = useHistory();
+  const { url, path } = useRouteMatch();
 
   /**
    * Elements viewed on the main maintenance route
@@ -66,7 +72,7 @@ const MaintenancePage = () => {
           size="small"
           variant="contained"
           startIcon={<Add />}
-          onClick={() => history.push('/maintenance/new/product')}
+          onClick={() => history.push(`${url}/new/product`)}
         >
           Product
         </Button>
@@ -86,12 +92,14 @@ const MaintenancePage = () => {
         <h1>Maintenance</h1>
         {headerButtons}
       </div>
+
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
       {/* add nested routes to allow for other routes
         * in relation to the maintenance route to appear with maintenance header and error alert
+        * If you add to more routes be sure to keep main path at the bottom
        */}
       <Switch>
-        <Route exact path="/maintenance/new/product" render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} setProducts={setProducts} />} />
+        <Route path={`${path}/new/product`} render={() => <NewProductPage history={history} setApiError={setApiError} setToastData={setToastData} openToast={openToast} setProducts={setProducts} />} />
         <Route path="" render={() => mainComponent} />
       </Switch>
     </article>
