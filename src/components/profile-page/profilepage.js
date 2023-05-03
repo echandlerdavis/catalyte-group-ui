@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import EmailIcon from '@material-ui/icons/Email';
+import ShippingIcon from '@material-ui/icons/LocalShipping';
 import styles from './profilepage.module.css';
 import fetchUser from './profilepageservice';
 import Constants from '../../utils/constants';
@@ -14,7 +16,6 @@ const ProfilePage = () => {
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: '',
     billingAddress: {
       street: '',
       city: '',
@@ -26,13 +27,15 @@ const ProfilePage = () => {
   const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
-    const accessToken = window.localStorage.getItem('access_token');
+    // Check if user is logged-in via Google
+    const authInstance = window.GamepadHapticActuator.auth2.getAuthInstance();
+    const isGoogleAuthenticated = authInstance.isSignedIn.get();
 
-    fetch(Constants.USER_ENDPOINT, {
-      headers: {
-        Authorization: `Bearer ${accessToken}` // replace accessToken with actual token
-      }
-    })
+    if (!isGoogleAuthenticated) {
+      setIsLoggedIn(false);
+      return;
+    }
+    fetch(Constants.USER_ENDPOINT)
       .then((response) => {
         if (response.status === 401) {
           setIsLoggedIn(false);
@@ -42,7 +45,9 @@ const ProfilePage = () => {
         return response.json();
       })
       .then((data) => fetchUser(data.email, setUser, setApiError))
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        setApiError(error.message);
+      });
   }, []);
 
   if (!isLoggedIn) {
@@ -72,15 +77,17 @@ const ProfilePage = () => {
             {user.lastName || ''}
           </p>
           <p>
-            <strong>Email:</strong>
+            <span>
+              <EmailIcon />
+              Email:
+            </span>
             {user.email || ''}
           </p>
           <p>
-            <strong>Phone Number:</strong>
-            {user.phoneNumber || ''}
-          </p>
-          <p>
-            <strong>Billing Address:</strong>
+            <span>
+              <ShippingIcon />
+              Billing Address:
+            </span>
             {user.billingAddress.street || ''}
             {user.billingAddress.city || ''}
             {user.billingAddress.state || ''}

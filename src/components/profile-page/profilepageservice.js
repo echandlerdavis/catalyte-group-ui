@@ -12,33 +12,46 @@ import Constants from '../../utils/constants';
  */
 const fetchUser = async (email, setUser, setApiError) => {
   try {
-    const accessToken = localStorage.getItem('access_token');
-    const userResponse = await HttpHelper(`${Constants.USER_ENDPOINT}?userEmail=${email}`, 'GET', {
-      Authorization: `Bearer ${accessToken}`
-    });
-    const purchaseResponse = await HttpHelper(`${Constants.PURCHASE_ENDPOINT}?userEmail=${email}`, 'GET', {
-      Authorization: `Bearer ${accessToken}`
-    });
+    const userResponse = await HttpHelper(`${Constants.USER_ENDPOINT}?userEmail=${email}`, 'GET');
 
-    if (!userResponse.ok || !purchaseResponse.ok) {
+    if (!userResponse.ok) {
       throw new Error(Constants.API_ERROR);
     }
     const userData = await userResponse.json();
-    const purchaseData = await purchaseResponse.json();
 
-    const shippingAddress = purchaseData[0]?.deliveryAddress ?? {};
+    if (!userData) {
+      const testUsersResponse = await HttpHelper(`${Constants.USER_ENDPOINT}/test-users`, 'GET');
+      const testUsers = await testUsersResponse.json();
+      const testUserData = testUsers.find((user) => user.email === email);
 
-    setUser({
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      email: userData.email || '',
-      shippingAddress: {
-        street: shippingAddress.street || '',
-        city: shippingAddress.city || '',
-        state: shippingAddress.state || '',
-        zip: shippingAddress.zip || ''
+      if (!testUserData) {
+        throw new Error(Constants.API_ERROR);
       }
-    });
+
+      setUser({
+        firstName: testUserData.firstName,
+        lastName: testUserData.lastName,
+        email: testUserData.email,
+        billingAddress: {
+          street: testUserData.billingAddress.street,
+          city: testUserData.billingAddress.city,
+          state: testUserData.billingAddress.state,
+          zip: testUserData.billingAddress.zip
+        }
+      });
+    } else {
+      setUser({
+        firstName: userData.firstName || '',
+        lastName: userData.lastName || '',
+        email: userData.email || '',
+        billingAddress: {
+          street: userData.billingAddress.street || '',
+          city: userData.billingAddress.city || '',
+          state: userData.billingAddress.state || '',
+          zip: userData.billingAddress.zip || ''
+        }
+      });
+    }
   } catch (error) {
     setApiError(error.message);
   }
