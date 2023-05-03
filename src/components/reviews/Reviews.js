@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import SingleReview from './SingleReview';
+import fetchReviews from './ReviewService';
 
-export default function Reviews() {
+export default function Reviews({ productId }) {
+  const [reviews, setReviews] = useState([]);
+  const [apiError, setApiError] = useState(false);
+
+  useEffect(() => {
+    fetchReviews(setReviews, setApiError, productId)
+  }, []);
   return (
     <>
       <Grid
@@ -11,9 +18,12 @@ export default function Reviews() {
         justifyContent="flex-start"
         alignItems="center"
       >
-        <Grid item xs={12}>
-          <SingleReview />
+        {reviews.map((review) => (
+          <Grid item xs={12}>
+            <SingleReview review={review}/>
         </Grid>
+        ))}
+        
       </Grid>
     </>
   );

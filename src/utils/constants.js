@@ -12,6 +12,7 @@ module.exports = Object.freeze({
   PURCHASE_ENDPOINT: '/purchases',
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
+  REVIEWS_ENDPOINT: (productId) => `/products/${productId}/reviews`,
   GOOGLE_CLIENT_ID: '912899852587-7996nh9mlpvpa2446q0il4f9hj5o492h.apps.googleusercontent.com', // ENTER CLIENT ID HERE
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',

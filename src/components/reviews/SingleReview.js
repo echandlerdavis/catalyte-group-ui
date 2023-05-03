@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 
-export default function SingleReview() {
+export default function SingleReview({ review }) {
   return (
     <Paper>
       <Grid container spacing={2}>
@@ -15,7 +15,7 @@ export default function SingleReview() {
           <Typography>What it is going to say</Typography>
         </Grid>
         <Grid item>
-          <Rating value={5} />
+          <Rating name="read-only" value={5} readOnly />
         </Grid>
       </Grid>
     </Paper>
