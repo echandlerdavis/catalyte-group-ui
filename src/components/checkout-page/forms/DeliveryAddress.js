@@ -20,6 +20,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         label="First Name"
         onChange={onChange}
         value={deliveryData.firstName}
+        required
       />
 
       <FormItem
@@ -28,6 +29,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         label="Last Name"
         onChange={onChange}
         value={deliveryData.lastName}
+        required
       />
 
       <FormItem
@@ -37,6 +39,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         label="Street"
         onChange={onChange}
         value={deliveryData.street}
+        required
       />
 
       <FormItem
@@ -54,6 +57,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         label="City"
         onChange={onChange}
         value={deliveryData.city}
+        required
       />
 
       <FormItemDropdown
@@ -62,6 +66,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         onChange={onChange}
         value={deliveryData.state}
         options={usStates}
+        required
       />
 
       <FormItem
@@ -71,6 +76,7 @@ const DeliveryAddress = ({ onChange, deliveryData }) => {
         label="Zip"
         onChange={onChange}
         value={deliveryData.zip}
+        required
       />
     </div>
 

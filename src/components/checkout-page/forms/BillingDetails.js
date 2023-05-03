@@ -2,6 +2,7 @@ import React from 'react';
 import FormItem from '../../form/FormItem';
 import FormItemDropdown from '../../form/FormItemDropdown';
 import styles from './DeliveryAddress.module.css';
+// import Toast from './toast/Toast';
 
 /**
  * @name BillingDetails
@@ -14,6 +15,8 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
   return (
 
     <div className={styles.deliveryAddress}>
+      {/* {Object.keys(errors).length === 0 && submitting ? (
+        <Toast/>) : null} */}
       {!useShippingForBilling && (
         <>
 
@@ -24,6 +27,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             label="Street"
             onChange={onChange}
             value={billingData.billingStreet}
+            required
           />
 
           <FormItem
@@ -41,6 +45,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             label="City"
             onChange={onChange}
             value={billingData.billingCity}
+            required
           />
 
           <FormItemDropdown
@@ -49,6 +54,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             onChange={onChange}
             value={billingData.billingState}
             options={usStates}
+            required
           />
 
           <FormItem
@@ -58,6 +64,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             label="Zip"
             onChange={onChange}
             value={billingData.billingZip}
+            required
           />
         </>
       )}
@@ -68,6 +75,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="Email"
         onChange={onChange}
         value={billingData.email}
+        required
       />
 
       <FormItem
@@ -77,6 +85,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="Phone"
         onChange={onChange}
         value={billingData.phone}
+        required
       />
 
       <FormItem
@@ -86,6 +95,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="Credit Card"
         onChange={onChange}
         value={billingData.creditCard}
+        required
       />
 
       <FormItem
@@ -95,6 +105,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="CVV"
         onChange={onChange}
         value={billingData.cvv}
+        required
       />
 
       <FormItem
@@ -104,6 +115,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="Expiration"
         onChange={onChange}
         value={billingData.expiration}
+        required
       />
 
       <FormItem
@@ -112,6 +124,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         label="Cardholder Name"
         onChange={onChange}
         value={billingData.cardholder}
+        required
       />
     </div>
 

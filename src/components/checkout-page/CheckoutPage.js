@@ -7,6 +7,7 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
+// import CreditCardValidation from './forms/formValidation';
 
 /**
  * @name CheckoutPage
@@ -70,7 +71,14 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
+    // if (CreditCardValidation(
+    //   creditCard.cardNumber,
+    //   creditCard.expiration,
+    //   creditCard.cvv,
+    //   creditCard.cardholder
+    // ).length === 0) {
     makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
+    // }
   };
 
   if (products.length === 0) {
@@ -116,11 +124,12 @@ const CheckoutPage = () => {
             onChange={onBillingChange}
             billingData={billingData}
             useShippingForBilling={useSameAddress}
+            requried
           />
         </div>
       </section>
       <div className={styles.payNow}>
-        <button onClick={handlePay} type="button" className={styles.payButton}>
+        <button onClick={handlePay} type="submit" className={styles.payButton}>
           Checkout
         </button>
       </div>
