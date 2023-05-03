@@ -125,7 +125,7 @@ export const consolidateOrder = (product, duplicates, order) => {
  * @param {*} props product
  * @return component
  */
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, clickAction }) => {
   const classes = useStyles();
   const [open, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({
@@ -214,11 +214,13 @@ const ProductCard = ({ product }) => {
           className={classes.header}
           title={product.name}
           subheader={`${product.demographic} ${product.category} ${product.type}`}
+          onClick={() => clickAction(product)}
         />
         <CardMedia
           className={classes.media}
           image={Constants.PLACEHOLDER_IMAGE}
           title="placeholder"
+          onClick={() => clickAction(product)}
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
