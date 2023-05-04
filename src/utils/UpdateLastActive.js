@@ -49,11 +49,10 @@ const errorSetter = () => null;
 const setLastActive = () => {
   const biscuits = parseCookies();
   // if no user in cookies, return without doing anything
-  if (!Object.keys(biscuits).includes('user')) {
-    return;
+  if (Object.keys(biscuits).includes('user')) {
+    const user = JSON.parse(biscuits.user);
+    updateLastActive(user, errorSetter);
   }
-  const user = JSON.parse(biscuits.user);
-  updateLastActive(user, errorSetter);
 };
 
 export default setLastActive;
