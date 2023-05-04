@@ -141,6 +141,10 @@ const ProductCard = ({ product, clickAction }) => {
     setOpenToast(true);
   };
 
+  const modalClickZone = {
+    cursor: 'pointer'
+  };
+
   const { dispatch } = useCart();
   const {
     state: { products }
@@ -200,38 +204,40 @@ const ProductCard = ({ product, clickAction }) => {
           severity={toastData.SEVERITY}
           handleClose={closeToast}
         />
-        <CardHeader
-          avatar={(
-            <Avatar aria-label="demographics" className={classes.avatar}>
-              {product.demographic.charAt(0)}
-            </Avatar>
+        <div style={modalClickZone}>
+          <CardHeader
+            avatar={(
+              <Avatar aria-label="demographics" className={classes.avatar}>
+                {product.demographic.charAt(0)}
+              </Avatar>
           )}
-          action={(
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+            action={(
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
           )}
-          className={classes.header}
-          title={product.name}
-          subheader={`${product.demographic} ${product.category} ${product.type}`}
-          onClick={() => clickAction(product)}
-        />
-        <CardMedia
-          className={classes.media}
-          image={Constants.PLACEHOLDER_IMAGE}
-          title="placeholder"
-          onClick={() => clickAction(product)}
-        />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {product.description}
-          </Typography>
-          <br />
-          <Typography variant="body2" color="textSecondary" component="p">
-            Price: $
-            {product.price.toFixed(2)}
-          </Typography>
-        </CardContent>
+            className={classes.header}
+            title={product.name}
+            subheader={`${product.demographic} ${product.category} ${product.type}`}
+            onClick={() => clickAction(product)}
+          />
+          <CardMedia
+            className={classes.media}
+            image={Constants.PLACEHOLDER_IMAGE}
+            title="placeholder"
+            onClick={() => clickAction(product)}
+          />
+          <CardContent onClick={() => clickAction(product)}>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {product.description}
+            </Typography>
+            <br />
+            <Typography variant="body2" color="textSecondary" component="p">
+              Price: $
+              {product.price.toFixed(2)}
+            </Typography>
+          </CardContent>
+        </div>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />
