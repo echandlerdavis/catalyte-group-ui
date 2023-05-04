@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import EmailIcon from '@material-ui/icons/Email';
 import ShippingIcon from '@material-ui/icons/LocalShipping';
-import styles from './profilepage.module.css';
-import fetchUser from './profilepageservice';
-import Constants from '../../utils/constants';
+import styles from './ProfilePage.module.css';
+import { fetchUser, parseCookies } from './ProfilePageService';
 
 /**
  * @name ProfilePage
@@ -18,6 +17,7 @@ const ProfilePage = () => {
     email: '',
     billingAddress: {
       street: '',
+      street2: '',
       city: '',
       state: '',
       zip: ''
@@ -27,28 +27,15 @@ const ProfilePage = () => {
   const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
-    // Check if user is logged-in via Google
-    const authInstance = window.GamepadHapticActuator.auth2.getAuthInstance();
-    const isGoogleAuthenticated = authInstance.isSignedIn.get();
-
-    if (!isGoogleAuthenticated) {
+    const cookies = parseCookies();
+    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+    if (user) {
+      setIsLoggedIn(true);
+      fetchUser(cookiesUser.email, setUser, setApiError);
+    } else {
       setIsLoggedIn(false);
-      return;
     }
-    fetch(Constants.USER_ENDPOINT)
-      .then((response) => {
-        if (response.status === 401) {
-          setIsLoggedIn(false);
-          throw new Error('User not authenticated');
-        }
-        setIsLoggedIn(true);
-        return response.json();
-      })
-      .then((data) => fetchUser(data.email, setUser, setApiError))
-      .catch((error) => {
-        setApiError(error.message);
-      });
-  }, []);
+  }, [user]);
 
   if (!isLoggedIn) {
     return <div>Please log in to continue to your user page</div>;
@@ -88,10 +75,11 @@ const ProfilePage = () => {
               <ShippingIcon />
               Billing Address:
             </span>
-            {user.billingAddress.street || ''}
-            {user.billingAddress.city || ''}
-            {user.billingAddress.state || ''}
-            {user.billingAddress.zip || ''}
+            {user.billingAddress.billingStreet || ''}
+            {user.billingAddress.billingStreet2 || ''}
+            {user.billingAddress.billingCity || ''}
+            {user.billingAddress.billingState || ''}
+            {user.billingAddress.billingZip || ''}
           </p>
         </div>
       )}

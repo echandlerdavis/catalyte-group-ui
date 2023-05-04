@@ -97,7 +97,7 @@ const Header = () => {
    * @description Redirect the page to /profilepage when clicked
    */
   const handleProfileClick = () => {
-    history.push('/profilepage');
+    history.push('/ProfilePage');
   };
 
   return (
