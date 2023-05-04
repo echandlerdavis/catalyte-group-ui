@@ -11,9 +11,13 @@ import Constants from '../../utils/constants';
  * @returns {Promise<objec>}returns the product object that was saved
  */
 export const SaveProduct = async (product, setApiError) => {
-  await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product)
-    .then((response) => response.json())
-    .catch(() => setApiError(true));
+  try {
+    const response = await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product);
+    return response.json();
+  } catch {
+    setApiError(true);
+    return false;
+  }
 };
 
 /**

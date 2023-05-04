@@ -47,7 +47,6 @@ const NewProductPage = ({
   const [formData, setFormData] = useState(initialFormData);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const [distinctAttributes, setDistinctAtrributes] = useState({});
-  const [newProduct, setNewProduct] = useState({});
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
   const priceIsInvalid = useRef(false);
@@ -174,11 +173,11 @@ const NewProductPage = ({
    * Generates the errors and saves the product if no errors present
    * @param {Event} e
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      setNewProduct(SaveProduct(formData, setApiError));
+      const newProduct = await SaveProduct(formData, setApiError);
       if (newProduct) {
         setProducts((products) => [...products, newProduct]);
         setToastData(constants.SAVE_PRODUCT_SUCCESS);
