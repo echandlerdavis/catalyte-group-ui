@@ -5,14 +5,12 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Box from '@material-ui/core/Box';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
@@ -51,12 +49,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
+   * Reads the color of a product and returns component with the color as the background
+   * Please note that inline style was needed in order to override MUI table cell styles
+   * @param {string} hexColor products color as hexColor string
+   * @returns div element
+   */
+const colorDot = (hexColor) => (
+  <div style={{
+    backgroundColor: hexColor,
+    color: hexColor === '#ffffff' ? 'black' : 'white',
+    justifySelf: 'flex-end',
+    boxShadow: '.05rem .05rem .05rem grey',
+    height: '1.5em',
+    width: '1.5em',
+    borderRadius: '50%'
+  }}
+  />
+);
+
+/**
  * @name ProductModalCard
  * @description displays single product card component
  * @param {*} props product
  * @return component
  */
-const ProductModalCard = (props) => {
+const ProductModalCard = React.forwardRef((props, ref) => {
   const { product } = props;
   const classes = useStyles();
   const { dispatch } = useCart();
@@ -85,23 +102,13 @@ const ProductModalCard = (props) => {
   };
 
   return (
-    <Box>
+    <Box ref={ref}>
       <Card className={classes.root} onClick={() => onClose()}>
         <div className={styles.CardContainer}>
           <CardHeader
-            avatar={(
-              <Avatar aria-label="demographics" className={classes.avatar}>
-                {product.demographic.charAt(0)}
-              </Avatar>
-          )}
-            action={(
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
-          )}
             className={classes.header}
             title={product.name}
-            subheader={`${product.demographic} ${product.category} ${product.type}`}
+            subheader={`${product.category} ${product.type}`}
           />
           <CardMedia
             className={classes.media}
@@ -118,6 +125,16 @@ const ProductModalCard = (props) => {
               {product.price.toFixed(2)}
             </Typography>
           </CardContent>
+          <br />
+          <Typography variant="body2" color="textSecondary" component="span" style={{ display: 'inline-flex', justifyContent: 'flex-start', width: '100%' }}>
+            Primary Color:&nbsp;&nbsp;
+            {colorDot(product.primaryColorCode)}
+          </Typography>
+          <br />
+          <Typography variant="body2" color="textSecondary" component="span" style={{ display: 'inline-flex', justifyContent: 'flex-start', width: '100%' }}>
+            Secondary Color:&nbsp;&nbsp;
+            {colorDot(product.secondaryColorCode)}
+          </Typography>
           <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
               <FavoriteIcon />
@@ -133,6 +150,6 @@ const ProductModalCard = (props) => {
       </Card>
     </Box>
   );
-};
+});
 
 export default ProductModalCard;
