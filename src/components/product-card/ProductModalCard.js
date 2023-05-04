@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Box from '@material-ui/core/Box';
-import { TextField } from '@material-ui/core';
+import { ClickAwayListener, TextField } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
@@ -155,68 +155,70 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   };
 
   return (
-    <Box ref={ref} className={classes.box}>
-      <Toast
-        message={toastData.MESSAGE}
-        open={open}
-        severity={toastData.SEVERITY}
-        handleClose={closeToast}
-      />
-      <Card className={classes.root}>
-        <div className={styles.CardContainer}>
-          <CardHeader
-            className={classes.header}
-            title={product.name}
-            subheader={`${product.category} ${product.type}`}
-            action={(
-              <IconButton onClick={() => onClose()}>
-                <Close />
-              </IconButton>
+    <ClickAwayListener onClickAway={onClose}>
+      <Box ref={ref} className={classes.box}>
+        <Toast
+          message={toastData.MESSAGE}
+          open={open}
+          severity={toastData.SEVERITY}
+          handleClose={closeToast}
+        />
+        <Card className={classes.root}>
+          <div className={styles.CardContainer}>
+            <CardHeader
+              className={classes.header}
+              title={product.name}
+              subheader={`${product.category} ${product.type}`}
+              action={(
+                <IconButton onClick={() => onClose()}>
+                  <Close />
+                </IconButton>
             )}
-          />
-          <CardMedia
-            className={classes.media}
-            image={Constants.PLACEHOLDER_IMAGE}
-            title="placeholder"
-          />
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {product.description}
+            />
+            <CardMedia
+              className={classes.media}
+              image={Constants.PLACEHOLDER_IMAGE}
+              title="placeholder"
+            />
+            <CardContent>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {product.description}
+              </Typography>
+              <br />
+              <Typography variant="body2" color="textSecondary" component="p">
+                Price: $
+                {product.price.toFixed(2)}
+              </Typography>
+            </CardContent>
+            <br />
+            <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+              <div className={classes.colorLabel}>Primary Color:</div>
+              {colorDot(product.primaryColorCode)}
             </Typography>
             <br />
-            <Typography variant="body2" color="textSecondary" component="p">
-              Price: $
-              {product.price.toFixed(2)}
+            <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+              <div className={classes.colorLabel}>Secondary Color:</div>
+              {colorDot(product.secondaryColorCode)}
             </Typography>
-          </CardContent>
-          <br />
-          <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-            <div className={classes.colorLabel}>Primary Color:</div>
-            {colorDot(product.primaryColorCode)}
-          </Typography>
-          <br />
-          <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-            <div className={classes.colorLabel}>Secondary Color:</div>
-            {colorDot(product.secondaryColorCode)}
-          </Typography>
-          <CardActions>
-            <TextField
-              label="Quantity"
-              id="qtyInput"
-              type="number"
-              InputProps={{ inputProps: { min: 0 } }}
-              className={classes.quantityInput}
-              value={inputValue}
-              onChange={inputChange}
-              autoFocus
-            />
-            <IconButton aria-label="add to shopping cart" onClick={onAdd}>
-              <AddShoppingCartIcon />
-            </IconButton>
-          </CardActions>
-        </div>
-      </Card>
-    </Box>
+            <CardActions>
+              <TextField
+                label="Quantity"
+                id="qtyInput"
+                type="number"
+                InputProps={{ inputProps: { min: 0 } }}
+                className={classes.quantityInput}
+                value={inputValue}
+                onChange={inputChange}
+                autoFocus
+              />
+              <IconButton aria-label="add to shopping cart" onClick={onAdd}>
+                <AddShoppingCartIcon />
+              </IconButton>
+            </CardActions>
+          </div>
+        </Card>
+      </Box>
+    </ClickAwayListener>
   );
 });
 
