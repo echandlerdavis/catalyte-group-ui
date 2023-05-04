@@ -50,7 +50,7 @@ export const GetProductBrands = async (setApiError, setAttribute) => {
 export const GetProductCategories = async (setApiError, setAttribute) => {
   await HttpHelper(Constants.CATEGORIES_ENDPOINT, 'GET')
     .then((response) => response.json())
-    .then((data) => setAttribute((prev) => ({ ...prev, catgory: data })))
+    .then((data) => setAttribute((prev) => ({ ...prev, category: data })))
     .catch(() => setApiError(true));
 };
 
