@@ -8,7 +8,7 @@ import Constants from '../../utils/constants';
  * @param {object} product the product object to be saved to the database
  * @param {React.Dispatch<React.SetStateAction>} setApiError
  * sets error if response other than 200 is returned
- * @returns {Promise<objec>}returns the product object that was saved
+ * @returns {Promise<object>}returns the product object that was saved
  */
 export const SaveProduct = async (product, setApiError) => {
   try {
