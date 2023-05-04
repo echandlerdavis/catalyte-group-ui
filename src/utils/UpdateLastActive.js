@@ -47,10 +47,13 @@ const errorSetter = () => null;
  * @returns {React.MutableRefObject, function}
  */
 const setLastActive = () => {
-  const user = JSON.parse(parseCookies().user);
-  if (user !== {} && user !== null && user !== undefined) {
-    updateLastActive(user, errorSetter);
+  const biscuits = parseCookies();
+  // if no user in cookies, return without doing anything
+  if (!Object.keys(biscuits).includes('user')) {
+    return;
   }
+  const user = JSON.parse(biscuits.user);
+  updateLastActive(user, errorSetter);
 };
 
 export default setLastActive;
