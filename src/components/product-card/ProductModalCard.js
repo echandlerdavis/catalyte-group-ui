@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -14,6 +14,8 @@ import { Close } from '@material-ui/icons';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
+import { validateOrder, inOrder } from './ProductCard';
+import Toast from '../toast/Toast';
 
 /**
  * @name useStyles
@@ -59,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
   colorLabel: {
     alignSelf: 'flex-start',
     flexBasis: '50%'
+  },
+  quantityInput: {
+    width: '5vw'
   }
 }));
 /**
@@ -92,11 +97,42 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   const {
     state: { products }
   } = useCart();
-
   const { onClose } = props;
+  // toast stuff for errors
+  const [open, setOpenToast] = useState(false);
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
+
+  const closeToast = () => {
+    setOpenToast(false);
+  };
+
+  const openToast = () => {
+    setOpenToast(true);
+  };
+  // input box stuff
+  const [inputValue, setInputValue] = useState(1);
+  const inputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
   const onAdd = () => {
-    if (products.length === 0) {
+    // if inputValue = 0, do nothing
+    if (inputValue === 0) {
+      return;
+    }
+    // validate order and pop toast if error
+    const validation = validateOrder(product, products);
+    if (!validation.valid) {
+      setToastData(Constants.ADD_PRODUCT_FAILURE(validation.errors));
+      openToast();
+      return;
+    }
+    // check to see if product is already in order
+    const repeatItem = inOrder(product, products);
+    if (!repeatItem) {
       // add product to order
       dispatch(
         {
@@ -106,15 +142,26 @@ const ProductModalCard = React.forwardRef((props, ref) => {
             title: product.name,
             price: product.price,
             description: product.description,
-            quantity: 1
+            quantity: inputValue
           }
         }
       );
+      onClose();
+      return;
     }
+    // if not a new item, set the quantity to inputValue
+    products.filter((p) => p.id === product.id)[0].quantity = inputValue;
+    onClose();
   };
 
   return (
     <Box ref={ref} className={classes.box}>
+      <Toast
+        message={toastData.MESSAGE}
+        open={open}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
       <Card className={classes.root}>
         <div className={styles.CardContainer}>
           <CardHeader
@@ -154,9 +201,13 @@ const ProductModalCard = React.forwardRef((props, ref) => {
           </Typography>
           <CardActions>
             <TextField
+              label="Quantity"
+              id="qtyInput"
               type="number"
               InputProps={{ inputProps: { min: 0 } }}
-              default={1}
+              className={classes.quantityInput}
+              value={inputValue}
+              onChange={inputChange}
               autoFocus
             />
             <IconButton aria-label="add to shopping cart" onClick={onAdd}>
