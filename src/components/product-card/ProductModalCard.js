@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   colorSpan: {
     display: 'inline-flex',
     justifyContent: 'flex-start',
-    alignContent: 'center',
+    alignItems: 'center',
     width: '100%',
     marginLeft: '1em',
     marginRight: '1em'
@@ -63,7 +63,14 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: '50%'
   },
   quantityInput: {
-    width: '5vw'
+    width: '3em',
+    margin: '1em',
+    alignSelf: 'flex-end'
+  },
+  actionsFormatting: {
+    display: 'inline-flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end'
   }
 }));
 /**
@@ -200,7 +207,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
               <div className={classes.colorLabel}>Secondary Color:</div>
               {colorDot(product.secondaryColorCode)}
             </Typography>
-            <CardActions>
+            <CardActions className={classes.actionsFormatting}>
               <TextField
                 label="Quantity"
                 id="qtyInput"
@@ -211,7 +218,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 onChange={inputChange}
                 autoFocus
               />
-              <IconButton aria-label="add to shopping cart" onClick={onAdd}>
+              <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
                 <AddShoppingCartIcon />
               </IconButton>
             </CardActions>
