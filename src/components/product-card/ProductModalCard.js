@@ -7,11 +7,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import ShareIcon from '@material-ui/icons/Share';
 import Box from '@material-ui/core/Box';
+import { TextField } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
@@ -40,14 +39,28 @@ const useStyles = makeStyles((theme) => ({
   expandOpen: {
     transform: 'rotate(180deg)'
   },
-  avatar: {
-    backgroundColor: red[500]
-  },
   header: {
     minHeight: 100
+  },
+  box: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  colorSpan: {
+    display: 'inline-flex',
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    width: '100%',
+    marginLeft: '1em',
+    marginRight: '1em'
+  },
+  colorLabel: {
+    alignSelf: 'flex-start',
+    flexBasis: '50%'
   }
 }));
-
 /**
    * Reads the color of a product and returns component with the color as the background
    * Please note that inline style was needed in order to override MUI table cell styles
@@ -58,7 +71,6 @@ const colorDot = (hexColor) => (
   <div style={{
     backgroundColor: hexColor,
     color: hexColor === '#ffffff' ? 'black' : 'white',
-    justifySelf: 'flex-end',
     boxShadow: '.05rem .05rem .05rem grey',
     height: '1.5em',
     width: '1.5em',
@@ -102,13 +114,18 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   };
 
   return (
-    <Box ref={ref}>
-      <Card className={classes.root} onClick={() => onClose()}>
+    <Box ref={ref} className={classes.box}>
+      <Card className={classes.root}>
         <div className={styles.CardContainer}>
           <CardHeader
             className={classes.header}
             title={product.name}
             subheader={`${product.category} ${product.type}`}
+            action={(
+              <IconButton onClick={() => onClose()}>
+                <Close />
+              </IconButton>
+            )}
           />
           <CardMedia
             className={classes.media}
@@ -126,22 +143,22 @@ const ProductModalCard = React.forwardRef((props, ref) => {
             </Typography>
           </CardContent>
           <br />
-          <Typography variant="body2" color="textSecondary" component="span" style={{ display: 'inline-flex', justifyContent: 'flex-start', width: '100%' }}>
-            Primary Color:&nbsp;&nbsp;
+          <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+            <div className={classes.colorLabel}>Primary Color:</div>
             {colorDot(product.primaryColorCode)}
           </Typography>
           <br />
-          <Typography variant="body2" color="textSecondary" component="span" style={{ display: 'inline-flex', justifyContent: 'flex-start', width: '100%' }}>
-            Secondary Color:&nbsp;&nbsp;
+          <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+            <div className={classes.colorLabel}>Secondary Color:</div>
             {colorDot(product.secondaryColorCode)}
           </Typography>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
+          <CardActions>
+            <TextField
+              type="number"
+              InputProps={{ inputProps: { min: 0 } }}
+              default={1}
+              autoFocus
+            />
             <IconButton aria-label="add to shopping cart" onClick={onAdd}>
               <AddShoppingCartIcon />
             </IconButton>
