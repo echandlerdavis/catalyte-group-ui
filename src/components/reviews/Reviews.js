@@ -3,31 +3,42 @@ import { Grid } from '@material-ui/core';
 import SingleReview from './SingleReview';
 import fetchReviews from './ReviewService';
 import AppAlert from '../alert/Alert';
-import constants from '../../utils/constants';
+import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 
 export default function Reviews({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
-    fetchReviews(setReviews, setApiError, productId)
+    fetchReviews(setReviews, setApiError, productId);
   }, []);
   return (
     <>
+      <h1>Reviews</h1>
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
-      <Grid
-        container
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-      >
-        {reviews.map((review) => (
-          <Grid item xs={12}>
-            <SingleReview review={review}/>
-        </Grid>
-        ))}
-        
-      </Grid>
+      {reviews.length === 0
+        ? (
+          <AppAlert
+            severity={SEVERITY_LEVELS.INFO}
+            title="No Reviews Yet!"
+            message="There are no reviews yet for this product."
+          />
+        ) : (
+          <Grid
+            container
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            {reviews.map((review) => (
+              <Grid item xs={12} key={review.id}>
+                <SingleReview review={review} />
+              </Grid>
+            ))}
+
+          </Grid>
+        )}
+
     </>
   );
 }
