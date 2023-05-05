@@ -9,7 +9,7 @@ import constants from './constants';
  */
 const updateLastActive = async (user, setApiError) => {
   const updatedUser = user;
-  if (user !== null && user !== undefined) {
+  if (user) {
     await HttpHelper(constants.UPDATE_LAST_ACTIVE_ENDPOINT(user.id), 'PUT', updatedUser)
       .then((response) => {
         if (response.ok) {
