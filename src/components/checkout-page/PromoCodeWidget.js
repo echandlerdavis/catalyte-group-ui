@@ -20,13 +20,20 @@ const PromoCodeWidget = () => {
     setCode(e.target.value);
   };
 
-  const onFocusChange = () => {
-    // TODO: need helper function to hit DB to get code
-    fetchPromoCode(code, setPromoCode, setErrors, setValidCode);
-    if (validCode) {
+  const onFocusChange = async () => {
+    // reset everything
+    setPromoCode({});
+    setValidCode(false);
+    setErrors([]);
+    if (code.length > 0) {
+      await fetchPromoCode(code, setPromoCode, setErrors);// code running before promise resolves
       console.log(promoCode);
-      setErrors([]);
-      // do stuff with the promo code
+      if (Object.keys(promoCode).length > 0) {
+        setValidCode(true);
+        console.log(promoCode);
+        setErrors([]);
+        // do stuff with the promo code
+      }
     }
   };
 
