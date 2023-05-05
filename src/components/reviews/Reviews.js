@@ -28,9 +28,10 @@ export default function Reviews({ productId }) {
           direction="column"
           justifyContent="flex-start"
           alignItems="center"
+          spacing={2}
         >
           {reviews.map((review) => (
-            <Grid item xs={9} key={review.id}>
+            <Grid item xs={12} key={review.id} >
               <SingleReview review={review} />
             </Grid>
           ))}
