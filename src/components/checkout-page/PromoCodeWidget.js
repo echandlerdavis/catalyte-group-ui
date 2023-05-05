@@ -14,7 +14,7 @@ const PromoCodeWidget = () => {
   const [errors, setErrors] = useState([]);
   const [validCode, setValidCode] = useState(false);
   const [code, setCode] = useState('');
-  const [promoCode, setPromoCode] = useState({});
+  const [promoCode, setPromoCode] = useState(null);
 
   const onUserInput = (e) => {
     setCode(e.target.value);
@@ -26,13 +26,19 @@ const PromoCodeWidget = () => {
     setValidCode(false);
     setErrors([]);
     if (code.length > 0) {
-      await fetchPromoCode(code, setPromoCode, setErrors);// code running before promise resolves
-      console.log(promoCode);
-      if (Object.keys(promoCode).length > 0) {
+      const resp = await fetchPromoCode(code);
+      console.log(resp);
+      if (resp.status === 200) {
         setValidCode(true);
+        setPromoCode(resp.json());
         console.log(promoCode);
-        setErrors([]);
         // do stuff with the promo code
+      }
+      if (resp.status === 404) {
+        setErrors([resp.error, resp.errorMessage]);
+      }
+      if (resp.status === 400) {
+        setErrors(resp.errorMessage);
       }
     }
   };
@@ -47,7 +53,7 @@ const PromoCodeWidget = () => {
         value={code}
         onBlur={onFocusChange}
       />
-      { errors.length > 0 && <Alert severity="error" title="Error:" message={errors.join(',')} />}
+      { errors.length > 0 && <Alert severity="error" title="Error:" message={errors.join(': ')} />}
       {errors.length === 0 && validCode && <CheckCircle style={checkBoxStyle} />}
     </>
   );
