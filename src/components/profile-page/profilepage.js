@@ -11,38 +11,23 @@ import { fetchUser, parseCookies } from './ProfilePageService';
  * and shipping address
  */
 const ProfilePage = () => {
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    billingAddress: {
-      street: '',
-      street2: '',
-      city: '',
-      state: '',
-      zip: ''
-    }
-  });
+  const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     const cookies = parseCookies();
     const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-    if (user) {
+    if (cookiesUser) {
       setIsLoggedIn(true);
       fetchUser(cookiesUser.email, setUser, setApiError);
     } else {
       setIsLoggedIn(false);
     }
-  }, [user]);
+  }, []);
 
   if (!isLoggedIn) {
     return <div>Please log in to continue to your user page</div>;
-  }
-
-  if (!user) {
-    return <div>Loading...</div>;
   }
 
   return (
