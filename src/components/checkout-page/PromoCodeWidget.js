@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import { green } from '@material-ui/core/colors';
 import Alert from '../alert/Alert';
+import fetchPromoCode from './PromoCodeWidgetService';
 
 const checkBoxStyle = {
   color: green[500],
@@ -13,6 +14,7 @@ const PromoCodeWidget = () => {
   const [errors, setErrors] = useState([]);
   const [validCode, setValidCode] = useState(false);
   const [code, setCode] = useState('');
+  const [promoCode, setPromoCode] = useState({});
 
   const onUserInput = (e) => {
     setCode(e.target.value);
@@ -20,12 +22,11 @@ const PromoCodeWidget = () => {
 
   const onFocusChange = () => {
     // TODO: need helper function to hit DB to get code
-    if (code.length > 0) {
+    fetchPromoCode(code, setPromoCode, setErrors, setValidCode);
+    if (validCode) {
+      console.log(promoCode);
       setErrors([]);
-      setValidCode(true);
-    } else {
-      setValidCode(false);
-      setErrors(['invalid code']);
+      // do stuff with the promo code
     }
   };
 

@@ -24,5 +24,7 @@ module.exports = Object.freeze({
     MESSAGE: `${description} added to cart!`,
     SEVERITY: SEVERITY_LEVELS.SUCCESS
   }),
-  LOGO_ALT: 'Jaba the Hutt drinking coffee'
+  LOGO_ALT: 'Jaba the Hutt drinking coffee',
+  PROMOCODE_ENDPOINT: '/promotionalCodes',
+  INVALID_CODE: 'Invalid code'
 });
