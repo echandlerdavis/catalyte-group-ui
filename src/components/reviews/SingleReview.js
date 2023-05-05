@@ -3,6 +3,7 @@ import {
   Avatar, Paper, Typography, Grid, makeStyles
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
+import styles from './Reviews.module.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
+    minWidth: 700,
     maxWidth: 700
   },
   avatar: {
@@ -20,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   rating: {
     width: 50,
     height: 50,
-    padding: 5
+    padding: 2
   }
 }));
 
@@ -30,15 +32,14 @@ export default function SingleReview({ review }) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Grid container spacing={2} direction='row'>
-          <Grid item>
-            <Avatar className={classes.avatar}>
-              {review.userName.charAt(0)}
-            </Avatar>
-          </Grid>
-          <Grid item xs={12} sm container >
-            <Grid item xs container direction='column' spacing={2}>
-            <Grid item xs>
+        <Grid container spacing={2}>
+          <Grid item container justifyContent="space-between">
+            <Grid item container xs={1} justifyContent="center">
+              <Avatar className={classes.avatar}>
+                {review.userName.charAt(0)}
+              </Avatar>
+            </Grid>
+            <Grid item xs={8}>
               <Typography>
                 {review.title}
               </Typography>
@@ -46,6 +47,11 @@ export default function SingleReview({ review }) {
                 {review.userName}
               </Typography>
             </Grid>
+            <Grid item xs={3} container justifyContent="flex-end">
+              <Rating name="read-only" className={styles.span} value={review.rating} size="small" readOnly />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} container>
             <Grid item>
               <Typography>
                 {review.review}
@@ -56,12 +62,9 @@ export default function SingleReview({ review }) {
                 {review.createdAt}
               </Typography>
             </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={3}>
-            <Rating name="read-only" value={review.rating} size="small" readOnly />
           </Grid>
         </Grid>
+
       </Paper>
     </div>
   );
