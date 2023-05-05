@@ -23,7 +23,7 @@ const App = () => (
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
             <Route exact path="/maintenance" render={() => <MaintenancePage />} />
-            <Route exact path="/reviews" render={() => <Reviews />} />
+            <Route exact path="/reviews" render={() => <Reviews productId={6} />} />
           </Switch>
         </main>
         <Footer />

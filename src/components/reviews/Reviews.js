@@ -11,34 +11,31 @@ export default function Reviews({ productId }) {
 
   useEffect(() => {
     fetchReviews(setReviews, setApiError, productId);
-  }, []);
+  }, [productId]);
   return (
     <>
       <h1>Reviews</h1>
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
-      {reviews.length === 0
-        ? (
-          <AppAlert
-            severity={SEVERITY_LEVELS.INFO}
-            title="No Reviews Yet!"
-            message="There are no reviews yet for this product."
-          />
-        ) : (
-          <Grid
-            container
-            direction="column"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            {reviews.map((review) => (
-              <Grid item xs={12} key={review.id}>
-                <SingleReview review={review} />
-              </Grid>
-            ))}
-
-          </Grid>
-        )}
-
+      {reviews.length === 0 ? (
+        <AppAlert
+          severity={SEVERITY_LEVELS.INFO}
+          title="No Reviews Yet!"
+          message="There are no reviews yet for this product."
+        />
+      ) : (
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          {reviews.map((review) => (
+            <Grid item xs={9} key={review.id}>
+              <SingleReview review={review} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 }
