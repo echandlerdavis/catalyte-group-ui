@@ -6,6 +6,7 @@ import Constants from '../../utils/constants';
 import fetchProducts from './ProductPageService';
 import AppAlert from '../alert/Alert';
 import ProductModalCard from '../product-card/ProductModalCard';
+import Toast from '../toast/Toast';
 
 /**
  * @name ProductPage
@@ -17,6 +18,19 @@ const ProductPage = () => {
   const [apiError, setApiError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalProduct, setModalProduct] = useState('');
+  const [open, setOpenToast] = useState(false);
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
+
+  const closeToast = () => {
+    setOpenToast(false);
+  };
+
+  const openToast = () => {
+    setOpenToast(true);
+  };
 
   const openModal = () => {
     setShowModal(true);
@@ -37,8 +51,19 @@ const ProductPage = () => {
       <Modal
         open={showModal}
       >
-        <ProductModalCard product={modalProduct} onClose={closeModal} />
+        <ProductModalCard
+          product={modalProduct}
+          onClose={closeModal}
+          openToastCallback={openToast}
+          setToastCallback={setToastData}
+        />
       </Modal>
+      <Toast
+        message={toastData.MESSAGE}
+        open={open}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <section className={styles.app}>
         {products.map((product) => (
@@ -46,6 +71,8 @@ const ProductPage = () => {
             <ProductCard
               product={product}
               clickAction={displayModal}
+              openToast={openToast}
+              setToastData={setToastData}
             />
           </div>
         ))}

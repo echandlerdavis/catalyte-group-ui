@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,7 +15,6 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
-import Toast from '../toast/Toast';
 import styles from './ProductCard.module.css';
 
 /**
@@ -125,22 +124,10 @@ export const consolidateOrder = (product, duplicates, order) => {
  * @param {*} props product
  * @return component
  */
-const ProductCard = ({ product, clickAction }) => {
+const ProductCard = ({
+  product, clickAction, openToast, setToastData
+}) => {
   const classes = useStyles();
-  const [open, setOpenToast] = useState(false);
-  const [toastData, setToastData] = useState({
-    MESSAGE: '',
-    SEVERITY: Constants.SEVERITY_LEVELS.INFO
-  });
-
-  const closeToast = () => {
-    setOpenToast(false);
-  };
-
-  const openToast = () => {
-    setOpenToast(true);
-  };
-
   const modalClickZone = {
     cursor: 'pointer'
   };
@@ -198,12 +185,6 @@ const ProductCard = ({ product, clickAction }) => {
   return (
     <Card className={classes.root}>
       <div className={styles.CardContainer}>
-        <Toast
-          message={toastData.MESSAGE}
-          open={open}
-          severity={toastData.SEVERITY}
-          handleClose={closeToast}
-        />
         <div style={modalClickZone}>
           <CardHeader
             avatar={(

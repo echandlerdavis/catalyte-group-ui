@@ -99,6 +99,7 @@ const colorDot = (hexColor) => (
  */
 const ProductModalCard = React.forwardRef((props, ref) => {
   const { product } = props;
+  const { setToastCallback, openToastCallback } = props;
   const classes = useStyles();
   const { dispatch } = useCart();
   const {
@@ -141,6 +142,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     const repeatItem = inOrder(product, products);
     if (!repeatItem) {
       // add product to order
+      setToastCallback(Constants.ADD_PRODUCT_SUCCESS(product.name));
       dispatch(
         {
           type: 'add',
@@ -154,6 +156,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
         }
       );
       onClose();
+      openToastCallback();
       return;
     }
     // if not a new item, set the quantity to inputValue
