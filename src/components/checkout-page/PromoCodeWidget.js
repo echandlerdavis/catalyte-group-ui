@@ -26,20 +26,14 @@ const PromoCodeWidget = () => {
     setValidCode(false);
     setErrors([]);
     if (code.length > 0) {
-      const resp = await fetchPromoCode(code);
-      console.log(resp);
-      if (resp.status === 200) {
+      const promo = await fetchPromoCode(code, setPromoCode, setErrors);
+      if (promo) {
         setValidCode(true);
-        setPromoCode(resp.json());
         console.log(promoCode);
         // do stuff with the promo code
       }
-      if (resp.status === 404) {
-        setErrors([resp.error, resp.errorMessage]);
-      }
-      if (resp.status === 400) {
-        setErrors(resp.errorMessage);
-      }
+      console.log('onFocus promocode: ', promoCode);
+      console.log('onFocus errors: ', errors);
     }
   };
 
