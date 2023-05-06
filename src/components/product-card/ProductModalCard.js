@@ -25,11 +25,13 @@ import Toast from '../toast/Toast';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
-    height: '100%'
+    height: '100%',
+    minWidth: '30vw'
   },
   media: {
     height: 0,
-    paddingTop: '56.25%'
+    paddingTop: '56.25%',
+    margin: '1em'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   },
   colorLabel: {
     alignSelf: 'flex-start',
-    flexBasis: '50%'
+    flexBasis: '28%'
   },
   quantityInput: {
     width: '3em',
