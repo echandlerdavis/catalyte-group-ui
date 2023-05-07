@@ -7,6 +7,7 @@ import styles from './NewProductPage.module.css';
 import { GetAllDistinctLists, SaveProduct } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
+import FormItemDropdown from '../form/FormItemDropdown';
 
 /**
  * @name NewProductPage
@@ -215,6 +216,18 @@ const NewProductPage = ({
             }
             // If the attribute has a distinct list of options map to an input with data list
             if (distinctAttributes && Object.keys(distinctAttributes).includes(attribute)) {
+              if (attribute === 'demographic') {
+                return (
+                  <FormItemDropdown
+                    key={attribute}
+                    onChange={handleFormChange}
+                    value={formData[attribute]}
+                    id={attribute}
+                    label={attribute}
+                    options={distinctAttributes[attribute]}
+                  />
+                );
+              }
               return (
                 <FormItemDataList
                   key={attribute}
