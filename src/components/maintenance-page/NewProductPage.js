@@ -29,7 +29,7 @@ const NewProductPage = ({
     brand: '',
     imageSrc: '',
     material: '',
-    price: '',
+    price: '1.00',
     quantity: '',
     name: '',
     description: '',
@@ -83,7 +83,13 @@ const NewProductPage = ({
    * @returns array of field names that are empty
    */
   const getFieldsNotEmpty = () => (
-    Object.keys(formData).filter((key) => formData[key].length === 0)
+    Object.keys(formData).filter((key) => {
+      let formInput = formData[key];
+      if (typeof formInput === 'string') {
+        formInput = formInput.trim();
+      }
+      return formInput.length === 0;
+    })
   );
 
   /**
@@ -232,6 +238,8 @@ const NewProductPage = ({
                 type={formInputTypes[attribute]}
                 label={attribute}
                 className={styleClass}
+                min={1.00}
+                step={attribute === 'price' ? 0.01 : 1}
               />
             );
           })

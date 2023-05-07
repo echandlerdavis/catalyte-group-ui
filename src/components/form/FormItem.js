@@ -9,7 +9,7 @@ import styles from './FormItem.module.css';
  * @return component
  */
 const FormItem = ({
-  onChange, value, id, label, placeholder, type, className
+  onChange, value, id, label, placeholder, type, className, min, step
 }) => {
   const checkbox = (
     <Checkbox
@@ -22,7 +22,7 @@ const FormItem = ({
     />
   );
 
-  const inputBox = (
+  let inputBox = (
     <input
       className={`${styles.input} ${className}`}
       id={id}
@@ -31,8 +31,19 @@ const FormItem = ({
       type={type}
       value={value}
       checked={value}
+      min={min}
+      step={step}
     />
   );
+
+  if (label === 'price') {
+    inputBox = (
+      <div className={styles.priceInputBox}>
+        <div className={styles.priceInputIcon}>$</div>
+        {inputBox}
+      </div>
+    );
+  }
 
   return (
     <div key={`input${id}`}>
