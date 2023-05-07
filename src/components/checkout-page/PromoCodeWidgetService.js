@@ -13,16 +13,19 @@ const fetchPromoCode = async (codeName) => {
       fetchedData.status = response.status;
       if (response.status === 200) {
         fetchedData.gotPromoCode = true;
-        return response.json();
       }
-      fetchedData.errors = response.json();
-      throw new Error();
+      return response.json();
     })
     .then((data) => {
-      fetchedData.data = data;
-      console.log('data: ', data);
-    })
-    .catch((e) => e);
+      if (fetchedData.gotPromoCode) {
+        fetchedData.data = data;
+      } else if (fetchedData.status === 404) {
+        fetchedData.errors = [data.errorMessage];
+      } else {
+        fetchedData.errors = [...data.errorMessage];
+      }
+    });
+  console.log('received data: ', fetchedData);
   return fetchedData;
 };
 

@@ -34,7 +34,7 @@ const PromoCodeWidget = () => {
       setPromoCode(fetchData.data);
       console.log('promo code: ', fetchData.data);
     }
-    if (fetchData.errors && fetchData.errors.length > 0) {
+    if (!fetchData.gotPromoCode && fetchData.errors) {
       setErrors([...fetchData.errors]);
     }
   }, [fetchData]);
