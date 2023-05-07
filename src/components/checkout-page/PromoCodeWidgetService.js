@@ -2,19 +2,22 @@ import HttpHelper from '../../utils/HttpHelper';
 import Constants from '../../utils/constants';
 
 const fetchPromoCode = async (codeName, setter, errorSetter) => {
-  try {
-    const resp = await HttpHelper(`${Constants.PROMOCODE_ENDPOINT}/${codeName}`, 'GET');
-    if (resp.status === 200) {
-      setter(resp.json());
-      return;
-    }
-  } catch (e) {
-    console.log('Service error: ');
-    console.log(e);
-    setter(null);
-    errorSetter([e.message]);
-    throw e;
-  }
+  await HttpHelper(`${Constants.PROMOCODE_ENDPOINT}/${codeName}`, 'GET')
+    .then((response) => {
+      if (response.status === 200) {
+        setter(response.json());
+        return true;
+      }
+      if (response.status === 404) {
+        errorSetter([Constants.INVALID_CODE]);
+        return false;
+      }
+      throw new Error(response.json());
+    })
+    .catch((e) => {
+      errorSetter([e]);
+      return false;
+    });
 };
 
 export default fetchPromoCode;

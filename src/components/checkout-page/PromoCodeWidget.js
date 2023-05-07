@@ -25,15 +25,14 @@ const PromoCodeWidget = () => {
     setPromoCode({});
     setValidCode(false);
     setErrors([]);
+    // if user entered something
     if (code.length > 0) {
       const promo = await fetchPromoCode(code, setPromoCode, setErrors);
-      if (promo) {
-        setValidCode(true);
+      setValidCode(promo);
+      if (validCode) {
         console.log(promoCode);
         // do stuff with the promo code
       }
-      console.log('onFocus promocode: ', promoCode);
-      console.log('onFocus errors: ', errors);
     }
   };
 
