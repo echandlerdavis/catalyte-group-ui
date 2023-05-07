@@ -1,11 +1,29 @@
 .container {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     grid-gap: 2rem;
     margin: 2rem;
 }
 
-.card p {
+.gridContainer {
+    margin-bottom: 1rem;
+}
+
+.edit {
+    font-size: 10px;
+    text-decoration: underline;
+    margin-top: 1rem;
+    align-self: flex-start;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+.info p {
     font-size: 16px;
     margin-bottom: 20px;
     display: grid;
@@ -13,7 +31,7 @@
     align-items: center;
 }
 
-.card p span {
+.info p span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,13 +40,13 @@
     margin-right: 10px;
 }
 
-.card p span svg {
+.info p span svg {
     width: 100%;
     height: 100%;
     fill: #395aa1;
 }
 
-.card p:last-child {
+.info p:last-child {
     margin-bottom: 0;
 }
 

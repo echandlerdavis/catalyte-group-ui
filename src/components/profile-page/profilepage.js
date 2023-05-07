@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import EmailIcon from '@material-ui/icons/Email';
-import ShippingIcon from '@material-ui/icons/LocalShipping';
-import styles from './ProfilePage.module.css';
+import { Typography, Grid } from '@material-ui/core';
 import { fetchUser, parseCookies } from './ProfilePageService';
+import styles from './ProfilePage.module.css';
 
-/**
- * @name ProfilePage
- * @description Component for displaying the user profile page
- * @returns JSX elemnet that displays the user's first name, last name, email, phone number,
- * and shipping address
- */
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,41 +24,59 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <h1>
-        {user.firstName}
-        {user.lastName}
-      </h1>
+    <div>
+      <Typography variant="h3" gutterBottom>
+        {user?.firstName || ''}
+        {' '}
+        {user?.lastName || ''}
+      </Typography>
       {apiError ? (
-        <div>Error retrieving user data. Please try again later.</div>
+        <div className={styles.errMsg}>
+          Error retrieving user data. Please try again later.
+        </div>
       ) : (
-        <div className={styles.info}>
-          <p>
-            <strong>First Name:</strong>
-            {user.firstName || ''}
-          </p>
-          <p>
-            <strong>Last Name:</strong>
-            {user.lastName || ''}
-          </p>
-          <p>
-            <span>
-              <EmailIcon />
-              Email:
+        <div>
+          <Typography variant="h6" gutterBottom>
+            Account Details
+          </Typography>
+          <Grid container spacing={1}>
+            <Grid item xs={3} sm={6}>
+              <Typography variant="body3">
+                {user?.firstName || 'Error retrieving user data'}
+                {' '}
+                {user?.lastName || ''}
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography variant="body3">
+                {user?.email || 'Error retrieving user data'}
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography variant="body3">
+                {user?.billingAddress ? (
+                  <>
+                    {user.billingAddress.billingStreet || ''}
+                    {user.billingAddress.billingStreet2 || ''}
+                    {', '}
+                    {user.billingAddress.billingCity || ''}
+                    {', '}
+                    {user.billingAddress.billingState || ''}
+                    {' '}
+                    {user.billingAddress.billingZip || ''}
+                  </>
+                ) : (
+                  'Error retrieving user data'
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography variant="body4">
+            <span className={styles.edit}>
+              <p> </p>
+              <b>edit</b>
             </span>
-            {user.email || ''}
-          </p>
-          <p>
-            <span>
-              <ShippingIcon />
-              Billing Address:
-            </span>
-            {user.billingAddress.billingStreet || ''}
-            {user.billingAddress.billingStreet2 || ''}
-            {user.billingAddress.billingCity || ''}
-            {user.billingAddress.billingState || ''}
-            {user.billingAddress.billingZip || ''}
-          </p>
+          </Typography>
         </div>
       )}
     </div>
