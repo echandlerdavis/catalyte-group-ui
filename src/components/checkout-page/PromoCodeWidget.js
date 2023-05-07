@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import { green } from '@material-ui/core/colors';
@@ -12,29 +12,32 @@ const checkBoxStyle = {
 
 const PromoCodeWidget = () => {
   const [errors, setErrors] = useState([]);
-  const [validCode, setValidCode] = useState(false);
   const [code, setCode] = useState('');
-  const [promoCode, setPromoCode] = useState(null);
+  const [promoCode, setPromoCode] = useState('');
+  const [fetchData, setFetchData] = useState({});
 
   const onUserInput = (e) => {
     setCode(e.target.value);
   };
 
   const onFocusChange = async () => {
-    // reset everything
-    setPromoCode({});
-    setValidCode(false);
+    setPromoCode('');
     setErrors([]);
+    setFetchData({});
     // if user entered something
     if (code.length > 0) {
-      const promo = await fetchPromoCode(code, setPromoCode, setErrors);
-      setValidCode(promo);
-      if (validCode) {
-        console.log(promoCode);
-        // do stuff with the promo code
-      }
+      setFetchData(await fetchPromoCode(code));
     }
   };
+  useEffect(() => {
+    if (fetchData.gotPromoCode) {
+      setPromoCode(fetchData.data);
+      console.log('promo code: ', fetchData.data);
+    }
+    if (fetchData.errors && fetchData.errors.length > 0) {
+      setErrors([...fetchData.errors]);
+    }
+  }, [fetchData]);
 
   return (
     <>
@@ -47,7 +50,7 @@ const PromoCodeWidget = () => {
         onBlur={onFocusChange}
       />
       { errors.length > 0 && <Alert severity="error" title="Error:" message={errors.join(': ')} />}
-      {errors.length === 0 && validCode && <CheckCircle style={checkBoxStyle} />}
+      {errors.length === 0 && promoCode && <CheckCircle style={checkBoxStyle} />}
     </>
   );
 };
