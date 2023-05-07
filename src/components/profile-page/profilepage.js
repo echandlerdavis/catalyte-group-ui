@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  Button,
+  Avatar
+} from '@material-ui/core';
 import { fetchUser, parseCookies } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
 
@@ -25,11 +30,20 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <Typography variant="h3" gutterBottom>
-        {user?.firstName || ''}
-        {' '}
-        {user?.lastName || ''}
-      </Typography>
+      <div className={styles.header}>
+        <Avatar
+          alt="Profile Image"
+          src={user?.profileImage || ''}
+          className={styles.profileImage}
+        >
+          {user?.firstName.charAt(0)}
+        </Avatar>
+        <Typography variant="h3" gutterBottom>
+          {user?.firstName || ''}
+          {' '}
+          {user?.lastName || ''}
+        </Typography>
+      </div>
       {apiError ? (
         <div className={styles.errMsg}>
           Error retrieving user data. Please try again later.
@@ -77,6 +91,12 @@ const ProfilePage = () => {
               <b>edit</b>
             </span>
           </Typography>
+          <p> </p>
+          <p> </p>
+          <p> </p>
+          <Button variant="outlined" color="primary">
+            Purchase History
+          </Button>
         </div>
       )}
     </div>

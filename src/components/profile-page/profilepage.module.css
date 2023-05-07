@@ -21,6 +21,7 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 2rem;
+    margin-top: 2rem;
   }
 
 .info p {
@@ -55,4 +56,3 @@
     font-size: 14px;
     margin: 0px 2px 4px 4px;
 }
-
