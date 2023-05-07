@@ -47,7 +47,6 @@ const fetchUser = async (email, setUser, setApiError) => {
     setUser(user);
     return user;
   } catch (error) {
-    console.error(error);
     setApiError('Unexpected error Occurred');
     return null;
   }
