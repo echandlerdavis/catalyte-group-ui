@@ -16,6 +16,7 @@ import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
 import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
+import updateLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name useStyles
@@ -209,6 +210,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       );
       onClose();
       openToastCallback();
+      updateLastActive();
       return;
     }
     // if not a new item, set the quantity to inputValue
@@ -216,6 +218,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     setToastCallback(Constants.UPDATE_QUANTITY_SUCCESS(product.name, inputValue));
     openToastCallback();
     onClose();
+    updateLastActive();
   };
 
   return (
