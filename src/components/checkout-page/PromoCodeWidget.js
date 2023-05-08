@@ -10,6 +10,14 @@ const checkBoxStyle = {
   fontSize: '4em'
 };
 
+const promoCodeStyle = {
+  display: 'grid',
+  gridTemplateColumns: '2fr 4fr',
+  gridTemplateRows: '1fr',
+  gap: '0px 1em',
+  alignItems: 'center'
+};
+
 const PromoCodeWidget = () => {
   const [errors, setErrors] = useState([]);
   const [code, setCode] = useState('');
@@ -40,7 +48,7 @@ const PromoCodeWidget = () => {
   }, [fetchData]);
 
   return (
-    <>
+    <div style={promoCodeStyle}>
       <TextField
         id="promocodeInput"
         onChange={onUserInput}
@@ -51,7 +59,7 @@ const PromoCodeWidget = () => {
       />
       { errors.length > 0 && <Alert severity="error" title="Error:" message={errors.join(': ')} />}
       {errors.length === 0 && promoCode && <CheckCircle style={checkBoxStyle} />}
-    </>
+    </div>
   );
 };
 

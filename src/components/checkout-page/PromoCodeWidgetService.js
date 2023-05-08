@@ -25,7 +25,6 @@ const fetchPromoCode = async (codeName) => {
         fetchedData.errors = [...data.errorMessage];
       }
     });
-  console.log('received data: ', fetchedData);
   return fetchedData;
 };
 
