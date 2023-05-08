@@ -3,7 +3,7 @@ import {
   Avatar, Paper, Typography, Grid, makeStyles
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
-import styles from './Reviews.module.css';
+import styles from './Review.module.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
   rating: {
     width: 50,
     height: 50,
-    padding: 2
+    padding: 3
+  },
+  reviewHeading: {
+    paddingLeft: 8
   }
 }));
 
@@ -39,7 +42,7 @@ export default function SingleReview({ review }) {
                 {review.userName.charAt(0)}
               </Avatar>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={8} className={classes.reviewHeading}>
               <Typography>
                 {review.title}
               </Typography>
