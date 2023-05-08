@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FormItem from '../../form/FormItem';
 import FormItemDropdown from '../../form/FormItemDropdown';
 import styles from './DeliveryAddress.module.css';
-// import Toast from './toast/Toast';
 
 /**
  * @name BillingDetails
  * @description Allows entry of Billing Details
  * @return component
  */
-const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
+const BillingDetails = ({ billingData, useShippingForBilling }) => {
+  const [formData, setFormData] = useState('');
   const usStates = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Federated States of Micronesia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
+  const handleFormChange = ({ target }) => {
+    const { value, id } = target;
+    // Update form data with the targets new value
+    setFormData({
+      ...formData,
+      [id]: value
+    });
+  };
   return (
 
     <div className={styles.deliveryAddress}>
-      {/* {Object.keys(errors).length === 0 && submitting ? (
-        <Toast/>) : null} */}
       {!useShippingForBilling && (
         <>
 
@@ -25,7 +31,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             type="text"
             id="billingStreet"
             label="Street"
-            onChange={onChange}
+            onChange={handleFormChange}
             value={billingData.billingStreet}
             required
           />
@@ -35,7 +41,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             type="text"
             id="billingStreet2"
             label="Street 2 (Optional)"
-            onChange={onChange}
+            onChange={handleFormChange}
             value={billingData.billingStreet2}
           />
 
@@ -43,7 +49,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             type="text"
             id="billingCity"
             label="City"
-            onChange={onChange}
+            onChange={handleFormChange}
             value={billingData.billingCity}
             required
           />
@@ -51,7 +57,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
           <FormItemDropdown
             id="billingState"
             label="State"
-            onChange={onChange}
+            onChange={handleFormChange}
             value={billingData.billingState}
             options={usStates}
             required
@@ -62,7 +68,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
             type="text"
             id="billingZip"
             label="Zip"
-            onChange={onChange}
+            onChange={handleFormChange}
             value={billingData.billingZip}
             required
           />
@@ -73,7 +79,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="email"
         id="email"
         label="Email"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.email}
         required
       />
@@ -83,7 +89,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="text"
         id="phone"
         label="Phone"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.phone}
         required
       />
@@ -93,7 +99,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="text"
         id="creditCard"
         label="Credit Card"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.creditCard}
         required
       />
@@ -103,7 +109,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="text"
         id="cvv"
         label="CVV"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.cvv}
         required
       />
@@ -113,7 +119,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="text"
         id="expiration"
         label="Expiration"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.expiration}
         required
       />
@@ -122,7 +128,7 @@ const BillingDetails = ({ onChange, billingData, useShippingForBilling }) => {
         type="text"
         id="cardholder"
         label="Cardholder Name"
-        onChange={onChange}
+        onChange={handleFormChange}
         value={billingData.cardholder}
         required
       />
