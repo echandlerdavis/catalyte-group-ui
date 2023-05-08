@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -131,19 +131,54 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       ? 1
       : products.filter((p) => p.id === product.id)[0].quantity
   );
+  const initialInput = useRef(Number.parseInt(inputValue, 10));
+  // prevents user from inputing -, thus stopping negative numbers
+  const validateKeyStroke = (e) => {
+    if (e.key === '-') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
   const inputChange = (e) => {
-    setInputValue(e.target.value);
+    if (e.target.value.length > 0) {
+      setInputValue(Number.parseInt(e.target.value, 10));
+    } else {
+      setInputValue('');
+    }
   };
 
+  const resetInput = () => {
+    setInputValue(initialInput.current);
+  };
+
+  useEffect(() => {
+    resetInput();
+  }, [toastData]);
+
   const onAdd = () => {
-    // if inputValue = 0, do nothing
-    if (inputValue === 0 || inputValue === '0' || inputValue === '') {
-      setToastData(Constants.ADD_PRODUCT_FAILURE([Constants.CANNOT_ADD_ZERO_QUANTITY]));
+    // make sure inputValue is filled out
+    if (inputValue.length === 0) {
+      setToastData(Constants.ADD_PRODUCT_FAILURE([Constants.QUANTITY_MUST_BE_ENTERED]));
       openToast();
       return;
     }
     // make sure inputValue is a number
     setInputValue(Number.parseInt(inputValue, 10));
+    // check for number errors
+    // if inputValue = 0, do nothing
+    let errors = [];
+    if (inputValue <= 0) {
+      errors.push(Constants.CANNOT_ADD_ZERO_QUANTITY);
+    }
+    if (!Number.isInteger(inputValue)) {
+      errors.push(Constants.QUANTITY_MUST_BE_INT);
+    }
+    if (errors.length > 0) {
+      setToastData(Constants.ADD_PRODUCT_FAILURE(errors));
+      openToast();
+      errors = [];
+      return;
+    }
     // validate order and pop toast if error
     const validation = validateOrder(product, products, inputValue);
     if (!validation.valid) {
@@ -234,10 +269,12 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 label="Quantity"
                 id="qtyInput"
                 type="number"
+                step="1"
                 InputProps={{ inputProps: { min: 0 } }}
                 className={classes.quantityInput}
                 value={inputValue}
                 onChange={inputChange}
+                onKeyDown={validateKeyStroke}
                 autoFocus
               />
               <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>

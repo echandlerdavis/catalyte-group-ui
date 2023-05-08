@@ -16,9 +16,11 @@ module.exports = Object.freeze({
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',
   CANNOT_ADD_ZERO_QUANTITY: 'Product quantity cannot be less than 1.',
+  QUANTITY_MUST_BE_ENTERED: 'Product quantity must contain a positive number.',
+  QUANTITY_MUST_BE_INT: 'Product quantity must be a whole number.',
   SEVERITY_LEVELS,
   ADD_PRODUCT_FAILURE: (stringList) => ({
-    MESSAGE: `Failed to add product: ${stringList.join('|')}`,
+    MESSAGE: `Failed to add product: ${stringList.join('\n\r')}`,
     SEVERITY: SEVERITY_LEVELS.ERROR
   }),
   ADD_PRODUCT_SUCCESS: (description) => ({
