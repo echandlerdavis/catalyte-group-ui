@@ -85,10 +85,13 @@ const colorDot = (hexColor) => (
   <div style={{
     backgroundColor: hexColor,
     color: hexColor === '#ffffff' ? 'black' : 'white',
-    boxShadow: '.05rem .05rem .05rem grey',
+    boxShadow: '.1rem .1rem .1rem grey',
     height: '1.5em',
     width: '1.5em',
-    borderRadius: '50%'
+    borderRadius: '50%',
+    borderColor: 'grey',
+    borderWidth: '1px',
+    borderStyle: 'solid'
   }}
   />
 );
