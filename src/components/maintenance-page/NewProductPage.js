@@ -31,10 +31,10 @@ const NewProductPage = ({
     imageSrc: '',
     material: '',
     price: '1.00',
-    quantity: '',
+    quantity: '1',
     name: '',
     description: '',
-    demographic: '',
+    demographic: 'Women',
     category: '',
     type: '',
     releaseDate: initialReleaseDate,
@@ -108,7 +108,7 @@ const NewProductPage = ({
    */
   const validateQuantityNotNegative = () => {
     const { quantity } = formData;
-    return (quantity <= 0);
+    return (quantity && quantity <= 0);
   };
 
   /**
