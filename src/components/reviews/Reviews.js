@@ -25,13 +25,14 @@ export default function Reviews({ productId }) {
       ) : (
         <Grid
           container
-          direction="column"
-          justifyContent="flex-start"
+          direction="row"
+          // justifyContent="flex-start"
           alignItems="center"
           spacing={2}
+          style={{ maxHeight: '50vh', overflow: 'auto', overflowY: 'scroll' }}
         >
           {reviews.map((review) => (
-            <Grid item xs={12} key={review.id} >
+            <Grid item xs={12} key={review.id}>
               <SingleReview review={review} />
             </Grid>
           ))}
