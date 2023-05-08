@@ -17,13 +17,13 @@ const App = () => (
     <div className="Container">
       <BrowserRouter>
         <Header />
-        <FilterComponentExample />
         <main>
           <Switch>
             <Route exact path="/" render={() => <ProductPage />} />
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
             <Route exact path="/maintenance" render={() => <MaintenancePage />} />
+            <Route exact path="/filter" render={() => <FilterComponentExample />} />
           </Switch>
         </main>
         <Footer />
