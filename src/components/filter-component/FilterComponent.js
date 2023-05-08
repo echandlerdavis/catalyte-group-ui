@@ -23,32 +23,38 @@ const FilterComponent = ({
 
   const iconStyle = { fontSize: '1em', color: '#808080' };
 
+  const handleExpandClick = () => setShowOptions(!showOptions);
+
   return (
     <ul>
       {/** Filter Header */}
-      <div className={styles.filterHeader}>
+      <button
+        className={styles.filterHeader}
+        onClick={handleExpandClick}
+        type="button"
+      >
         {fieldName}
-        <button type="button" onClick={() => setShowOptions(!showOptions)}>
-          {showOptions
-            ? <ExpandLess style={iconStyle} />
-            : <ExpandMore style={iconStyle} />}
-        </button>
-      </div>
+        <div>
+          {showOptions ? <ExpandLess style={iconStyle} /> : <ExpandMore style={iconStyle} />}
+        </div>
+      </button>
       {/** Conditionally render list of options into list of checkboxes */}
       {showOptions && (
       <div className={styles.optionsList}>
         {options.map((option) => (
           <li key={option}>
-            <Checkbox
-              id={fieldName}
-              name={option}
-              icon={<TripOrigin style={{ fontSize: '.5em' }} />}
-              checkedIcon={<Lens style={{ color: 'green', fontSize: '.5em' }} />}
-              onChange={onChange}
-              size="small"
-              value={value}
-            />
-            {option}
+            <label htmlFor={option}>
+              <Checkbox
+                id={option}
+                name={fieldName}
+                icon={<TripOrigin style={{ fontSize: '.5em' }} />}
+                checkedIcon={<Lens style={{ color: 'green', fontSize: '.5em' }} />}
+                onChange={onChange}
+                size="small"
+                value={value}
+              />
+              <div className={styles.optionName}>{option}</div>
+            </label>
           </li>
         ))}
       </div>

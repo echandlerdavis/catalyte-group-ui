@@ -53,8 +53,8 @@ const FilterComponentExample = () => {
    * @param {EventTarget} target
    */
   const onChange = ({ target }) => {
-    // targets id is the filter name and name is the option. EX: Type = id Shorts = name
-    const { id: filterName, name: option } = target;
+    // targets id is the filter option and name is the filter name. EX: Type = name Shorts = id
+    const { id: option, name: filterName } = target;
     const options = filters[filterName];
     selected.current.value = !options[option];
     setFilters({
