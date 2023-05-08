@@ -4,6 +4,7 @@ import OrderItem from './OrderItem';
 import { getSubtotal } from './ReviewOrderWidgetService';
 import styles from './ReviewOrderWidget.module.css';
 import PromoCodeWidget from './PromoCodeWidget';
+import { usePromoCode, applyPromoCode, calculateDiscount } from './PromoCodeWidgetService';
 
 /**
  * @name ReviewOrderWidget
@@ -14,6 +15,12 @@ const ReviewOrderWidget = () => {
   const {
     state: { products }
   } = useCart();
+
+  const { promoCode } = usePromoCode();
+  const noDiscount = getSubtotal(products);
+  const discount = calculateDiscount(noDiscount, promoCode);
+  console.log('noDiscount: ', noDiscount, ' discount: ', discount);
+
   return (
     <>
       {products.map(({
@@ -34,7 +41,13 @@ const ReviewOrderWidget = () => {
           <p>Subtotal</p>
         </div>
         <div className={styles.price}>
-          <p>{getSubtotal(products)}</p>
+          {Object.keys(promoCode) > 0 && (
+          <span>
+            Discount:
+            {discount}
+          </span>
+          )}
+          <p>{applyPromoCode(noDiscount, discount)}</p>
         </div>
       </div>
     </>
