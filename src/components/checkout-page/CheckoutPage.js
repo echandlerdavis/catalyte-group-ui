@@ -7,6 +7,7 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
+import setLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name CheckoutPage
@@ -70,7 +71,9 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
-    makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
+    makePurchase(productData, deliveryAddress, billingAddress, creditCard)
+      .then(() => setLastActive())
+      .then(() => history.push('/confirmation'));
   };
 
   if (products.length === 0) {

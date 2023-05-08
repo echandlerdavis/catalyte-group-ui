@@ -5,6 +5,8 @@ const SEVERITY_LEVELS = {
   WARNING: 'warning'
 };
 
+const USERS_ENDPOINT = '/users';
+
 module.exports = Object.freeze({
   API_ERROR: 'Oops, something went wrong',
   BASE_URL_API: 'http://localhost:8085',
@@ -12,6 +14,9 @@ module.exports = Object.freeze({
   PURCHASE_ENDPOINT: '/purchases',
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
+  USERS_ENDPOINT,
+  USERS_PUT_ENDPOINT: (id) => `${USERS_ENDPOINT}/${id}`,
+  UPDATE_LAST_ACTIVE_ENDPOINT: (id) => `${USERS_ENDPOINT}/${id}/updateLastActive`,
   GOOGLE_CLIENT_ID: '912899852587-7996nh9mlpvpa2446q0il4f9hj5o492h.apps.googleusercontent.com', // ENTER CLIENT ID HERE
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',
