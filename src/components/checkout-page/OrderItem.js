@@ -8,7 +8,7 @@ import { toPrice } from './ReviewOrderWidgetService';
  * @return component
  */
 const OrderItem = ({
-  price, title, description, quantity
+  price, title, description, quantity, onRemove
 }) => (
   <div className={styles.orderItem}>
     <div className={styles.image}>
@@ -21,6 +21,9 @@ const OrderItem = ({
     </div>
     <div className={styles.price}>
       <p>{toPrice(quantity * price)}</p>
+      <button onClick={onRemove} className={styles.removeButton}>
+        <i className="fa fa-trash" />
+      </button>
     </div>
   </div>
 );
