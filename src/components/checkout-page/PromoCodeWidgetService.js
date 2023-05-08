@@ -3,7 +3,7 @@ import HttpHelper from '../../utils/HttpHelper';
 import Constants from '../../utils/constants';
 
 export const usePromoCode = () => {
-  const [promoCode, setPromoCode] = useState({});
+  const [promoCode, setPromoCode] = useState('');
 
   return { promoCode, setPromoCode };
 };
@@ -19,7 +19,7 @@ export const calculateDiscount = (cartTotal, promoCode) => {
         discount = (promoCode.rate / 100) * cartTotal;
         break;
       default:
-        console.log(`${promoCode.type} has not been implemented`);
+        throw new Error(`${promoCode.type} has not been implemented`);
     }
   }
   return discount;

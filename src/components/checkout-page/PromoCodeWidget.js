@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import { green } from '@material-ui/core/colors';
 import Alert from '../alert/Alert';
-import fetchPromoCode, { usePromoCode } from './PromoCodeWidgetService';
+import fetchPromoCode from './PromoCodeWidgetService';
 
 const checkBoxStyle = {
   color: green[500],
@@ -18,10 +18,9 @@ const promoCodeStyle = {
   alignItems: 'center'
 };
 
-const PromoCodeWidget = () => {
+const PromoCodeWidget = ({ promoCode, setPromoCode }) => {
   const [errors, setErrors] = useState([]);
   const [code, setCode] = useState('');
-  const { promoCode, setPromoCode } = usePromoCode();
   const [fetchData, setFetchData] = useState({});
 
   const onUserInput = (e) => {
@@ -40,7 +39,6 @@ const PromoCodeWidget = () => {
   useEffect(() => {
     if (fetchData.gotPromoCode) {
       setPromoCode(fetchData.data);
-      console.log('promo code: ', fetchData.data);
     }
     if (!fetchData.gotPromoCode && fetchData.errors) {
       setErrors([...fetchData.errors]);
@@ -58,7 +56,7 @@ const PromoCodeWidget = () => {
         onBlur={onFocusChange}
       />
       { errors.length > 0 && <Alert severity="error" title="Error:" message={errors.join(': ')} />}
-      {errors.length === 0 && Object.keys(promoCode) > 0 && <CheckCircle style={checkBoxStyle} />}
+      {errors.length === 0 && promoCode && <CheckCircle style={checkBoxStyle} />}
     </div>
   );
 };

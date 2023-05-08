@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
 import OrderItem from './OrderItem';
-import { getSubtotal } from './ReviewOrderWidgetService';
+import { getSubtotal, toPrice } from './ReviewOrderWidgetService';
 import styles from './ReviewOrderWidget.module.css';
 import PromoCodeWidget from './PromoCodeWidget';
 import { usePromoCode, applyPromoCode, calculateDiscount } from './PromoCodeWidgetService';
@@ -16,11 +16,13 @@ const ReviewOrderWidget = () => {
     state: { products }
   } = useCart();
 
-  const { promoCode } = usePromoCode();
+  const { promoCode, setPromoCode } = usePromoCode();
   const noDiscount = getSubtotal(products);
-  const discount = calculateDiscount(noDiscount, promoCode);
-  console.log('noDiscount: ', noDiscount, ' discount: ', discount);
+  const [discount, setDiscount] = useState(calculateDiscount(noDiscount, promoCode));
 
+  useEffect(() => {
+    setDiscount(calculateDiscount(noDiscount, promoCode));
+  }, [promoCode, noDiscount]);
   return (
     <>
       {products.map(({
@@ -34,20 +36,20 @@ const ReviewOrderWidget = () => {
           quantity={quantity}
         />
       ))}
-      <PromoCodeWidget />
+      <PromoCodeWidget promoCode={promoCode} setPromoCode={setPromoCode} />
       <hr />
       <div className={styles.subtotal}>
         <div>
           <p>Subtotal</p>
         </div>
         <div className={styles.price}>
-          {Object.keys(promoCode) > 0 && (
+          {discount > 0 && (
           <span>
             Discount:
-            {discount}
+            {toPrice(discount)}
           </span>
           )}
-          <p>{applyPromoCode(noDiscount, discount)}</p>
+          <p>{toPrice(applyPromoCode(noDiscount, discount))}</p>
         </div>
       </div>
     </>
