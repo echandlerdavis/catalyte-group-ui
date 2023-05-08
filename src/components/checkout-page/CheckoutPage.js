@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
@@ -7,7 +7,7 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
-import constants from '../../utils/constants';
+// import constants from '../../utils/constants';
 import fieldStyles from './forms/DeliveryAddress.module.css';
 
 /**
@@ -15,7 +15,7 @@ import fieldStyles from './forms/DeliveryAddress.module.css';
  * @description A view that contains details needed to process a transaction for items
  * @return component
  */
-const CheckoutPage = ({ openToast }) => {
+const CheckoutPage = () => {
   const history = useHistory();
 
   const {
@@ -35,6 +35,9 @@ const CheckoutPage = ({ openToast }) => {
     expiration: null,
     cardholder: null
   };
+  const errors = [
+    'billingStreet'
+  ];
   const [billingData, setBillingData] = React.useState({});
   const [deliveryData, setDeliveryData] = React.useState({});
   const [useSameAddress, setUseSameAddress] = React.useState(false);
@@ -43,7 +46,7 @@ const CheckoutPage = ({ openToast }) => {
   const cvvIsInvalid = useRef(false);
   const expirationIsInvalid = useRef(false);
   const cardNumberIsInvalid = useRef(false);
-  const [formErrorMessage, setFormErrorMessage] = useState(null);
+  // const [formErrorMessage, setFormErrorMessage] = useState(null);
   // const [formData, setFormData] = useState(initialFormData);
 
   const onBillingChange = (e) => {
@@ -62,12 +65,12 @@ const CheckoutPage = ({ openToast }) => {
     Object.keys(billingData).filter((key) => billingData[key].length === 0)
   );
   const validateCVVIs3Digits = () => {
-    console.log(billingData);
-    console.log(billingData.cvv);
     if (billingData.cvv) {
       const { cvv } = billingData;
-      return (cvv.length !== 3);
+      console.log(cvv);
+      return (cvv.toString.length === 3);
     }
+    console.log(billingData.cvv);
     return false;
   };
   const validateExpirationFormat = () => {
@@ -146,55 +149,16 @@ const CheckoutPage = ({ openToast }) => {
       formHasError.current = false;
     }
 
-    makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
-  };
-
-  const generateError = () => {
-    // Start with blank form error message to remove previous errors
-    setFormErrorMessage(null);
-    let errorMessage = null;
-    // If fields are empty get list with empty fields and join the list in a string
-    if (emptyFields.current.length) {
-      errorMessage = constants.FORM_FIELDS_EMPTY(emptyFields.current);
-    }
-    // Build the error message string checking if error message has a previous error
-    // If previous error join the prev error message with the next error
-    if (cvvIsInvalid.current) {
-      if (errorMessage) {
-        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_PRICE);
+    const handleSubmit = async () => {
+      if (!formHasError.current) {
+        makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
+        handlePay();
+        history.push('/confirmation');
       } else {
-        errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
+        // setToastData(constants.SAVE_PRODUCT_FAILURE);
       }
-    }
-    if (expirationIsInvalid.current) {
-      if (errorMessage) {
-        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_QUANTITY);
-      } else {
-        errorMessage = constants.PRODUCT_FORM_INVALID_QUANTITY;
-      }
-    }
-    if (cardNumberIsInvalid.current) {
-      if (errorMessage) {
-        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_QUANTITY);
-      } else {
-        errorMessage = constants.PRODUCT_FORM_INVALID_QUANTITY;
-      }
-    }
-    setFormErrorMessage(errorMessage);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    generateError();
-    if (!formHasError.current) {
-      // setToastData(constants.SAVE_PRODUCT_SUCCESS);
-      handlePay();
-      // eslint-disable-next-line no-restricted-globals
-      history.push('/confirmation');
-    } else {
-      // setToastData(constants.SAVE_PRODUCT_FAILURE);
-    }
-    openToast();
+    };
+    handleSubmit();
   };
 
   if (products.length === 0) {
@@ -237,7 +201,7 @@ const CheckoutPage = ({ openToast }) => {
       <section className={`${styles.step} ${styles.payment}`}>
         <h2 className={styles.title}>3. Billing Details</h2>
         <div className={`Card ${styles.stepCard}`}>
-          {formHasError.current && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
+          {formHasError.current && <AppAlert severity="error" title="Error" />}
           <BillingDetails
             onChange={onBillingChange}
             billingData={billingData}
@@ -248,7 +212,7 @@ const CheckoutPage = ({ openToast }) => {
         </div>
       </section>
       <div className={styles.payNow}>
-        <button onClick={handleSubmit} type="submit" className={styles.payButton}>
+        <button onClick={handlePay} type="submit" className={styles.payButton}>
           Checkout
         </button>
       </div>
