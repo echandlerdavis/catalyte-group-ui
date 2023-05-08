@@ -15,6 +15,7 @@ module.exports = Object.freeze({
   GOOGLE_CLIENT_ID: '912899852587-7996nh9mlpvpa2446q0il4f9hj5o492h.apps.googleusercontent.com', // ENTER CLIENT ID HERE
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',
+  CANNOT_ADD_ZERO_QUANTITY: 'Product quantity cannot be less than 1.',
   SEVERITY_LEVELS,
   ADD_PRODUCT_FAILURE: (stringList) => ({
     MESSAGE: `Failed to add product: ${stringList.join('|')}`,
@@ -22,6 +23,14 @@ module.exports = Object.freeze({
   }),
   ADD_PRODUCT_SUCCESS: (description) => ({
     MESSAGE: `${description} added to cart!`,
+    SEVERITY: SEVERITY_LEVELS.SUCCESS
+  }),
+  ADD_MULTIPLE_SUCCESS: (description, quantity) => ({
+    MESSAGE: `${quantity} of ${description} added to cart!`,
+    SEVERITY: SEVERITY_LEVELS.SUCCESS
+  }),
+  UPDATE_QUANTITY_SUCCESS: (description, quantity) => ({
+    MESSAGE: `${quantity} of ${description} now in cart!`,
     SEVERITY: SEVERITY_LEVELS.SUCCESS
   }),
   LOGO_ALT: 'Jaba the Hutt drinking coffee'

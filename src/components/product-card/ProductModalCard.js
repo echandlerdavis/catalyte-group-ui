@@ -125,19 +125,27 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   const openToast = () => {
     setOpenToast(true);
   };
-  // input box stuff
-  const [inputValue, setInputValue] = useState(1);
+  // input box stuff. Defaults to quantity already in cart.
+  const [inputValue, setInputValue] = useState(
+    (products.filter((p) => p.id === product.id)[0] === undefined)
+      ? 1
+      : products.filter((p) => p.id === product.id)[0].quantity
+  );
   const inputChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const onAdd = () => {
     // if inputValue = 0, do nothing
-    if (inputValue === 0) {
+    if (inputValue === 0 || inputValue === '0' || inputValue === '') {
+      setToastData(Constants.ADD_PRODUCT_FAILURE([Constants.CANNOT_ADD_ZERO_QUANTITY]));
+      openToast();
       return;
     }
+    // make sure inputValue is a number
+    setInputValue(Number.parseInt(inputValue, 10));
     // validate order and pop toast if error
-    const validation = validateOrder(product, products);
+    const validation = validateOrder(product, products, inputValue);
     if (!validation.valid) {
       setToastData(Constants.ADD_PRODUCT_FAILURE(validation.errors));
       openToast();
@@ -147,7 +155,11 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     const repeatItem = inOrder(product, products);
     if (!repeatItem) {
       // add product to order
-      setToastCallback(Constants.ADD_PRODUCT_SUCCESS(product.name));
+      if (Number.parseInt(inputValue, 10) === 1) {
+        setToastCallback(Constants.ADD_PRODUCT_SUCCESS(product.name));
+      } else {
+        setToastCallback(Constants.ADD_MULTIPLE_SUCCESS(product.name, inputValue));
+      }
       dispatch(
         {
           type: 'add',
@@ -166,6 +178,8 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     }
     // if not a new item, set the quantity to inputValue
     products.filter((p) => p.id === product.id)[0].quantity = inputValue;
+    setToastCallback(Constants.UPDATE_QUANTITY_SUCCESS(product.name, inputValue));
+    openToastCallback();
     onClose();
   };
 

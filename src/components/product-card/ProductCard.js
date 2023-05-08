@@ -76,7 +76,7 @@ export const inOrder = (product, orders) => orders.filter((p) => p.id === produc
  * @param {Product object} product
  * @returns result Object {valid: boolean, errors: [string]}
  */
-export const validateOrder = (product, orders) => {
+export const validateOrder = (product, orders, desiredQty) => {
   const result = {
     valid: true,
     errors: []
@@ -90,10 +90,13 @@ export const validateOrder = (product, orders) => {
   // if product has no id, can't verify inventory
   if (result.valid) {
     // user has already clicked add icon, so orderQty is currenty orderQty + 1
-    const ordersQty = inOrder(product, orders)
-      ? orders.filter((p) => p.id === product.id)[0].quantity + 1
-      : 1;
-    if (!haveEnoughInventory(product.quantity, ordersQty)) {
+    let orderQty = desiredQty;
+    if (orderQty === undefined && inOrder(product, orders)) {
+      orderQty = orders.filter((p) => p.id === product.id)[0].quantity + 1;
+    } else if (orderQty === undefined) {
+      orderQty = 1;
+    }
+    if (!haveEnoughInventory(product.quantity, orderQty)) {
       result.valid = false;
       result.errors.push(Constants.INSUFFICIENT_INVENTORY);
     }
