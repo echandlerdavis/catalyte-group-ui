@@ -16,6 +16,12 @@ function cartReducer(state, action) {
         products: [...state.products, action.product]
       };
     }
+    case 'remove' {
+      return {
+        ...state,
+        products: state.products.filter((product) => product.title !== action.product.title)
+      };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }

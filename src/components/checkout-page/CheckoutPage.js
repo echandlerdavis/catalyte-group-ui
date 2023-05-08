@@ -17,8 +17,11 @@ const CheckoutPage = () => {
   const history = useHistory();
 
   const {
-    state: { products }
-  } = useCart();
+    state: { products }, dispatch } = useCart();
+
+  const handleRemove = (product) => {
+    dispatch({ type: 'remove', product });
+  };
 
   const [billingData, setBillingData] = React.useState({});
   const [deliveryData, setDeliveryData] = React.useState({});
@@ -89,7 +92,7 @@ const CheckoutPage = () => {
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>
         <div className={`Card ${styles.stepCard}`}>
-          <ReviewOrderWidget />
+          <ReviewOrderWidgetRemove={handleRemove} />
         </div>
       </section>
       <section className={`${styles.step} ${styles.delivery}`}>
