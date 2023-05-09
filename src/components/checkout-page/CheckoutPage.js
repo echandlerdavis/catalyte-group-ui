@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
@@ -7,8 +7,10 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
-// import constants from '../../utils/constants';
-import fieldStyles from './forms/DeliveryAddress.module.css';
+import constants from '../../utils/constants';
+import Toast from '../toast/Toast';
+// import { validateOrder } from '../product-card/ProductCard';
+// import fieldStyles from './forms/DeliveryAddress.module.css';
 
 /**
  * @name CheckoutPage
@@ -35,19 +37,34 @@ const CheckoutPage = () => {
     expiration: null,
     cardholder: null
   };
-  const errors = [
-    'billingStreet'
-  ];
-  const [billingData, setBillingData] = React.useState({});
-  const [deliveryData, setDeliveryData] = React.useState({});
-  const [useSameAddress, setUseSameAddress] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const errorMessage = useRef();
+  const [billingData, setBillingData] = useState({});
+  const [deliveryData, setDeliveryData] = useState({});
+  const [useSameAddress, setUseSameAddress] = useState(false);
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
-  const cvvIsInvalid = useRef(false);
-  const expirationIsInvalid = useRef(false);
-  const cardNumberIsInvalid = useRef(false);
+  const cvvIsValid = useRef(false);
+  const expirationIsValid = useRef(false);
+  const cardNumberIsValid = useRef(false);
   // const [formErrorMessage, setFormErrorMessage] = useState(null);
   // const [formData, setFormData] = useState(initialFormData);
+
+  const requiredFields = [
+    'billingStreet',
+    'billingCity',
+    'billingState',
+    'billingZip',
+    'phone',
+    'email',
+    'cvv',
+    'expiration',
+    'cardholder',
+    'creditCard',
+    'lastName',
+    'firstName'
+  ];
 
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
@@ -62,8 +79,9 @@ const CheckoutPage = () => {
   };
 
   const getFieldsNotEmpty = () => (
-    Object.keys(billingData).filter((key) => billingData[key].length === 0)
+    requiredFields.filter((field) => !billingData[field] || billingData[field].trim().length === 0)
   );
+
   const validateCVVIs3Digits = () => {
     if (billingData.cvv) {
       const { cvv } = billingData;
@@ -89,18 +107,40 @@ const CheckoutPage = () => {
     }
     return false;
   };
-
-  Object.keys(attributes).forEach((key) => {
-    if (errors.includes(key)) {
-      attributes[key] = fieldStyles.InvalidFields;
+  const getErrorFields = () => {
+    setErrors('');
+    emptyFields.current = null;
+    emptyFields.current = getFieldsNotEmpty();
+    cvvIsValid.current = validateCVVIs3Digits();
+    expirationIsValid.current = validateExpirationFormat();
+    cardNumberIsValid.current = validateCreditCardNumber();
+    if (emptyFields.current.length) {
+      setErrors([...emptyFields.current]);
+      errorMessage.current = constants.FORM_FIELDS_EMPTY(emptyFields.current);
+      formHasError.current = true;
     }
-  });
-
-  /**
- *  Generates the error message based on the form errors present
- */
-
+    if (!cvvIsValid.current) {
+      setErrors((prev) => [...prev, 'cvv']);
+      errorMessage.current += '& cvv invalid';
+      formHasError.current = true;
+    }
+    if (!expirationIsValid.current) {
+      setErrors((prev) => [...prev, 'expiration']);
+      errorMessage.current += ' & expiration invalid';
+      formHasError.current = true;
+    }
+    if (!cardNumberIsValid.current) {
+      setErrors((prev) => [...prev, 'creditCard']);
+      errorMessage.current += ' & cardNumber invalid';
+      formHasError.current = true;
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handlePay = () => {
+    handleClose();
+
     const productData = products.map(({ id, quantity }) => ({ id, quantity }));
     const deliveryAddress = {
       firstName: deliveryData.firstName,
@@ -134,33 +174,22 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
-
-    emptyFields.current = getFieldsNotEmpty();
-    cvvIsInvalid.current = validateCVVIs3Digits();
-    expirationIsInvalid.current = validateExpirationFormat();
-    cardNumberIsInvalid.current = validateCreditCardNumber();
-    // eslint-disable-next-line max-len
-    if (emptyFields.current.length
-      || cvvIsInvalid.current
-      || expirationIsInvalid.current
-      || cardNumberIsInvalid.current) {
-      formHasError.current = true;
-    } else {
-      formHasError.current = false;
-    }
+    getErrorFields();
 
     const handleSubmit = async () => {
       if (!formHasError.current) {
+        console.log('purchase', makePurchase(productData, deliveryAddress, billingAddress, creditCard));
         makePurchase(productData, deliveryAddress, billingAddress, creditCard).then(() => history.push('/confirmation'));
-        handlePay();
         history.push('/confirmation');
       } else {
-        // setToastData(constants.SAVE_PRODUCT_FAILURE);
+        setOpen(true);
       }
     };
     handleSubmit();
   };
-
+  products.forEach((product) => {
+    console.log(product.quantity);
+  });
   if (products.length === 0) {
     return (
       <div className={styles.checkoutContainer}>
@@ -182,6 +211,7 @@ const CheckoutPage = () => {
       </section>
       <section className={`${styles.step} ${styles.delivery}`}>
         <h2 className={styles.title}>2. Delivery Address</h2>
+        {formHasError.current && <Toast message="Order not Submitted due to error!" open={open} handleClose={handleClose} severity="error" />}
         <div className={`Card ${styles.stepCard}`}>
           <DeliveryAddress onChange={onDeliveryChange} deliveryData={deliveryData} />
           <label htmlFor="useSame" className={styles.sameAddressText}>
@@ -201,13 +231,14 @@ const CheckoutPage = () => {
       <section className={`${styles.step} ${styles.payment}`}>
         <h2 className={styles.title}>3. Billing Details</h2>
         <div className={`Card ${styles.stepCard}`}>
-          {formHasError.current && <AppAlert severity="error" title="Error" />}
+          {formHasError.current && <AppAlert severity="error" title="Error" message={errorMessage.current} />}
           <BillingDetails
             onChange={onBillingChange}
             billingData={billingData}
             useShippingForBilling={useSameAddress}
             empytyFields={emptyFields}
             value={billingData[attributes]}
+            errors={errors}
           />
         </div>
       </section>

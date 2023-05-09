@@ -28,6 +28,7 @@ module.exports = Object.freeze({
   PRODUCT_FORM_INVALID_QUANTITY: 'Quantity can not be a negative number',
   SAVE_PRODUCT_SUCCESS: { MESSAGE: 'Product Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
   SAVE_PRODUCT_FAILURE: { MESSAGE: 'Connection to Database Failed', SEVERITY: SEVERITY_LEVELS.ERROR },
+
   ADD_PRODUCT_FAILURE: (stringList) => ({
     MESSAGE: `Failed to add product: ${stringList.join('|')}`,
     SEVERITY: SEVERITY_LEVELS.ERROR
