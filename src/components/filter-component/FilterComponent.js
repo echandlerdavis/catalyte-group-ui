@@ -26,7 +26,7 @@ const FilterComponent = ({
   const handleExpandClick = () => setShowOptions(!showOptions);
 
   return (
-    <ul>
+    <ul className={styles.FilterList}>
       {/** Filter Header */}
       <button
         className={styles.filterHeader}
@@ -42,8 +42,8 @@ const FilterComponent = ({
       {showOptions && (
       <div className={styles.optionsList}>
         {options.map((option) => (
-          <li key={option}>
-            <label htmlFor={option}>
+          <li key={option} className={styles.FilterItem}>
+            <label htmlFor={option} className={styles.FilterLabel}>
               <Checkbox
                 id={option}
                 name={fieldName}
