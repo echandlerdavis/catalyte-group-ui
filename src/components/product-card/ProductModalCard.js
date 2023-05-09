@@ -262,13 +262,14 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 {colorDot(product.secondaryColorCode)}
               </Typography>
             </CardContent>
-            <Typography variant="body2" color="textSecondary" component="p" style={{ marginLeft: '1em' }}>
-              Quantity currently in cart:
-              <br />
-              {inOrder(product, products)
+            <TextField
+              style={{ marginLeft: '1em' }}
+              label="Currently in cart:"
+              value={inOrder(product, products)
                 ? products.filter((p) => p.id === product.id)[0].quantity
                 : 0}
-            </Typography>
+              disabled
+            />
 
             <CardActions className={classes.actionsFormatting}>
               <TextField
