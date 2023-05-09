@@ -36,9 +36,5 @@ module.exports = Object.freeze({
     MESSAGE: `${quantity} of ${description} added to cart!`,
     SEVERITY: SEVERITY_LEVELS.SUCCESS
   }),
-  UPDATE_QUANTITY_SUCCESS: (description, quantity) => ({
-    MESSAGE: `${quantity} of ${description} now in cart!`,
-    SEVERITY: SEVERITY_LEVELS.SUCCESS
-  }),
   LOGO_ALT: 'Jaba the Hutt drinking coffee'
 });

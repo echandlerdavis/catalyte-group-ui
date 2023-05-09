@@ -57,9 +57,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '100%',
-    marginLeft: '1em',
-    marginRight: '1em'
+    width: '100%'
   },
   colorLabel: {
     alignSelf: 'flex-start',
@@ -126,12 +124,8 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   const openToast = () => {
     setOpenToast(true);
   };
-  // input box stuff. Defaults to quantity already in cart.
-  const [inputValue, setInputValue] = useState(
-    (products.filter((p) => p.id === product.id)[0] === undefined)
-      ? 1
-      : products.filter((p) => p.id === product.id)[0].quantity
-  );
+  // input box stuff. Defaults to 1.
+  const [inputValue, setInputValue] = useState(1);
   const initialInput = useRef(Number.parseInt(inputValue, 10));
   // prevents user from inputing -, thus stopping negative numbers
   const validateKeyStroke = (e) => {
@@ -187,15 +181,16 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       openToast();
       return;
     }
+    // set success toast data
+    if (Number.parseInt(inputValue, 10) === 1) {
+      setToastCallback(Constants.ADD_PRODUCT_SUCCESS(product.name));
+    } else {
+      setToastCallback(Constants.ADD_MULTIPLE_SUCCESS(product.name, inputValue));
+    }
     // check to see if product is already in order
     const repeatItem = inOrder(product, products);
     if (!repeatItem) {
       // add product to order
-      if (Number.parseInt(inputValue, 10) === 1) {
-        setToastCallback(Constants.ADD_PRODUCT_SUCCESS(product.name));
-      } else {
-        setToastCallback(Constants.ADD_MULTIPLE_SUCCESS(product.name, inputValue));
-      }
       dispatch(
         {
           type: 'add',
@@ -213,9 +208,8 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       updateLastActive();
       return;
     }
-    // if not a new item, set the quantity to inputValue
-    products.filter((p) => p.id === product.id)[0].quantity = inputValue;
-    setToastCallback(Constants.UPDATE_QUANTITY_SUCCESS(product.name, inputValue));
+    // if not a new item, add the quantity to inputValue
+    products.filter((p) => p.id === product.id)[0].quantity += inputValue;
     openToastCallback();
     onClose();
     updateLastActive();
@@ -256,17 +250,26 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 Price: $
                 {product.price.toFixed(2)}
               </Typography>
+              <br />
+              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                <div className={classes.colorLabel}>Primary Color:</div>
+                {colorDot(product.primaryColorCode)}
+              </Typography>
+              <br />
+              <br />
+              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                <div className={classes.colorLabel}>Secondary Color:</div>
+                {colorDot(product.secondaryColorCode)}
+              </Typography>
             </CardContent>
-            <br />
-            <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-              <div className={classes.colorLabel}>Primary Color:</div>
-              {colorDot(product.primaryColorCode)}
+            <Typography variant="body2" color="textSecondary" component="p" style={{ marginLeft: '1em' }}>
+              Quantity currently in cart:
+              <br />
+              {inOrder(product, products)
+                ? products.filter((p) => p.id === product.id)[0].quantity
+                : 0}
             </Typography>
-            <br />
-            <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-              <div className={classes.colorLabel}>Secondary Color:</div>
-              {colorDot(product.secondaryColorCode)}
-            </Typography>
+
             <CardActions className={classes.actionsFormatting}>
               <TextField
                 label="Quantity"
