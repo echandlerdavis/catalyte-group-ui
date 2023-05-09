@@ -1,0 +1,59 @@
+form{
+    display: flex;
+    margin: 0 5em;
+    padding: 2em 5em!important;
+}
+
+.fieldContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.fieldContainer > div{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    flex-basis: 45%;
+}
+
+.fieldContainer > div:where(:nth-child(14), :nth-child(15), :nth-child(16)) {
+    flex-basis: 5%;
+}
+
+.formButtonContainer{
+    flex-direction: row!important;
+    justify-content: space-evenly!important;
+    flex-basis: 100%!important;
+    margin-top: 2em;
+}
+
+label{
+    text-transform: capitalize;
+}
+
+
+input[type="color"]{
+    width: 8em;
+    height: 4em;
+    padding: 0;
+}
+
+.invalidField {
+    border: .05em solid red;
+}
+
+/** 
+* Make form items responsive on smaller screens
+*/
+@media screen and (max-width: 768px) {
+    .fieldContainer > div {
+        flex-basis: 100%;
+    }
+
+    .formButtonContainer{
+        flex-direction: column!important;
+    }
+}
