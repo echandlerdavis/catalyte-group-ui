@@ -4,19 +4,18 @@ import OrderItem from './OrderItem';
 import { getSubtotal, toPrice } from './ReviewOrderWidgetService';
 import styles from './ReviewOrderWidget.module.css';
 import PromoCodeWidget from './PromoCodeWidget';
-import { usePromoCode, applyPromoCode, calculateDiscount } from './PromoCodeWidgetService';
+import { applyPromoCode, calculateDiscount } from './PromoCodeWidgetService';
 
 /**
  * @name ReviewOrderWidget
  * @description Displays order items and subtotal
  * @return component
  */
-const ReviewOrderWidget = () => {
+const ReviewOrderWidget = ({ promoCode, promoCodeSetter }) => {
   const {
     state: { products }
   } = useCart();
 
-  const { promoCode, setPromoCode } = usePromoCode();
   const noDiscount = getSubtotal(products);
   const [discount, setDiscount] = useState(calculateDiscount(noDiscount, promoCode));
 
@@ -36,7 +35,7 @@ const ReviewOrderWidget = () => {
           quantity={quantity}
         />
       ))}
-      <PromoCodeWidget promoCode={promoCode} setPromoCode={setPromoCode} />
+      <PromoCodeWidget promoCode={promoCode} setPromoCode={promoCodeSetter} />
       <hr />
       <div className={styles.subtotal}>
         <div>

@@ -8,6 +8,7 @@ import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
 import setLastActive from '../../utils/UpdateLastActive';
+import { usePromoCode } from './PromoCodeWidgetService';
 
 /**
  * @name CheckoutPage
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
   const [billingData, setBillingData] = React.useState({});
   const [deliveryData, setDeliveryData] = React.useState({});
   const [useSameAddress, setUseSameAddress] = React.useState(false);
+  const { promoCode, setPromoCode } = usePromoCode();
 
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
@@ -71,7 +73,7 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
-    makePurchase(productData, deliveryAddress, billingAddress, creditCard)
+    makePurchase(productData, deliveryAddress, billingAddress, creditCard, promoCode)
       .then(() => setLastActive())
       .then(() => history.push('/confirmation'));
   };
@@ -92,7 +94,7 @@ const CheckoutPage = () => {
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>
         <div className={`Card ${styles.stepCard}`}>
-          <ReviewOrderWidget />
+          <ReviewOrderWidget promoCode={promoCode} promoCodeSetter={setPromoCode} />
         </div>
       </section>
       <section className={`${styles.step} ${styles.delivery}`}>

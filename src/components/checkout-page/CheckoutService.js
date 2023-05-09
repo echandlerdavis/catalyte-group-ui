@@ -8,12 +8,13 @@ import Constants from '../../utils/constants';
  * @param {*} cartContents items to purchase
  * @returns payment confirmation response
  */
-const makePurchase = async (products, deliveryAddress, billingAddress, creditCard) => {
+const makePurchase = async (products, deliveryAddress, billingAddress, creditCard, promoCode) => {
   await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
     products,
     deliveryAddress,
     billingAddress,
-    creditCard
+    creditCard,
+    promoCode
   })
     .then((response) => response.json())
     .catch(() => {
