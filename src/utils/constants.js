@@ -20,13 +20,20 @@ module.exports = Object.freeze({
   GOOGLE_CLIENT_ID: '912899852587-7996nh9mlpvpa2446q0il4f9hj5o492h.apps.googleusercontent.com', // ENTER CLIENT ID HERE
   PRODUCT_MISSING_ID: 'Product id cannot be null, undefined, and above 0.',
   INSUFFICIENT_INVENTORY: 'There is insufficient inventory for this product.',
+  CANNOT_ADD_ZERO_QUANTITY: 'Product quantity cannot be less than 1.',
+  QUANTITY_MUST_BE_ENTERED: 'Product quantity must contain a positive number.',
+  QUANTITY_MUST_BE_INT: 'Product quantity must be a whole number.',
   SEVERITY_LEVELS,
   ADD_PRODUCT_FAILURE: (stringList) => ({
-    MESSAGE: `Failed to add product: ${stringList.join('|')}`,
+    MESSAGE: `Failed to add product: ${stringList.join('\n\r')}`,
     SEVERITY: SEVERITY_LEVELS.ERROR
   }),
   ADD_PRODUCT_SUCCESS: (description) => ({
     MESSAGE: `${description} added to cart!`,
+    SEVERITY: SEVERITY_LEVELS.SUCCESS
+  }),
+  ADD_MULTIPLE_SUCCESS: (description, quantity) => ({
+    MESSAGE: `${quantity} of ${description} added to cart!`,
     SEVERITY: SEVERITY_LEVELS.SUCCESS
   }),
   LOGO_ALT: 'Jaba the Hutt drinking coffee',
