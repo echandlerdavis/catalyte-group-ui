@@ -22,7 +22,7 @@ const App = () => (
             <Route exact path="/" render={() => <ProductPage />} />
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
-            <Route exact path="/maintenance" render={() => <MaintenancePage />} />
+            <Route path="/maintenance" render={() => <MaintenancePage />} />
             <Route exact path="/profilepage" render={() => <ProfilePage />} />
           </Switch>
         </main>
