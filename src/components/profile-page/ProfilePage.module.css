@@ -1,12 +1,29 @@
 .container {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 2rem;
-    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem auto;
+    max-width: 600px;
+    text-align: center;
 }
 
 .gridContainer {
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gridItem {
+    display: flex;
+    justify-content: center;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .edit {

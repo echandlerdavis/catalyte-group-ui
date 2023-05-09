@@ -137,7 +137,12 @@ const Header = () => {
         {user && `${user.firstName} ${user.lastName}`}
       </div>
       {user && (
-        <Button onClick={handleProfileClick} variant="contained" color="primary">
+        <Button
+          onClick={handleProfileClick}
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: '10px' }}
+        >
           <PersonIcon style={{ backgroundColor: 'transparent' }} />
           {/* Profile icon */}
         </Button>

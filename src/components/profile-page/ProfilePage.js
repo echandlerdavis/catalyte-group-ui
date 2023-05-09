@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Typography,
-  Grid,
-  Button,
-  Avatar
+  Grid
 } from '@material-ui/core';
 import { fetchUser, parseCookies } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
@@ -29,21 +27,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div>
-      <div className={styles.header}>
-        <Avatar
-          alt="Profile Image"
-          src={user?.profileImage || ''}
-          className={styles.profileImage}
-        >
-          {user?.firstName.charAt(0)}
-        </Avatar>
-        <Typography variant="h3" gutterBottom>
-          {user?.firstName || ''}
-          {' '}
-          {user?.lastName || ''}
-        </Typography>
-      </div>
+    <div className={`${styles.container} ${styles.center}`}>
       {apiError ? (
         <div className={styles.errMsg}>
           Error retrieving user data. Please try again later.
@@ -53,20 +37,20 @@ const ProfilePage = () => {
           <Typography variant="h6" gutterBottom>
             Account Details
           </Typography>
-          <Grid container spacing={1}>
-            <Grid item xs={3} sm={6}>
+          <Grid container spacing={1} className={styles.gridContainer}>
+            <Grid item xs={3} sm={6} className={styles.gridItem}>
               <Typography variant="body3">
                 {user?.firstName || 'Error retrieving user data'}
                 {' '}
                 {user?.lastName || ''}
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={8} className={styles.gridItem}>
               <Typography variant="body3">
                 {user?.email || 'Error retrieving user data'}
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={8} className={styles.gridItem}>
               <Typography variant="body3">
                 {user?.billingAddress ? (
                   <>
@@ -85,18 +69,6 @@ const ProfilePage = () => {
               </Typography>
             </Grid>
           </Grid>
-          <Typography variant="body4">
-            <span className={styles.edit}>
-              <p> </p>
-              <b>edit</b>
-            </span>
-          </Typography>
-          <p> </p>
-          <p> </p>
-          <p> </p>
-          <Button variant="outlined" color="primary">
-            Purchase History
-          </Button>
         </div>
       )}
     </div>
