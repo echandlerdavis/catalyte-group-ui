@@ -35,11 +35,11 @@ const fetchUser = async (email, setUser, setApiError) => {
       user = userCookie;
     } else {
       // Use Test User data if no cookie is found or email doesn't match
-      const response = await HttpHelper(`${Constants.USER_ENDPOINT}/${email}`, 'GET');
+      const response = await HttpHelper(`${Constants.USERS_ENDPOINT}/${email}`, 'GET');
       if (response.ok) {
         user = await response.json();
       } else {
-        setApiError(`Error retrieving user data from ${Constants.USER_ENDPOINT}`);
+        setApiError(`Error retrieving user data from ${Constants.USERS_ENDPOINT}`);
         return null;
       }
     }
