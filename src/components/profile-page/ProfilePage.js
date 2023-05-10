@@ -39,19 +39,19 @@ const ProfilePage = () => {
           </Typography>
           <Grid container spacing={1} className={styles.gridContainer}>
             <Grid item xs={3} sm={6} className={styles.gridItem}>
-              <Typography variant="body3">
+              <Typography variant="">
                 {user?.firstName || 'Error retrieving user data'}
                 {' '}
                 {user?.lastName || ''}
               </Typography>
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography variant="body3">
+              <Typography variant="">
                 {user?.email || 'Error retrieving user data'}
               </Typography>
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography variant="body3">
+              <Typography variant="">
                 {user?.billingAddress ? (
                   <>
                     {user.billingAddress.billingStreet || ''}
