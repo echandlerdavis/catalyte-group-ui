@@ -10,7 +10,7 @@ import styles from './ReviewOrderWidget.module.css';
  * @return component
  */
 const ReviewOrderWidget = () => {
-  const { state: { products }, removeProducts } = useCart();
+  const { state: { products }, dispatch } = useCart();
   const [showModal, setShowModal] = useState(false);
   const [productIdToRemove, setProductIdToRemove] = useState(null);
 
@@ -26,14 +26,13 @@ const ReviewOrderWidget = () => {
 
   const handleRemoveProduct = () => {
     if (productIdToRemove) {
-      removeProducts(productIdToRemove);
+      dispatch({ type: 'REMOVE_PRODUCT', productId: productIdToRemove });
     }
     setShowModal(false);
   };
 
   return (
     <>
-      {/* Order items */}
       {products.map(({
         productId, price, title, description, quantity
       }) => (
@@ -47,23 +46,22 @@ const ReviewOrderWidget = () => {
         />
       ))}
 
-      {/* Modal */}
       {showModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <p>Are you sure you want to remove this item from your cart?</p>
             <div className={styles.modalButtons}>
-              <button className={styles.modalButton} onClick={handleRemoveCancel}>
+              <button type="button" className={styles.modalButton} onClick={handleRemoveCancel}>
                 Cancel
               </button>
-              <button className={styles.modalButton} onClick={handleRemoveProduct}>
-                remove
+              <button type="button" className={styles.modalButton} onClick={handleRemoveProduct}>
+                Remove
               </button>
             </div>
           </div>
         </div>
       )}
-      
+
       <hr />
       <div className={styles.subtotal}>
         <div>

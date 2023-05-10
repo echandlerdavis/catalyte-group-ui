@@ -16,8 +16,7 @@ import AppAlert from '../alert/Alert';
 const CheckoutPage = () => {
   const history = useHistory();
 
-  const {
-    state: { products }, dispatch } = useCart();
+  const { state: { products }, dispatch } = useCart();
 
   const handleRemove = (product) => {
     dispatch({ type: 'remove', product });
@@ -92,7 +91,7 @@ const CheckoutPage = () => {
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>
         <div className={`Card ${styles.stepCard}`}>
-          <ReviewOrderWidgetRemove={handleRemove} />
+          <ReviewOrderWidget onRemoveConfirmation={handleRemove} />
         </div>
       </section>
       <section className={`${styles.step} ${styles.delivery}`}>

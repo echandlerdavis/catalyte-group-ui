@@ -21,7 +21,7 @@ const OrderItem = ({
     </div>
     <div className={styles.price}>
       <p>{toPrice(quantity * price)}</p>
-      <button onClick={onRemove} className={styles.removeButton}>
+      <button type="button" onClick={onRemove} className={styles.removeButton}>
         <i className="fa fa-trash" />
       </button>
     </div>
