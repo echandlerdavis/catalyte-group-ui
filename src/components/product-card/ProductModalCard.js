@@ -27,7 +27,7 @@ import Reviews from '../reviews/Reviews';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '50em',
-    height: '50em',
+    height: '45em',
     overflowY: 'scroll'
   },
   media: {
@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '100%',
-    margin: 0
+    // width: '45%',
+    padding: 2
   },
   colorLabel: {
     alignSelf: 'flex-start',
@@ -245,53 +245,57 @@ const ProductModalCard = React.forwardRef((props, ref) => {
               title="placeholder"
             />
             <CardContent>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {product.description}
-              </Typography>
+              <div className={styles.description}>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {product.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Price: $
+                  {product.price.toFixed(2)}
+                </Typography>
+              </div>
               <br />
-              <Typography variant="body2" color="textSecondary" component="p">
-                Price: $
-                {product.price.toFixed(2)}
-              </Typography>
+              <div className={styles.description}>
+                <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                  <div className={classes.colorLabel}>Primary Color:</div>
+                  {colorDot(product.primaryColorCode)}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                  <div className={classes.colorLabel}>Secondary Color:</div>
+                  {colorDot(product.secondaryColorCode)}
+                </Typography>
+              </div>
               <br />
-              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-                <div className={classes.colorLabel}>Primary Color:</div>
-                {colorDot(product.primaryColorCode)}
-              </Typography>
               <br />
-              <br />
-              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-                <div className={classes.colorLabel}>Secondary Color:</div>
-                {colorDot(product.secondaryColorCode)}
-              </Typography>
-            </CardContent>
-            <TextField
-              style={{ marginLeft: '1em' }}
-              label="Currently in cart:"
-              value={inOrder(product, products)
-                ? products.filter((p) => p.id === product.id)[0].quantity
-                : 0}
-              disabled
-            />
-
-            <CardActions className={classes.actionsFormatting}>
               <TextField
-                label="Quantity"
-                id="qtyInput"
-                type="number"
-                step="1"
-                InputProps={{ inputProps: { min: 0 } }}
-                className={classes.quantityInput}
-                value={inputValue}
-                onChange={inputChange}
-                onKeyDown={validateKeyStroke}
-                autoFocus
+                style={{ marginLeft: '1em' }}
+                label="Currently in cart:"
+                value={inOrder(product, products)
+                  ? products.filter((p) => p.id === product.id)[0].quantity
+                  : 0}
+                disabled
               />
-              <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
-                <AddShoppingCartIcon />
-              </IconButton>
-            </CardActions>
-            <Reviews productId={product.id} />
+
+              <CardActions className={classes.actionsFormatting}>
+                <TextField
+                  label="Quantity"
+                  id="qtyInput"
+                  type="number"
+                  step="1"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  className={classes.quantityInput}
+                  value={inputValue}
+                  onChange={inputChange}
+                  onKeyDown={validateKeyStroke}
+                  autoFocus
+                />
+                <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+              </CardActions>
+              <Reviews productId={product.id} />
+            </CardContent>
+
           </div>
         </Card>
       </Box>
