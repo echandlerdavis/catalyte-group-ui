@@ -39,15 +39,17 @@ const ReviewOrderWidget = ({ promoCode, promoCodeSetter }) => {
       <hr />
       <div className={styles.subtotal}>
         <div>
+          {discount > 0 && <p>Discount</p>}
+          <br />
           <p>Subtotal</p>
         </div>
         <div className={styles.price}>
           {discount > 0 && (
-          <span>
-            Discount:
-            {toPrice(discount)}
-          </span>
+          <p>
+            {`(${toPrice(discount)})`}
+          </p>
           )}
+          <br />
           <p>{toPrice(applyPromoCode(noDiscount, discount))}</p>
         </div>
       </div>

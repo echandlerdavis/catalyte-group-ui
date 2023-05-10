@@ -11,11 +11,8 @@ const checkBoxStyle = {
 };
 
 const promoCodeStyle = {
-  display: 'grid',
-  gridTemplateColumns: '2fr 4fr',
-  gridTemplateRows: '1fr',
-  gap: '0px 1em',
-  alignItems: 'center'
+  display: 'flex',
+  fontSize: 10
 };
 
 const PromoCodeWidget = ({ promoCode, setPromoCode }) => {
