@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
@@ -16,6 +16,7 @@ import setLastActive from '../../utils/UpdateLastActive';
  */
 const CheckoutPage = () => {
   const history = useHistory();
+  const [purchaseConfirmation, setPurchaseConfirmation] = useState({});
 
   const {
     state: { products }
@@ -37,7 +38,7 @@ const CheckoutPage = () => {
     setUseSameAddress(e.target.checked);
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     const productData = products.map(({ id, quantity }) => ({ id, quantity }));
     const deliveryAddress = {
       firstName: deliveryData.firstName,
@@ -71,10 +72,26 @@ const CheckoutPage = () => {
       expiration: billingData.expiration,
       cardholder: billingData.cardholder
     };
-    makePurchase(productData, deliveryAddress, billingAddress, creditCard)
-      .then(() => setLastActive())
-      .then(() => history.push('/confirmation'));
+    setPurchaseConfirmation(await makePurchase(
+      productData,
+      deliveryAddress,
+      billingAddress,
+      creditCard
+    ));
   };
+
+  useEffect(() => {
+    if (purchaseConfirmation.success) {
+      // success: setLastActive, empty cart, and change to confirmation page
+      setLastActive();
+      while (products.length > 0) {
+        products.pop();
+      }
+      history.push('/confirmation');
+    } else {
+      // set toast
+    }
+  }, [purchaseConfirmation, history, products]);
 
   if (products.length === 0) {
     return (
