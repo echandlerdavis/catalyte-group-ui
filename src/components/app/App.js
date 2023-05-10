@@ -7,6 +7,7 @@ import ConfirmationPage from '../confirmation-page/ConfirmationPage';
 import MaintenancePage from '../maintenance-page/MaintenancePage';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
+import FilterComponentExample from '../filter-component/FilterContainer';
 /**
  * @name App
  * @returns component
@@ -22,6 +23,7 @@ const App = () => (
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
             <Route path="/maintenance" render={() => <MaintenancePage />} />
+            <Route exact path="/filter" render={() => <FilterComponentExample />} />
           </Switch>
         </main>
         <Footer />
