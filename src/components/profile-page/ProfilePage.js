@@ -46,12 +46,12 @@ const ProfilePage = () => {
               </Typography>
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography variant="">
+              <Typography>
                 {user?.email || 'Error retrieving user data'}
               </Typography>
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography variant="">
+              <Typography>
                 {user?.billingAddress ? (
                   <>
                     {user.billingAddress.billingStreet || ''}
