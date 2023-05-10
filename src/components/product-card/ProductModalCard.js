@@ -17,6 +17,7 @@ import styles from './ProductCard.module.css';
 import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
+import Reviews from '../reviews/Reviews';
 
 /**
  * @name useStyles
@@ -25,9 +26,9 @@ import updateLastActive from '../../utils/UpdateLastActive';
  */
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
-    height: '100%',
-    minWidth: '30vw'
+    width: '50em',
+    height: '50em',
+    overflowY: 'scroll'
   },
   media: {
     height: 0,
@@ -51,13 +52,15 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    overflow: 'hidden'
   },
   colorSpan: {
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
+    margin: 0
   },
   colorLabel: {
     alignSelf: 'flex-start',
@@ -288,6 +291,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 <AddShoppingCartIcon />
               </IconButton>
             </CardActions>
+            <Reviews productId={product.id} />
           </div>
         </Card>
       </Box>
