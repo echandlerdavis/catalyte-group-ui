@@ -45,8 +45,6 @@ const fetchPromoCode = async (codeName) => {
     .then((data) => {
       if (fetchedData.gotPromoCode) {
         fetchedData.data = data;
-      } else if (fetchedData.status === 404) {
-        fetchedData.errors = [data.errorMessage];
       } else {
         fetchedData.errors = [data.errorMessage];
       }
