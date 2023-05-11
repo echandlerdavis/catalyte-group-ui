@@ -311,7 +311,7 @@ const CheckoutPage = () => {
       };
       // Then save the purchase with the created objects
       const purchase = await makePurchase(
-        productData, deliveryAddress, billingAddress, creditCard, contact
+        productData, deliveryAddress, billingAddress, creditCard, contact, promoCode
       );
 
       // If successful save, got to confirmation page
