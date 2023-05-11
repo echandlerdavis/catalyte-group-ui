@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
 import FormItemDataList from '../form/FormItemDataList';
-import FormItem from '../form/FormItem';
 import styles from './NewProductPage.module.css';
 import { GetAllDistinctLists, SaveProduct } from './NewProductPageService';
 import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 import FormItemDropdown from '../form/FormItemDropdown';
+import FormItem from '../form/FormItem';
 
 /**
  * @name NewProductPage
