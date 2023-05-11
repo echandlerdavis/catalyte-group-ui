@@ -27,8 +27,6 @@ const CheckoutPage = () => {
     }
   };
 
-  const { dispatch } = useCart();
-
   const clearCart = () => (
     dispatch({ type: 'clear', product: {} })
   );
