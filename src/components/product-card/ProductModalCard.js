@@ -225,7 +225,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
 
   return (
     <ClickAwayListener onClickAway={onClose}>
-      <Box ref={ref} className={classes.box}>
+      <Box ref={{ ref }} className={classes.box}>
         <Toast
           message={toastData.MESSAGE}
           open={open}
@@ -293,7 +293,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                     value={inputValue}
                     onChange={inputChange}
                     onKeyDown={validateKeyStroke}
-                    autoFocus
                   />
                   <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
                     <AddShoppingCartIcon />
