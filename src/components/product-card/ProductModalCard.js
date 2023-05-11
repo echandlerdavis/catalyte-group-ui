@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    // width: '45%',
     padding: 2
   },
   colorLabel: {

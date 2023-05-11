@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
-    minWidth: 700,
     maxWidth: 700
   },
   avatar: {
@@ -43,10 +42,10 @@ export default function SingleReview({ review }) {
               </Avatar>
             </Grid>
             <Grid item xs={8} className={classes.reviewHeading}>
-              <Typography>
+              <Typography variant="h6">
                 {review.title}
               </Typography>
-              <Typography>
+              <Typography variant="subtitle2">
                 {review.userName}
               </Typography>
             </Grid>
@@ -55,15 +54,17 @@ export default function SingleReview({ review }) {
             </Grid>
           </Grid>
           <Grid item xs={12} container>
-            <Grid item>
-              <Typography>
+            <Grid item container>
+              <Typography variant="body1">
                 {review.review}
               </Typography>
-              <Typography>
-                written
-                {' '}
-                {review.createdAt}
-              </Typography>
+              <Grid item container justifyContent="flex-end">
+                <Typography variant="caption">
+                  written
+                  {' '}
+                  {review.createdAt}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
