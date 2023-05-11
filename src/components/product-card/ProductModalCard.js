@@ -57,13 +57,14 @@ const useStyles = makeStyles((theme) => ({
   },
   colorSpan: {
     display: 'inline-flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 2
   },
   colorLabel: {
     alignSelf: 'flex-start',
-    flexBasis: '28%'
+    flexBasis: '28%',
+    marginRight: '1em'
   },
   quantityInput: {
     width: '3em',
@@ -74,6 +75,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-end'
+  },
+  cartInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }));
 /**
@@ -266,32 +272,34 @@ const ProductModalCard = React.forwardRef((props, ref) => {
               </div>
               <br />
               <br />
-              <TextField
-                style={{ marginLeft: '1em' }}
-                label="Currently in cart:"
-                value={inOrder(product, products)
-                  ? products.filter((p) => p.id === product.id)[0].quantity
-                  : 0}
-                disabled
-              />
-
-              <CardActions className={classes.actionsFormatting}>
+              <div className={classes.cartInfo}>
                 <TextField
-                  label="Quantity"
-                  id="qtyInput"
-                  type="number"
-                  step="1"
-                  InputProps={{ inputProps: { min: 0 } }}
-                  className={classes.quantityInput}
-                  value={inputValue}
-                  onChange={inputChange}
-                  onKeyDown={validateKeyStroke}
-                  autoFocus
+                  style={{ marginLeft: '1em' }}
+                  label="Currently in cart:"
+                  value={inOrder(product, products)
+                    ? products.filter((p) => p.id === product.id)[0].quantity
+                    : 0}
+                  disabled
                 />
-                <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
-                  <AddShoppingCartIcon />
-                </IconButton>
-              </CardActions>
+
+                <CardActions className={classes.actionsFormatting}>
+                  <TextField
+                    label="Quantity"
+                    id="qtyInput"
+                    type="number"
+                    step="1"
+                    InputProps={{ inputProps: { min: 0 } }}
+                    className={classes.quantityInput}
+                    value={inputValue}
+                    onChange={inputChange}
+                    onKeyDown={validateKeyStroke}
+                    autoFocus
+                  />
+                  <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
+                    <AddShoppingCartIcon />
+                  </IconButton>
+                </CardActions>
+              </div>
               <Reviews productId={product.id} />
             </CardContent>
 
