@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,8 +15,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
-import Toast from '../toast/Toast';
 import styles from './ProductCard.module.css';
+import setLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name useStyles
@@ -77,7 +77,7 @@ export const inOrder = (product, orders) => orders.filter((p) => p.id === produc
  * @param {Product object} product
  * @returns result Object {valid: boolean, errors: [string]}
  */
-export const validateOrder = (product, orders) => {
+export const validateOrder = (product, orders, desiredQty) => {
   const result = {
     valid: true,
     errors: []
@@ -91,10 +91,13 @@ export const validateOrder = (product, orders) => {
   // if product has no id, can't verify inventory
   if (result.valid) {
     // user has already clicked add icon, so orderQty is currenty orderQty + 1
-    const ordersQty = inOrder(product, orders)
-      ? orders.filter((p) => p.id === product.id)[0].quantity + 1
-      : 1;
-    if (!haveEnoughInventory(product.quantity, ordersQty)) {
+    let orderQty = desiredQty;
+    if (orderQty === undefined && inOrder(product, orders)) {
+      orderQty = orders.filter((p) => p.id === product.id)[0].quantity + 1;
+    } else if (orderQty === undefined) {
+      orderQty = 1;
+    }
+    if (!haveEnoughInventory(product.quantity, orderQty)) {
       result.valid = false;
       result.errors.push(Constants.INSUFFICIENT_INVENTORY);
     }
@@ -125,20 +128,12 @@ export const consolidateOrder = (product, duplicates, order) => {
  * @param {*} props product
  * @return component
  */
-const ProductCard = ({ product }) => {
+const ProductCard = ({
+  product, clickAction, openToast, setToastData
+}) => {
   const classes = useStyles();
-  const [open, setOpenToast] = useState(false);
-  const [toastData, setToastData] = useState({
-    MESSAGE: '',
-    SEVERITY: Constants.SEVERITY_LEVELS.INFO
-  });
-
-  const closeToast = () => {
-    setOpenToast(false);
-  };
-
-  const openToast = () => {
-    setOpenToast(true);
+  const modalClickZone = {
+    cursor: 'pointer'
   };
 
   const { dispatch } = useCart();
@@ -157,6 +152,8 @@ const ProductCard = ({ product }) => {
     }
     // set the success message
     setToastData(Constants.ADD_PRODUCT_SUCCESS(product.name));
+    // update activity time
+    setLastActive();
     // locate if the product is a duplicate
     let existingProducts = [];
     if (products.length > 0) {
@@ -194,42 +191,40 @@ const ProductCard = ({ product }) => {
   return (
     <Card className={classes.root}>
       <div className={styles.CardContainer}>
-        <Toast
-          message={toastData.MESSAGE}
-          open={open}
-          severity={toastData.SEVERITY}
-          handleClose={closeToast}
-        />
-        <CardHeader
-          avatar={(
-            <Avatar aria-label="demographics" className={classes.avatar}>
-              {product.demographic.charAt(0)}
-            </Avatar>
+        <div style={modalClickZone}>
+          <CardHeader
+            avatar={(
+              <Avatar aria-label="demographics" className={classes.avatar}>
+                {product.demographic.charAt(0)}
+              </Avatar>
           )}
-          action={(
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+            action={(
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
           )}
-          className={classes.header}
-          title={product.name}
-          subheader={`${product.demographic} ${product.category} ${product.type}`}
-        />
-        <CardMedia
-          className={classes.media}
-          image={Constants.PLACEHOLDER_IMAGE}
-          title="placeholder"
-        />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {product.description}
-          </Typography>
-          <br />
-          <Typography variant="body2" color="textSecondary" component="p">
-            Price: $
-            {product.price.toFixed(2)}
-          </Typography>
-        </CardContent>
+            className={classes.header}
+            title={product.name}
+            subheader={`${product.demographic} ${product.category} ${product.type}`}
+            onClick={() => clickAction(product)}
+          />
+          <CardMedia
+            className={classes.media}
+            image={Constants.PLACEHOLDER_IMAGE}
+            title="placeholder"
+            onClick={() => clickAction(product)}
+          />
+          <CardContent onClick={() => clickAction(product)}>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {product.description}
+            </Typography>
+            <br />
+            <Typography variant="body2" color="textSecondary" component="p">
+              Price: $
+              {product.price.toFixed(2)}
+            </Typography>
+          </CardContent>
+        </div>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />

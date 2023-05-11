@@ -10,3 +10,13 @@
   color: #666666;
   margin-bottom: .5em;
 }
+
+.priceInputIcon{
+  margin-top: .5em;
+  padding: .5em;
+}
+
+.priceInputBox{
+  display: flex;
+
+}

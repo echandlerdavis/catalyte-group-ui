@@ -8,6 +8,7 @@ import { useCart } from '../checkout-page/CartContext';
 import styles from './Header.module.css';
 import constants from '../../utils/constants';
 import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
+import setLastActive from '../../utils/UpdateLastActive';
 
 /**
  * @name Header
@@ -36,6 +37,7 @@ const Header = () => {
       lastName: response.profileObj.familyName
     };
     loginUser(googleUser, setUser, setApiError);
+    setLastActive();
     setGoogleError('');
   };
 
