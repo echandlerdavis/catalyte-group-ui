@@ -10,7 +10,6 @@ import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 import Toast from '../toast/Toast';
 import { usePromoCode } from './PromoCodeWidgetService';
-import { usePromoCode } from './PromoCodeWidgetService';
 
 /**
  * @name CheckoutPage
