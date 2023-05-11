@@ -1,6 +1,8 @@
 import React, { useState, createElement } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import PersonIcon from '@material-ui/icons/Person';
+import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import loginUser from './HeaderService';
 import iconWithBadge from './IconWithBadge';
@@ -42,7 +44,7 @@ const Header = () => {
   };
 
   /**
-   * @name handleGoogleLoginSuccess
+   * @name handleGoogleLoginFailure
    * @description Function to run if google login was unsuccessful
    */
   const handleGoogleLoginFailure = () => {
@@ -56,8 +58,11 @@ const Header = () => {
    * @description Function to run if google logout was successful
    */
   const handleGoogleLogoutSuccess = () => {
-    setUser('');
+    setUser(null);
     setGoogleError('');
+    sessionStorage.removeItem('token');
+    history.push('/');
+    window.dispatchEvent(new Event('logout'));
   };
 
   /**
@@ -91,6 +96,14 @@ const Header = () => {
     className: styles.appLogo,
     onClick: handleLogoClick
   });
+
+  /**
+   * @name handleProfileClick
+   * @description Redirect the page to /profilepage when clicked
+   */
+  const handleProfileClick = () => {
+    history.push('/ProfilePage');
+  };
 
   return (
     <header id={styles.header} className="Set-to-front">
@@ -126,6 +139,17 @@ const Header = () => {
       <div className={styles.optionalText}>
         {user && `${user.firstName} ${user.lastName}`}
       </div>
+      {user && (
+        <Button
+          onClick={handleProfileClick}
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: '10px' }}
+        >
+          <PersonIcon style={{ backgroundColor: 'transparent' }} />
+          {/* Profile icon */}
+        </Button>
+      )}
     </header>
   );
 };

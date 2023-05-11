@@ -16,6 +16,12 @@ function cartReducer(state, action) {
         products: [...state.products, action.product]
       };
     }
+    case 'clear': {
+      return {
+        ...state,
+        products: []
+      };
+    }
     case 'remove': {
       return {
         ...state,
