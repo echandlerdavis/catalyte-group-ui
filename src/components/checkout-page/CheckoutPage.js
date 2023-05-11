@@ -325,7 +325,7 @@ const CheckoutPage = () => {
       setPurchaseConfirmation(purchase);
 
       // If successful save, got to confirmation page
-      if (purchase) {
+      if (purchase.success) {
         clearCart();
         history.push('/confirmation');
       } else {
@@ -384,6 +384,7 @@ const CheckoutPage = () => {
         open={openToast}
         severity={toastData.SEVERITY}
         handleClose={closeToast}
+        horizontalPosition="right"
       />
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>

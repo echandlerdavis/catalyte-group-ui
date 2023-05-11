@@ -13,14 +13,14 @@ import Alert from '@material-ui/lab/Alert';
  * Info is the default if not defined in the component.
  */
 export default function Toast({
-  message, open, handleClose, severity = 'info'
+  message, open, handleClose, severity = 'info', horizontalPosition = 'left'
 }) {
   return (
     <>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: horizontalPosition
         }}
         open={open}
         autoHideDuration={8000}
