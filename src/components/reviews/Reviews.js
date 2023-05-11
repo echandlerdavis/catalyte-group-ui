@@ -6,6 +6,7 @@ import SingleReview from './SingleReview';
 import fetchReviews from './ReviewService';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
+import styles from './Review.module.css';
 
 export default function Reviews({ productId }) {
   const [reviews, setReviews] = useState([]);
@@ -17,14 +18,16 @@ export default function Reviews({ productId }) {
   }, [productId]);
 
   const handleSortChange = (event) => {
+    const newToOld = [...reviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const oldToNew = [...newToOld].reverse();
     setReviewOrder(event.target.value);
-    let sortedReviews = reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    if (reviewOrder === 'oldToNew') {
-      sortedReviews = sortedReviews.reverse();
-    } else if (reviewOrder === 'None') {
-      sortedReviews = reviews;
+    if (event.target.value === 'oldToNew') {
+      setReviews(oldToNew);
+    } else if (event.target.value === 'newToOld') {
+      setReviews(newToOld);
+    } else {
+      setReviews(reviews.sort((a, b) => a.id - b.id));
     }
-    setReviews(sortedReviews);
   };
 
   const listReviews = reviews.map((review) => (
@@ -35,7 +38,7 @@ export default function Reviews({ productId }) {
 
   return (
     <>
-      <div>
+      <div className={styles.reviewHeader}>
         <h1>Reviews</h1>
         <TextField
           id="select-review-order"
