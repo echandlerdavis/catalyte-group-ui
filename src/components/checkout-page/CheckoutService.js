@@ -1,6 +1,5 @@
 import HttpHelper from '../../utils/HttpHelper';
 import Constants from '../../utils/constants';
-
 /**
  *
  * @name makePayment
@@ -8,18 +7,20 @@ import Constants from '../../utils/constants';
  * @param {*} cartContents items to purchase
  * @returns payment confirmation response
  */
-const makePurchase = async (products, deliveryAddress, billingAddress, creditCard) => {
-  await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
-    products,
-    deliveryAddress,
-    billingAddress,
-    creditCard
-  })
-    .then((response) => response.json())
-    .catch(() => {
-      /* eslint-disable no-console */
-      console.log('Failed to purchase');
-      /* eslint-enable no-console */
+const makePurchase = async (products, deliveryAddress, billingAddress, creditCard, contact) => {
+  try {
+    const response = await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
+      products,
+      deliveryAddress,
+      billingAddress,
+      creditCard,
+      contact
     });
+    if (response.status === 201) return response.json();
+    return false;
+  } catch {
+    console.log('Failed to purchase');
+    return false;
+  }
 };
 export default makePurchase;

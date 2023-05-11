@@ -1,0 +1,38 @@
+.FilterList{
+    border-top: .15em solid #d3d3d3;
+    padding: .5em;
+    margin: .5em 0;
+}
+
+.FilterItem {
+    list-style: none;
+}
+
+.optionsList {
+    margin-top: .5em;
+}
+
+.filterHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color:transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.FilterLabel {
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.FilterLabel span {
+    margin: 0;
+}
+
+.optionName {
+    margin-left: .5em;
+}

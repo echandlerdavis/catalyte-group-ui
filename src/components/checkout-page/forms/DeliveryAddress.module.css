@@ -8,3 +8,7 @@
   font-weight: 700;
   color: #666666;
 }
+
+.invalidField {
+  border: .05em solid red;
+}
