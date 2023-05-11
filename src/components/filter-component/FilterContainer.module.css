@@ -1,0 +1,7 @@
+.filterContainer {
+    background-color: white;
+    box-shadow: .75rem .25rem 1rem #b3b3b3;
+    padding: 1em;
+    margin: 0 30vw;
+    justify-self: center;
+}
