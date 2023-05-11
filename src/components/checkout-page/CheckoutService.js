@@ -1,6 +1,5 @@
 import HttpHelper from '../../utils/HttpHelper';
 import Constants from '../../utils/constants';
-
 /**
  *
  * @name makePayment
@@ -8,30 +7,32 @@ import Constants from '../../utils/constants';
  * @param {*} cartContents items to purchase
  * @returns payment confirmation response
  */
-const makePurchase = async (products, deliveryAddress, billingAddress, creditCard) => {
-  const resp = {
-    status: null,
-    data: null,
+const makePurchase = async (products, deliveryAddress, billingAddress, creditCard, contact) => {
+  const purchaseReport = {
     success: false,
-    errors: ''
+    data: null
   };
-  await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
-    products,
-    deliveryAddress,
-    billingAddress,
-    creditCard
-  })
-    .then((response) => {
-      resp.status = response.status;
-      if (response.ok) {
-        resp.success = true;
-        resp.data = response.json();
-      } else {
-        resp.errors = response.json();
-      }
-    })
-    .catch();
-
-  return resp;
+  try {
+    const response = await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
+      products,
+      deliveryAddress,
+      billingAddress,
+      creditCard,
+      contact
+    });
+    if (response.status === 201) {
+      purchaseReport.success = true;
+      purchaseReport.data = response.json();
+      return purchaseReport;
+    }
+    console.log(response.status);
+    purchaseReport.data = response;
+    return purchaseReport;
+  } catch (error) {
+    console.log('Failed to purchase', error);
+    purchaseReport.success = false;
+    purchaseReport.data = error.json();
+    return purchaseReport;
+  }
 };
 export default makePurchase;

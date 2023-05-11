@@ -24,6 +24,7 @@ const CheckoutPage = () => {
     SEVERITY: Constants.SEVERITY_LEVELS.INFO
   });
   const [openToast, setOpenToast] = useState(false);
+  const [errors, setErrors] = useState('');
 
   const {
     state: { products }
@@ -91,8 +92,6 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    console.log('errors: ', purchaseConfirmation.errors);
-    console.log('data: ', purchaseConfirmation.data);
     if (purchaseConfirmation.success) {
       // success: setLastActive, empty cart, and change to confirmation page
       setLastActive();
@@ -100,15 +99,31 @@ const CheckoutPage = () => {
         products.pop();
       }
       history.push('/confirmation');
-    } else if (purchaseConfirmation.errors) {
-      // set toast
-      setToastData({
-        MESSAGE: purchaseConfirmation.errors,
-        SEVERITY: Constants.SEVERITY_LEVELS.ERROR
-      });
-      showToast();
+    } else if (purchaseConfirmation.data) {
+      // set errors
+      setErrors(purchaseConfirmation.data.json());
     }
   }, [purchaseConfirmation, history, products]);
+
+  useEffect(() => {
+    // set toast data and open toast
+    if (errors) {
+      // errors should be a promise
+      errors.then((error) => {
+        // construct message
+        console.log(error.payload);
+        let toastMessage = error.payload.reduce((message, product) => `${message + product.name},`, error.errorMessage);
+        toastMessage = toastMessage.replace(/.$/, '.');
+        // set toast data
+        setToastData({ MESSAGE: toastMessage, SEVERITY: Constants.SEVERITY_LEVELS.ERROR });
+        console.log(toastMessage);
+        // show toast
+        if (toastMessage.length > 0) {
+          showToast();
+        }
+      });
+    }
+  }, [errors]);
 
   if (products.length === 0) {
     return (
