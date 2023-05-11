@@ -18,9 +18,10 @@ const ReviewOrderWidget = () => {
     dispatch({ type: 'remove', product: { title } });
   };
 
-  const handleUpdateQuantity = (title, newQuantity, shouldShowModal) => {
+  const handleUpdateQuantity = (title, newQuantity) => {
     const updatedProducts = products.map((product) => {
       if (product.title === title) {
+        const shouldShowModal = newQuantity === 0;
         return { ...product, quantity: parseInt(newQuantity, 10), showModal: shouldShowModal };
       }
       return product;
@@ -28,7 +29,7 @@ const ReviewOrderWidget = () => {
 
     dispatch({ type: 'updateQuantity', products: updatedProducts });
 
-    if (shouldShowModal) {
+    if (newQuantity === 0) {
       setProductToRemove(title);
       setShowModal(true);
     }
@@ -51,32 +52,33 @@ const ReviewOrderWidget = () => {
       {products.map(({
         productId, price, title, description, quantity
       }) => (
-        <OrderItem
-          key={productId}
-          price={price}
-          title={title}
-          description={description}
-          quantity={quantity}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemoveConfirmation={handleRemoveProductFromCart}
-        />
-      ))}
-
-      {showModal && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <p>Are you sure you want to remove this item from your cart?</p>
-            <div className={styles.modalButtons}>
-              <button type="button" className={styles.modalButton} onClick={handleRemoveCancel}>
-                Cancel
-              </button>
-              <button type="button" className={styles.modalButton} onClick={handleRemoveProduct}>
-                Remove
-              </button>
+        <div key={productId}>
+          <OrderItem
+            id={`order-item-${title}`}
+            price={price}
+            title={title}
+            description={description}
+            quantity={quantity}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveConfirmation={handleRemoveProductFromCart}
+          />
+          {productToRemove === title && showModal && (
+            <div className={styles.modalContainer}>
+              <div className={styles.modalContent}>
+                <p>Are you sure you want to remove this item from your cart?</p>
+                <div className={styles.modalButtons}>
+                  <button type="button" className={styles.modalButton} onClick={handleRemoveCancel}>
+                    Cancel
+                  </button>
+                  <button type="button" className={styles.modalButton} onClick={handleRemoveProduct}>
+                    Remove
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      ))}
 
       <hr />
       <div className={styles.subtotal}>

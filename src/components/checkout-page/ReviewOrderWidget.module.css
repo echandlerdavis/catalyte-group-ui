@@ -6,3 +6,30 @@
 .price {
   justify-self: end;
 }
+
+.modalContainer {
+  position: relative;
+  margin-top: 8px;
+  background-color: rgba(255, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.modalContent{
+  color: red;
+}
+
+.modalButtons {
+  margin-top: 8px;
+}
+
+.modalButton {
+  margin-right: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modalButton:last-child {
+  margin-right: 0;
+}
