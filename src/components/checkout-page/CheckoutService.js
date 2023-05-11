@@ -25,11 +25,12 @@ const makePurchase = async (products, deliveryAddress, billingAddress, creditCar
       purchaseReport.data = response.json();
       return purchaseReport;
     }
-    console.log(response.status);
     purchaseReport.data = response;
     return purchaseReport;
   } catch (error) {
-    console.log('Failed to purchase', error);
+    /* eslint-disable no-console */
+    console.log('Failed to purchase');
+    /* eslint-enable no-console */
     purchaseReport.success = false;
     purchaseReport.data = error.json();
     return purchaseReport;

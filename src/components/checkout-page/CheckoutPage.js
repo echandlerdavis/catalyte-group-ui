@@ -111,12 +111,10 @@ const CheckoutPage = () => {
       // errors should be a promise
       errors.then((error) => {
         // construct message
-        console.log(error.payload);
         let toastMessage = error.payload.reduce((message, product) => `${message + product.name},`, error.errorMessage);
         toastMessage = toastMessage.replace(/.$/, '.');
         // set toast data
         setToastData({ MESSAGE: toastMessage, SEVERITY: Constants.SEVERITY_LEVELS.ERROR });
-        console.log(toastMessage);
         // show toast
         if (toastMessage.length > 0) {
           showToast();
