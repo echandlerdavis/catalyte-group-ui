@@ -36,6 +36,16 @@ const ReviewOrderWidget = () => {
   };
 
   const handleRemoveCancel = () => {
+    const productToUpdate = products.find((product) => product.title === productToRemove);
+    if (productToUpdate && productToUpdate.quantity === 0) {
+      const updatedProducts = products.map((product) => {
+        if (product.title === productToRemove) {
+          return { ...product, quantity: 1 };
+        }
+        return product;
+      });
+      dispatch({ type: 'updateQuantity', products: updatedProducts });
+    }
     setProductToRemove(null);
     setShowModal(false);
   };
