@@ -10,6 +10,7 @@ import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 import Toast from '../toast/Toast';
 import { usePromoCode } from './PromoCodeWidgetService';
+import { usePromoCode } from './PromoCodeWidgetService';
 
 /**
  * @name CheckoutPage
@@ -311,7 +312,7 @@ const CheckoutPage = () => {
       };
       // Then save the purchase with the created objects
       const purchase = await makePurchase(
-        productData, deliveryAddress, billingAddress, creditCard, promoCode, contact
+        productData, deliveryAddress, billingAddress, creditCard, contact, promoCode
       );
 
       // If successful save, got to confirmation page

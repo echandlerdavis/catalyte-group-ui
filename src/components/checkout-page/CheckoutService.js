@@ -8,7 +8,7 @@ import Constants from '../../utils/constants';
  * @returns payment confirmation response
  */
 const makePurchase = async (
-  products, deliveryAddress, billingAddress, creditCard, contact, promoCode
+  products, deliveryAddress, billingAddress, creditCard, promoCode, contact
 ) => {
   try {
     const response = await HttpHelper(Constants.PURCHASE_ENDPOINT, 'POST', {
