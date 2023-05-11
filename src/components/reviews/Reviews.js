@@ -7,30 +7,22 @@ import fetchReviews from './ReviewService';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 
-// const useStyles = makeStyles((theme) => ({
-//   formControl: {
-//     margin: theme.spacing(1),
-//     minWidth: 120
-//   },
-//   selectEmpty: {
-//     marginTop: theme.spacing(2)
-//   }
-// }));
-
 export default function Reviews({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [apiError, setApiError] = useState(false);
-  const [reviewOrder, setReviewOrder] = useState('newToOld');
+  const [reviewOrder, setReviewOrder] = useState('');
 
   useEffect(() => {
     fetchReviews(setReviews, setApiError, productId);
   }, [productId]);
 
   const handleSortChange = (event) => {
-    let sortedReviews = reviews.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     setReviewOrder(event.target.value);
+    let sortedReviews = reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     if (reviewOrder === 'oldToNew') {
       sortedReviews = sortedReviews.reverse();
+    } else if (reviewOrder === 'None') {
+      sortedReviews = reviews;
     }
     setReviews(sortedReviews);
   };
@@ -55,6 +47,9 @@ export default function Reviews({ productId }) {
           }}
           helperText="Order by date"
         >
+          <option key="default" value="None">
+            None
+          </option>
           <option key="newToOld" value="newToOld">
             Newest to Oldest
           </option>
