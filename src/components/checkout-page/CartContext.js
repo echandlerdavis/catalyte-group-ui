@@ -7,7 +7,7 @@ function cartReducer(state, action) {
     case 'delete': {
       return {
         ...state,
-        products: state.products.filter((product) => product.title !== action.product.title)
+        products: state.products.filter((p) => p.title !== action.product.title)
       };
     }
     case 'add': {
@@ -20,6 +20,24 @@ function cartReducer(state, action) {
       return {
         ...state,
         products: state.products.filter((product) => product.title !== action.product.title)
+      };
+    }
+    case 'updateQuantity': {
+      const { products } = action;
+      const updatedProducts = products.map((product) => {
+        const { title, quantity } = product;
+        if (quantity === 0) {
+          // Display the modal
+          return { ...product, showModal: true };
+        }
+        return state.products.find((p) => p.title === title)
+          ? { ...product }
+          : { ...product, quantity: parseInt(quantity, 10) };
+      });
+
+      return {
+        ...state,
+        products: updatedProducts
       };
     }
     default: {

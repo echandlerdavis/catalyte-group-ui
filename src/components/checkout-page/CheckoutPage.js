@@ -20,7 +20,7 @@ const CheckoutPage = () => {
   const { state: { products }, dispatch } = useCart();
 
   const handleRemove = (product) => {
-    dispatch({ type: 'remove', product });
+    dispatch({ type: 'remove', product: { title: product.title } });
   };
 
   const [billingData, setBillingData] = React.useState({});

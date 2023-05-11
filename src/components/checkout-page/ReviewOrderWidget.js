@@ -12,21 +12,36 @@ import styles from './ReviewOrderWidget.module.css';
 const ReviewOrderWidget = () => {
   const { state: { products }, dispatch } = useCart();
   const [showModal, setShowModal] = useState(false);
-  const [productIdToRemove, setProductIdToRemove] = useState(null);
+  const [productToRemove, setProductToRemove] = useState(null);
 
-  const handleRemoveConfirmation = (productId) => {
-    setProductIdToRemove(productId);
-    setShowModal(true);
+  const handleRemoveProductFromCart = (title) => {
+    dispatch({ type: 'remove', product: { title } });
+  };
+
+  const handleUpdateQuantity = (title, newQuantity, shouldShowModal) => {
+    const updatedProducts = products.map((product) => {
+      if (product.title === title) {
+        return { ...product, quantity: parseInt(newQuantity, 10), showModal: shouldShowModal };
+      }
+      return product;
+    });
+
+    dispatch({ type: 'updateQuantity', products: updatedProducts });
+
+    if (shouldShowModal) {
+      setProductToRemove(title);
+      setShowModal(true);
+    }
   };
 
   const handleRemoveCancel = () => {
-    setProductIdToRemove(null);
+    setProductToRemove(null);
     setShowModal(false);
   };
 
   const handleRemoveProduct = () => {
-    if (productIdToRemove) {
-      dispatch({ type: 'REMOVE_PRODUCT', productId: productIdToRemove });
+    if (productToRemove) {
+      dispatch({ type: 'remove', product: { title: productToRemove } });
     }
     setShowModal(false);
   };
@@ -42,7 +57,8 @@ const ReviewOrderWidget = () => {
           title={title}
           description={description}
           quantity={quantity}
-          onRemoveConfirmation={handleRemoveConfirmation}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveConfirmation={handleRemoveProductFromCart}
         />
       ))}
 

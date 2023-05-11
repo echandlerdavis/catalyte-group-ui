@@ -9,10 +9,24 @@ import { toPrice } from './ReviewOrderWidgetService';
  * @return component
  */
 const OrderItem = ({
-  price, title, description, quantity, onRemoveConfirmation
+  price,
+  title,
+  description,
+  quantity,
+  onRemoveConfirmation,
+  onUpdateQuantity
 }) => {
   const handleRemoveConfirmation = () => {
-    onRemoveConfirmation();
+    onRemoveConfirmation(title);
+  };
+
+  const handleQuantityChange = (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    if (newQuantity === 0) {
+      onUpdateQuantity(title, newQuantity, true);
+    } else {
+      onUpdateQuantity(title, newQuantity);
+    }
   };
 
   return (
@@ -23,7 +37,15 @@ const OrderItem = ({
       <div className={styles.item}>
         <p className={styles.itemTitle}>{title}</p>
         <p>{description}</p>
-        <p>{`Qty: ${quantity}`}</p>
+        <p>
+          Qty:
+          <input
+            type="number"
+            min="0"
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
+        </p>
       </div>
       <div className={styles.price}>
         <p>{toPrice(quantity * price)}</p>

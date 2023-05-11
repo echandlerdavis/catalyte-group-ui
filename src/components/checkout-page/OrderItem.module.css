@@ -18,3 +18,8 @@ p {
   align-self: end;
   justify-self: end;
 }
+
+.item input {
+  width: 60px;
+  outline: none;
+}
