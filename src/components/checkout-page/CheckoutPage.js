@@ -8,6 +8,8 @@ import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
 import setLastActive from '../../utils/UpdateLastActive';
+import Toast from '../toast/Toast';
+import Constants from '../../utils/constants';
 
 /**
  * @name CheckoutPage
@@ -17,6 +19,11 @@ import setLastActive from '../../utils/UpdateLastActive';
 const CheckoutPage = () => {
   const history = useHistory();
   const [purchaseConfirmation, setPurchaseConfirmation] = useState({});
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
+  const [openToast, setOpenToast] = useState(false);
 
   const {
     state: { products }
@@ -25,6 +32,9 @@ const CheckoutPage = () => {
   const [billingData, setBillingData] = React.useState({});
   const [deliveryData, setDeliveryData] = React.useState({});
   const [useSameAddress, setUseSameAddress] = React.useState(false);
+
+  const showToast = () => setOpenToast(true);
+  const closeToast = () => setOpenToast(false);
 
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
@@ -81,6 +91,8 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
+    console.log('errors: ', purchaseConfirmation.errors);
+    console.log('data: ', purchaseConfirmation.data);
     if (purchaseConfirmation.success) {
       // success: setLastActive, empty cart, and change to confirmation page
       setLastActive();
@@ -88,8 +100,13 @@ const CheckoutPage = () => {
         products.pop();
       }
       history.push('/confirmation');
-    } else {
+    } else if (purchaseConfirmation.errors) {
       // set toast
+      setToastData({
+        MESSAGE: purchaseConfirmation.errors,
+        SEVERITY: Constants.SEVERITY_LEVELS.ERROR
+      });
+      showToast();
     }
   }, [purchaseConfirmation, history, products]);
 
@@ -106,6 +123,12 @@ const CheckoutPage = () => {
 
   return (
     <article className={styles.checkoutContainer}>
+      <Toast
+        message={toastData.MESSAGE}
+        open={openToast}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>
         <div className={`Card ${styles.stepCard}`}>
