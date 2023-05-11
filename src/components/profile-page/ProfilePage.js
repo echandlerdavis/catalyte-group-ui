@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
   Grid
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { fetchUser, parseCookies } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
 
@@ -10,6 +12,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -19,11 +22,49 @@ const ProfilePage = () => {
       fetchUser(cookiesUser.email, setUser, setApiError);
     } else {
       setIsLoggedIn(false);
+      setUser(null); // Clear the user data
     }
   }, []);
 
+  const handleLogout = useCallback(() => {
+    setIsLoggedIn(false);
+    Cookies.remove('user');
+    setUser(null);
+    history.push('/');
+  }, [history]);
+
+  useEffect(() => {
+    const handleExternalLogout = () => {
+      handleLogout();
+    };
+
+    window.addEventListener('logout', handleExternalLogout);
+
+    return () => {
+      window.removeEventListener('logout', handleExternalLogout);
+    };
+  }, [handleLogout]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const timeout = setTimeout(() => {
+        history.push('/');
+      }, 3000);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    return undefined;
+  }, [isLoggedIn, history]);
+
   if (!isLoggedIn) {
-    return <div>Please log in to continue to your user page</div>;
+    return (
+      <div>
+        Please log in to continue to your profile page
+      </div>
+    );
   }
 
   return (

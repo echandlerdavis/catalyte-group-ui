@@ -44,7 +44,7 @@ const Header = () => {
   };
 
   /**
-   * @name handleGoogleLoginSuccess
+   * @name handleGoogleLoginFailure
    * @description Function to run if google login was unsuccessful
    */
   const handleGoogleLoginFailure = () => {
@@ -58,8 +58,11 @@ const Header = () => {
    * @description Function to run if google logout was successful
    */
   const handleGoogleLogoutSuccess = () => {
-    setUser('');
+    setUser(null);
     setGoogleError('');
+    sessionStorage.removeItem('token');
+    history.push('/');
+    window.dispatchEvent(new Event('logout'));
   };
 
   /**
