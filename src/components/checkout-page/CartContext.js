@@ -5,12 +5,6 @@ const CartContext = React.createContext();
 
 function cartReducer(state, action) {
   switch (action.type) {
-    case 'delete': {
-      return {
-        ...state,
-        products: state.products.filter((p) => p.title !== action.product.title)
-      };
-    }
     case 'add': {
       return {
         ...state,
