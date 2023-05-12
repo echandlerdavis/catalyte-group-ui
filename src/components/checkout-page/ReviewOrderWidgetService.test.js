@@ -26,7 +26,7 @@ describe('getSubtotal', () => {
         price: 3.50
       }
     ];
-    const expected = '$23.48';
+    const expected = 23.48;
 
     expect(getSubtotal(products)).toEqual(expected);
   });
