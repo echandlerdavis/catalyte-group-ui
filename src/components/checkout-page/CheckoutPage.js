@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import setLastActive from '../../utils/UpdateLastActive';
 import { useCart } from './CartContext';
@@ -8,8 +8,9 @@ import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
 import makePurchase from './CheckoutService';
 import AppAlert from '../alert/Alert';
-import constants from '../../utils/constants';
+import setLastActive from '../../utils/UpdateLastActive';
 import Toast from '../toast/Toast';
+import Constants from '../../utils/constants';
 
 /**
  * @name CheckoutPage
@@ -18,6 +19,13 @@ import Toast from '../toast/Toast';
  */
 const CheckoutPage = () => {
   const history = useHistory();
+  const [purchaseConfirmation, setPurchaseConfirmation] = useState({});
+  const [toastData, setToastData] = useState({
+    MESSAGE: '',
+    SEVERITY: Constants.SEVERITY_LEVELS.INFO
+  });
+  const [openToast, setOpenToast] = useState(false);
+  const [errors, setErrors] = useState('');
 
   const { state: { products }, dispatch } = useCart();
 
@@ -64,6 +72,9 @@ const CheckoutPage = () => {
   const deliveryZipIsValid = useRef(false);
   const phoneFormatIsValid = useRef(false);
 
+  const showToast = () => setOpenToast(true);
+  const closeToast = () => setOpenToast(false);
+
   const onBillingChange = (e) => {
     setBillingData({ ...billingData, [e.target.id]: e.target.value });
   };
@@ -76,7 +87,7 @@ const CheckoutPage = () => {
     setUseSameAddress(e.target.checked);
   };
 
-  const getEmptyFields = (requiredFields, object) => (
+  const getEmptyFields = async (requiredFields, object) => (
     requiredFields.filter((field) => !object[field] || object[field].trim().length === 0 || object[field === '-'])
   );
 
@@ -214,12 +225,12 @@ const CheckoutPage = () => {
     // build list of empty fields and add them to error message
     if (deliveryEmptyFields.current.length) {
       setDeliveryEmptyErrors([...deliveryEmptyFields.current]);
-      deliveryEmptyFieldMessage.current = constants.FORM_FIELDS_EMPTY(deliveryEmptyFields.current);
+      deliveryEmptyFieldMessage.current = Constants.FORM_FIELDS_EMPTY(deliveryEmptyFields.current);
       formHasError.current = true;
     }
     if (billingEmptyFields.current.length) {
       setBillingEmptyErrors([...billingEmptyFields.current]);
-      billingEmptyFieldMessage.current = constants.FORM_FIELDS_EMPTY(billingEmptyFields.current);
+      billingEmptyFieldMessage.current = Constants.FORM_FIELDS_EMPTY(billingEmptyFields.current);
       formHasError.current = true;
     }
 
@@ -316,9 +327,10 @@ const CheckoutPage = () => {
       const purchase = await makePurchase(
         productData, deliveryAddress, billingAddress, creditCard, contact
       );
+      setPurchaseConfirmation(purchase);
 
       // If successful save, got to confirmation page
-      if (purchase) {
+      if (purchase.success) {
         clearCart();
         history.push('/confirmation');
       } else {
@@ -327,6 +339,39 @@ const CheckoutPage = () => {
     }
     formErrorSetOpen(true);
   };
+
+  useEffect(() => {
+    if (purchaseConfirmation.success) {
+      // success: setLastActive, empty cart, and change to confirmation page
+      setLastActive();
+      while (products.length > 0) {
+        products.pop();
+      }
+      history.push('/confirmation');
+    } else if (purchaseConfirmation.data) {
+      // set errors
+      setErrors(purchaseConfirmation.data.json());
+    }
+  }, [purchaseConfirmation, history, products]);
+
+  useEffect(() => {
+    // set toast data and open toast
+    if (errors) {
+      // errors should be a promise
+      errors.then((error) => {
+        // construct message
+        let toastMessage = error.payload.reduce((message, product) => `${message + product.name},`, error.errorMessage);
+        toastMessage = toastMessage.replace(/.$/, '.');
+        // set toast data
+        setToastData({ MESSAGE: toastMessage, SEVERITY: Constants.SEVERITY_LEVELS.ERROR });
+        // show toast
+        if (toastMessage.length > 0) {
+          showToast();
+        }
+      });
+    }
+  }, [errors]);
+
   if (products.length === 0) {
     return (
       <div className={styles.checkoutContainer}>
@@ -339,6 +384,13 @@ const CheckoutPage = () => {
   }
   return (
     <article className={styles.checkoutContainer}>
+      <Toast
+        message={toastData.MESSAGE}
+        open={openToast}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+        horizontalPosition="right"
+      />
       <section className={`${styles.step} ${styles.order}`}>
         <h2 className={styles.title}>1. Review Order</h2>
         <div className={`Card ${styles.stepCard}`}>
