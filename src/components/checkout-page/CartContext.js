@@ -32,17 +32,21 @@ function cartReducer(state, action) {
       const { products } = action;
       const updatedProducts = products.map((product) => {
         const { title, quantity } = product;
-        if (quantity === '' || Number.isNaN(parseInt(quantity, 10)) || parseInt(quantity, 10) === 0) {
-          // Display the modal
-          return { ...product, showModal: true, quantity: 0 };
+        let updatedQuantity;
+
+        if (quantity === '' || Number.isNaN(parseInt(quantity, 10))) {
+          updatedQuantity = 0;
+        } else {
+          updatedQuantity = parseInt(quantity, 10);
         }
-        if (quantity === 0) {
+
+        if (quantity === 0 || updatedQuantity === 0 || parseInt(quantity, 10) === 0) {
           // Display the modal
-          return { ...product, showModal: true };
+          return { ...product, showModal: true, quantity: updatedQuantity };
         }
         return state.products.find((p) => p.title === title)
           ? { ...product }
-          : { ...product, quantity: parseInt(quantity, 10) };
+          : { ...product, quantity: updatedQuantity };
       });
 
       return {
