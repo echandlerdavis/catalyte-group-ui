@@ -5,18 +5,22 @@ p {
 .orderItem {
   display:grid;
   grid-template-columns: 2fr 3fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: auto;
   gap: 0px 1em;
   align-items: center;
 }
 
 .itemTitle {
   font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
 }
 
 .price {
-  align-self: end;
-  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .item input {

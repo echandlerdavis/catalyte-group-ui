@@ -48,6 +48,7 @@ const OrderItem = ({
         </p>
       </div>
       <div className={styles.price}>
+        <p> </p>
         <p>{toPrice(quantity * price)}</p>
         <button
           type="button"

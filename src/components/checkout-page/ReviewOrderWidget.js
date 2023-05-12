@@ -21,7 +21,9 @@ const ReviewOrderWidget = () => {
   const handleUpdateQuantity = (title, newQuantity) => {
     const updatedProducts = products.map((product) => {
       if (product.title === title) {
-        const shouldShowModal = newQuantity === 0;
+        const shouldShowModal = newQuantity === 0
+        || (product.quantity === '' && newQuantity === 0)
+        || (newQuantity === '' && product.quantity === 0);
         return { ...product, quantity: parseInt(newQuantity, 10), showModal: shouldShowModal };
       }
       return product;
