@@ -40,6 +40,9 @@ const ReviewOrderWidget = () => {
     if (newQuantity === 0 || newQuantity === '' || Number.isNaN(parseInt(newQuantity, 10))) {
       setProductToRemove(title);
       setShowModal(true);
+    } else {
+      setProductToRemove(null);
+      setShowModal(false);
     }
   };
 
