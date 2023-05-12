@@ -21,17 +21,23 @@ const ReviewOrderWidget = () => {
   const handleUpdateQuantity = (title, newQuantity) => {
     const updatedProducts = products.map((product) => {
       if (product.title === title) {
-        const shouldShowModal = newQuantity === 0
-        || (product.quantity === '' && newQuantity === 0)
-        || (newQuantity === '' && product.quantity === 0);
-        return { ...product, quantity: parseInt(newQuantity, 10), showModal: shouldShowModal };
+        const shouldShowModal = (
+          newQuantity === 0 || newQuantity === '' || Number.isNaN(parseInt(newQuantity, 10)))
+          && (product.quantity !== 0);
+        return {
+          ...product,
+          quantity: newQuantity === '' || Number.isNaN(parseInt(newQuantity, 10))
+            ? 0
+            : parseInt(newQuantity, 10),
+          showModal: shouldShowModal
+        };
       }
       return product;
     });
 
     dispatch({ type: 'updateQuantity', products: updatedProducts });
 
-    if (newQuantity === 0) {
+    if (newQuantity === 0 || newQuantity === '' || Number.isNaN(parseInt(newQuantity, 10))) {
       setProductToRemove(title);
       setShowModal(true);
     }
