@@ -17,6 +17,7 @@ import styles from './ProductCard.module.css';
 import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
+import Reviews from '../reviews/Reviews';
 
 /**
  * @name useStyles
@@ -25,9 +26,9 @@ import updateLastActive from '../../utils/UpdateLastActive';
  */
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
-    height: '100%',
-    minWidth: '30vw'
+    width: '50em',
+    height: '45em',
+    overflowY: 'scroll'
   },
   media: {
     height: 0,
@@ -51,17 +52,19 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    overflow: 'hidden'
   },
   colorSpan: {
     display: 'inline-flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%'
+    padding: 2
   },
   colorLabel: {
     alignSelf: 'flex-start',
-    flexBasis: '28%'
+    flexBasis: '28%',
+    marginRight: '1em'
   },
   quantityInput: {
     width: '3em',
@@ -72,6 +75,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-end'
+  },
+  cartInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }));
 /**
@@ -217,7 +225,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
 
   return (
     <ClickAwayListener onClickAway={onClose}>
-      <Box ref={ref} className={classes.box}>
+      <Box ref={{ ref }} className={classes.box}>
         <Toast
           message={toastData.MESSAGE}
           open={open}
@@ -242,52 +250,58 @@ const ProductModalCard = React.forwardRef((props, ref) => {
               title="placeholder"
             />
             <CardContent>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {product.description}
-              </Typography>
+              <div className={styles.description}>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {product.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Price: $
+                  {product.price.toFixed(2)}
+                </Typography>
+              </div>
               <br />
-              <Typography variant="body2" color="textSecondary" component="p">
-                Price: $
-                {product.price.toFixed(2)}
-              </Typography>
+              <div className={styles.description}>
+                <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                  <div className={classes.colorLabel}>Primary Color:</div>
+                  {colorDot(product.primaryColorCode)}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
+                  <div className={classes.colorLabel}>Secondary Color:</div>
+                  {colorDot(product.secondaryColorCode)}
+                </Typography>
+              </div>
               <br />
-              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-                <div className={classes.colorLabel}>Primary Color:</div>
-                {colorDot(product.primaryColorCode)}
-              </Typography>
               <br />
-              <br />
-              <Typography variant="body2" color="textSecondary" component="span" className={classes.colorSpan}>
-                <div className={classes.colorLabel}>Secondary Color:</div>
-                {colorDot(product.secondaryColorCode)}
-              </Typography>
-            </CardContent>
-            <TextField
-              style={{ marginLeft: '1em' }}
-              label="Currently in cart:"
-              value={inOrder(product, products)
-                ? products.filter((p) => p.id === product.id)[0].quantity
-                : 0}
-              disabled
-            />
+              <div className={classes.cartInfo}>
+                <TextField
+                  style={{ marginLeft: '1em' }}
+                  label="Currently in cart:"
+                  value={inOrder(product, products)
+                    ? products.filter((p) => p.id === product.id)[0].quantity
+                    : 0}
+                  disabled
+                />
 
-            <CardActions className={classes.actionsFormatting}>
-              <TextField
-                label="Quantity"
-                id="qtyInput"
-                type="number"
-                step="1"
-                InputProps={{ inputProps: { min: 0 } }}
-                className={classes.quantityInput}
-                value={inputValue}
-                onChange={inputChange}
-                onKeyDown={validateKeyStroke}
-                autoFocus
-              />
-              <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
-                <AddShoppingCartIcon />
-              </IconButton>
-            </CardActions>
+                <CardActions className={classes.actionsFormatting}>
+                  <TextField
+                    label="Quantity"
+                    id="qtyInput"
+                    type="number"
+                    step="1"
+                    InputProps={{ inputProps: { min: 0 } }}
+                    className={classes.quantityInput}
+                    value={inputValue}
+                    onChange={inputChange}
+                    onKeyDown={validateKeyStroke}
+                  />
+                  <IconButton aria-label="add to shopping cart" onClick={onAdd} style={{ alignSelf: 'flex-end', margin: '.25em' }}>
+                    <AddShoppingCartIcon />
+                  </IconButton>
+                </CardActions>
+              </div>
+              <Reviews productId={product.id} />
+            </CardContent>
+
           </div>
         </Card>
       </Box>

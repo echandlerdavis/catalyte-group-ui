@@ -63,8 +63,6 @@ const FilterComponentExample = () => {
     });
   };
 
-  console.log('filters state', filters);
-
   return (
     <article>
       <section>
