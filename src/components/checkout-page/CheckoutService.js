@@ -22,7 +22,6 @@ const makePurchase = async (
     if (response.status === 201) return response.json();
     return false;
   } catch {
-    console.log('Failed to purchase');
     return false;
   }
 };
