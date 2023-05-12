@@ -1,5 +1,4 @@
 import React from 'react';
-import setLastActive from '../../utils/UpdateLastActive';
 
 const CartContext = React.createContext();
 
@@ -20,7 +19,6 @@ function cartReducer(state, action) {
     case 'remove': {
       const { title } = action.product;
       const updatedProducts = state.products.filter((product) => product.title !== title);
-      setLastActive(); // Call setLastActive after updating the products array
       return {
         ...state,
         products: updatedProducts

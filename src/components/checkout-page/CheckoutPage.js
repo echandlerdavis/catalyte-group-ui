@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import setLastActive from '../../utils/UpdateLastActive';
 import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
@@ -25,6 +26,7 @@ const CheckoutPage = () => {
     if (product.quantity === '' || product.quantity === 0) {
       dispatch({ type: 'UpdateQuantity', products: [{ ...product, quantity: 1 }] });
     }
+    setLastActive();
   };
 
   const clearCart = () => (
