@@ -22,7 +22,7 @@ const CheckoutPage = () => {
 
   const handleRemove = (product) => {
     dispatch({ type: 'remove', product: { title: product.title } });
-    if (product.quantity === 0) {
+    if (product.quantity === '' || product.quantity === 0) {
       dispatch({ type: 'UpdateQuantity', products: [{ ...product, quantity: 1 }] });
     }
   };

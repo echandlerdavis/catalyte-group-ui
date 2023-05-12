@@ -32,6 +32,10 @@ function cartReducer(state, action) {
       const { products } = action;
       const updatedProducts = products.map((product) => {
         const { title, quantity } = product;
+        if (quantity === '' || Number.isNaN(parseInt(quantity, 10)) || parseInt(quantity, 10) === 0) {
+          // Display the modal
+          return { ...product, showModal: true, quantity: 0 };
+        }
         if (quantity === 0) {
           // Display the modal
           return { ...product, showModal: true };
