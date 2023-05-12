@@ -28,7 +28,13 @@ const ProductTable = ({ products }) => {
   // When products are passed set the attributes of a product to be displayed
   useEffect(() => {
     if (products.length) {
-      setProductAttributes(Object.keys(products[0]));
+      const attributes = [];
+      Object.keys(products[0]).forEach((key) => {
+        if (key !== 'reviews') {
+          attributes.push(key);
+        }
+      });
+      setProductAttributes(attributes);
     }
   }, [products]);
 

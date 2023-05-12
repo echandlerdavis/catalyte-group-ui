@@ -14,6 +14,7 @@ module.exports = Object.freeze({
   PURCHASE_ENDPOINT: '/purchases',
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
+  REVIEWS_ENDPOINT: (productId) => `/products/${productId}/reviews`,
   USERS_ENDPOINT,
   USERS_PUT_ENDPOINT: (id) => `${USERS_ENDPOINT}/${id}`,
   UPDATE_LAST_ACTIVE_ENDPOINT: (id) => `${USERS_ENDPOINT}/${id}/updateLastActive`,
