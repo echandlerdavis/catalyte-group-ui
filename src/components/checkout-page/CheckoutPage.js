@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import setLastActive from '../../utils/UpdateLastActive';
 import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
