@@ -5,7 +5,7 @@ import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
-import makePurchase from './CheckoutService';
+import makePurchase, { fetchStateData, objectListToKeyList } from './CheckoutService';
 import AppAlert from '../alert/Alert';
 import setLastActive from '../../utils/UpdateLastActive';
 import Toast from '../toast/Toast';
@@ -27,6 +27,7 @@ const CheckoutPage = () => {
   });
   const [openToast, setOpenToast] = useState(false);
   const [errors, setErrors] = useState('');
+  const [stateData, setStateData] = useState([]);
 
   const { state: { products }, dispatch } = useCart();
 
@@ -74,6 +75,7 @@ const CheckoutPage = () => {
   const phoneFormatIsValid = useRef(false);
   const { promoCode, setPromoCode } = usePromoCode();
 
+  const stateOptions = ['-', ...objectListToKeyList(stateData)];
   const showToast = () => setOpenToast(true);
   const closeToast = () => setOpenToast(false);
 
@@ -386,6 +388,15 @@ const CheckoutPage = () => {
     }
   }, [errors]);
 
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchStateData();
+      setStateData(data);
+    };
+    getData();
+  },
+  []);
+
   if (products.length === 0) {
     return (
       <div className={styles.checkoutContainer}>
@@ -424,6 +435,7 @@ const CheckoutPage = () => {
             onChange={onDeliveryChange}
             deliveryData={deliveryData}
             errors={`${deliveryEmptyErrors} ${deliveryInvalidErrors}`}
+            stateList={stateOptions}
           />
           <label htmlFor="useSame" className={styles.sameAddressText}>
             <div className={styles.useSameAddress}>
@@ -449,6 +461,7 @@ const CheckoutPage = () => {
             billingData={billingData}
             useShippingForBilling={useSameAddress}
             errors={`${billingEmptyErrors} ${billingInvalidErrors}`}
+            stateList={stateOptions}
           />
           {billingEmptyErrors && billingEmptyErrors.length > 0 && <AppAlert severity="error" title="Missing Requried Fields" message={billingEmptyFieldMessage.current} />}
           {billingInvalidErrors && billingInvalidErrors.length > 0 && <AppAlert severity="error" title="Please Correct The Following Errors:" message={billingErrorMessage.current} />}
