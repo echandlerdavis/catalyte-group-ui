@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchUser, parseCookies } from '../profile-page/ProfilePageService';
 import AppAlert from '../alert/Alert';
 import { SEVERITY_LEVELS } from '../../utils/constants';
@@ -12,6 +12,7 @@ const NewReviewPage = ({ props }) => {
 
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -25,6 +26,15 @@ const NewReviewPage = ({ props }) => {
     }
   }, []);
 
+  useEffect((user, isLoggedIn) => {
+    if (isLoggedIn && user){
+      const userEmail = user.email;
+      fetchPurchases(user.email, setHasMadePurchase, setApiError)
+    }else{
+      setHasMadePurchase(false);
+    }
+  }, [])
+
   const initialFormData = {
     title: '',
     rating: '',
@@ -36,12 +46,25 @@ const NewReviewPage = ({ props }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
+  const formHasError = useRef(false);
+  const emptyFields = useRef([]);
 
+
+  const generateError = () => {
+    setFormErrorMessage(null);
+    //validateFormData()
+    
+  }
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    generateError();
+    
+  }
 
   return (
     <>
@@ -57,14 +80,21 @@ const NewReviewPage = ({ props }) => {
           label="Title"
           onChange={handleFormChange}
           value={formData.title}
-          className={errors && errors.inclueds('title' && styles.invalidField)}
+          // className={errors && errors.includes('title') && styles.invalidField}
            />
           {/* Name of user (Just typography, I think) */}
           <Box component="fieldset" mb={3} borderColor="transparent">
             <Typography component="legend">Rating</Typography>
-            <Rating name="pristine" defaultValue={null} value={ratingValue} precision={0.5} />
+            <Rating name="pristine" defaultValue={null} value={formData.rating} precision={0.5} onChange={handleFormChange}/>
           </Box>
-          <FormItem />
+          <FormItem 
+          placeholder="Write review here"
+          type="text"
+          id="content"
+          onChange={handleFormChange}
+          value={formData.review}
+          // className={errors && errors.includes('review') && styles.invalidField}
+          />
         </form>
       )}
     </>
