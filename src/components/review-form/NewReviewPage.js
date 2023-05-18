@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUser, parseCookies } from '../profile-page/ProfilePageService';
 import AppAlert from '../alert/Alert';
-import { SEVERITY_LEVELS } from '../../utils/constants';
+import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import { Box, Typography } from '@material-ui/core'
 import FormItem from '../form/FormItem';
+import { saveReview } from './ReviewPageService';
 
 const NewReviewPage = ({ props }) => {
-  const { productId } = props;
+  const { productId, setApiError, setToastData, openToast, setReviews, history} = props;
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
 
@@ -28,10 +29,10 @@ const NewReviewPage = ({ props }) => {
 
 //TODO: figure out where setApiError is set - do we set it in this component or outside this component?
 // TODO: Should the review service check if the user has made a purchase of this product or should it be validated here. 
-  useEffect((user, isLoggedIn) => {
+  useEffect(() => {
     if (isLoggedIn && user){
       const userEmail = user.email;
-      fetchPurchases(user.email, setHasMadePurchase, setApiError)
+      fetchPurchases(userEmail, setHasMadePurchase, setApiError, productId)
     }else{
       setHasMadePurchase(false);
     }
@@ -50,12 +51,49 @@ const NewReviewPage = ({ props }) => {
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
+  const ratingIsInvalid = useRef(false);
 
+  const getEmptyFields = () => {
+    Object.keys(formData).filter((key) => {
+      let formInput = formData[key];
+      if(typeof formInput === 'string'){
+        formInput = formInput.trim()
+      }
+      return formInput.length === 0;
+    })
+  }
+
+  const validateRating = () => {
+    const { rating } = formData;
+    return (rating && rating >= 0.5 && rating <= 5);
+  }
+
+  const validateFormData = () => {
+    emptyFields.current = getEmptyFields();
+    ratingIsInvalid.current = validateRating();
+    if(emptyFields.current.length || ratingIsInvalid.current){
+      formHasError.current = true;
+    }else{
+      formHasError.current = false;
+    }
+  }
 
   const generateError = () => {
     setFormErrorMessage(null);
-    //validateFormData()
-    
+    validateFormData();
+    let errorMessage = null;
+    if(emptyFields.current.length){
+      errorMessage = constants.FORM_FIELDS_EMPTY(emptyFields.current);
+    }
+
+    if(ratingIsInvalid.current){
+      if(errorMessage){
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.REVIEW_FORM_INVALID_RATING);
+      }else{
+        errorMessage = constants.REVIEW_FORM_INVALID_RATING;
+      }
+    }
+    setFormErrorMessage(errorMessage);
   }
 
   const handleFormChange = (e) => {
@@ -65,6 +103,17 @@ const NewReviewPage = ({ props }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     generateError();
+    if(!formHasError.current){
+      const newReview = await saveReview(formData, setApiError);
+      if(newReview){
+        setReviews((reviews) => [...reviews, newReview]);
+        setToastData(constants.SAVE_REVIEW_SUCCESS);
+        history.push('/');
+      }else{
+        setToastData(constants.SAVE_REVIEW_FAILURE);
+      }
+      openToast();
+    }
     
   }
 

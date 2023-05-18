@@ -11,7 +11,7 @@ export const saveReview = async(review, setApiError, productId) => {
     }
 };
 
-export const fetchPurchasesByUserEmail = async (userEmail, setApiError, setHasMadePurchase) => {
+export const fetchPurchasesByUserEmail = async (userEmail, setApiError, setHasMadePurchase, productId) => {
     await HttpHelper(constants.PURCHASE_BY_EMAIL_ENDPOINT(userEmail), 'GET')
     .then((response) => response.json())
     .then((data) => {
