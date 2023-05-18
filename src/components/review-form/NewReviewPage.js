@@ -26,6 +26,8 @@ const NewReviewPage = ({ props }) => {
     }
   }, []);
 
+//TODO: figure out where setApiError is set - do we set it in this component or outside this component?
+// TODO: Should the review service check if the user has made a purchase of this product or should it be validated here. 
   useEffect((user, isLoggedIn) => {
     if (isLoggedIn && user){
       const userEmail = user.email;
@@ -72,7 +74,7 @@ const NewReviewPage = ({ props }) => {
       {!isLoggedIn ? (
         <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message="You must be logged in to write a review." />
       ) : (
-        <form>
+        <form onSubmit={handleSubmit}>
           <FormItem
           placeholder="Review Title"
           type="text"

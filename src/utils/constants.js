@@ -12,6 +12,7 @@ module.exports = Object.freeze({
   BASE_URL_API: 'http://localhost:8085',
   PLACEHOLDER_IMAGE: 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png',
   PURCHASE_ENDPOINT: '/purchases',
+  PURCHASE_BY_EMAIL_ENDPOINT: (email) => `/purchases/${email}`,
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
   REVIEWS_ENDPOINT: (productId) => `/products/${productId}/reviews`,
