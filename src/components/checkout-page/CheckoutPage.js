@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useCart } from './CartContext';
+import { useCart, shippingIsFree } from './CartContext';
 import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
@@ -423,6 +423,11 @@ const CheckoutPage = () => {
             promoCode={promoCode}
             promoCodeSetter={setPromoCode}
             onRemoveConfirmation={handleRemove}
+            shippingCost={shippingIsFree(products) || deliveryData.state === '-' || !deliveryData.state
+              ? 0
+              : stateData.filter(
+                (s) => s.fullName === deliveryData.state
+              )[0].shippingCost}
           />
         </div>
       </section>

@@ -52,5 +52,6 @@ module.exports = Object.freeze({
   }),
   LOGO_ALT: 'Jaba the Hutt drinking coffee',
   PROMOCODE_ENDPOINT: '/promotionalCodes',
-  INVALID_CODE: 'Invalid code'
+  INVALID_CODE: 'Invalid code',
+  FREE_SHIPPING_MIN: 50.00
 });
