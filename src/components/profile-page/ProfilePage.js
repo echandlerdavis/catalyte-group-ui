@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
-  Grid
+  Grid,
+  TextField,
+  Button
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -10,6 +12,7 @@ import styles from './ProfilePage.module.css';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
+  const [initialUser, setInitialUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
@@ -25,6 +28,13 @@ const ProfilePage = () => {
       setUser(null); // Clear the user data
     }
   }, []);
+
+  useEffect(() => {
+    // Set initialUser wheuser data is fetched
+    if (user) {
+      setInitialUser(user);
+    }
+  }, [user]);
 
   const handleLogout = useCallback(() => {
     setIsLoggedIn(false);
@@ -59,6 +69,22 @@ const ProfilePage = () => {
     return undefined;
   }, [isLoggedIn, history]);
 
+  const handleInputChange = (e, field) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [field]: e.target.value
+    }));
+  };
+
+  const handleCancel = () => {
+    // Reset user data to initial state
+    setUser(initialUser);
+  };
+
+  const handleSave = () => {
+    // Implement logic to save the updated user data
+  };
+
   if (!isLoggedIn) {
     return (
       <div>
@@ -75,41 +101,90 @@ const ProfilePage = () => {
         </div>
       ) : (
         <div>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom className={styles.center}>
             Account Details
           </Typography>
           <Grid container spacing={1} className={styles.gridContainer}>
-            <Grid item xs={3} sm={6} className={styles.gridItem}>
-              <Typography variant="">
-                {user?.firstName || 'Error retrieving user data'}
-                {' '}
-                {user?.lastName || ''}
-              </Typography>
+            <Grid item xs={4} sm={6} className={styles.gridItem}>
+              <div className={`${styles.label} ${styles.blackFont}`}>Name:</div>
+              <TextField
+                value={user?.firstName || ''}
+                onChange={(e) => handleInputChange(e, 'firstName')}
+                fullWidth
+                className={styles.textField}
+              />
+              <TextField
+                value={user?.lastName || ''}
+                onChange={(e) => handleInputChange(e, 'lastName')}
+                fullWidth
+                className={styles.textField}
+              />
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography>
-                {user?.email || 'Error retrieving user data'}
-              </Typography>
+              <div className={`${styles.labelColumn} ${styles.label}`}>Email:</div>
+              <div className={`${styles.dataColumn} ${styles.blackFont}`}>
+                <Typography>
+                  {user?.email || 'Error retrieving user data'}
+                </Typography>
+              </div>
             </Grid>
             <Grid item xs={8} className={styles.gridItem}>
-              <Typography>
-                {user?.billingAddress ? (
-                  <>
-                    {user.billingAddress.billingStreet || ''}
-                    {user.billingAddress.billingStreet2 || ''}
-                    {', '}
-                    {user.billingAddress.billingCity || ''}
-                    {', '}
-                    {user.billingAddress.billingState || ''}
-                    {' '}
-                    {user.billingAddress.billingZip || ''}
-                  </>
-                ) : (
-                  'Error retrieving user data'
-                )}
-              </Typography>
+              <div className={`${styles.labelColumn} ${styles.label}`}>Billing Address:</div>
+            </Grid>
+            <Grid item xs={8} className={styles.gridItem}>
+              <div className={`${styles.label}`}>Street:</div>
+              <TextField
+                value={user?.billingAddress?.billingStreet || ''}
+                onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet')}
+                fullWidth
+                className={styles.textField}
+              />
+            </Grid>
+            <Grid item xs={8} className={styles.gridItem}>
+              <div className={styles.label}>Street 2:</div>
+              <TextField
+                value={user?.billingAddress?.billingStreet2 || ''}
+                onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet2')}
+                fullWidth
+                className={styles.textField}
+              />
+            </Grid>
+            <Grid item xs={8} className={styles.gridItem}>
+              <div className={styles.label}>City:</div>
+              <TextField
+                value={user?.billingAddress?.billingCity || ''}
+                onChange={(e) => handleInputChange(e, 'billingAddress.billingCity')}
+                fullWidth
+                className={styles.textField}
+              />
+            </Grid>
+            <Grid item xs={8} className={styles.gridItem}>
+              <div className={styles.label}>State:</div>
+              <TextField
+                value={user?.billingAddress?.billingState || ''}
+                onChange={(e) => handleInputChange(e, 'billingAddress.billingState')}
+                fullWidth
+                className={styles.textField}
+              />
+            </Grid>
+            <Grid item xs={8} className={styles.gridItem}>
+              <div className={styles.label}>Zipcode:</div>
+              <TextField
+                value={user?.billingAddress?.billingZip || ''}
+                onChange={(e) => handleInputChange(e, 'billingAddress.billingZip')}
+                fullWidth
+                className={styles.textField}
+              />
             </Grid>
           </Grid>
+          <div className={styles.buttonContainer}>
+            <Button variant="contained" color="primary" size="small" onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="contained" size="small" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         </div>
       )}
     </div>
