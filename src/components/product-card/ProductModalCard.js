@@ -10,16 +10,18 @@ import Typography from '@material-ui/core/Typography';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Box from '@material-ui/core/Box';
 import {
-  ClickAwayListener, Switch, TextField, Button
+  ClickAwayListener, TextField, Button
 } from '@material-ui/core';
 import { Close, Add } from '@material-ui/icons';
-import { useHistory, useRouteMatch, Route } from 'react-router-dom';
+import {
+  useHistory, useRouteMatch, Switch, Route
+} from 'react-router-dom';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
 import { validateOrder, inOrder } from './ProductCard';
 import { fetchUser, parseCookies } from '../profile-page/ProfilePageService';
-import { fetchPurchases } from './ReviewPageService';
+import { fetchPurchases } from '../review-form/ReviewPageService';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
