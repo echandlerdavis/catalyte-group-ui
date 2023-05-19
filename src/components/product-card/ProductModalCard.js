@@ -9,15 +9,21 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Box from '@material-ui/core/Box';
-import { ClickAwayListener, TextField } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import {
+  ClickAwayListener, Switch, TextField, Button
+} from '@material-ui/core';
+import { Close, Add } from '@material-ui/icons';
+import { useHistory, useRouteMatch, Route } from 'react-router-dom';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
 import { validateOrder, inOrder } from './ProductCard';
+import { fetchUser, parseCookies } from '../profile-page/ProfilePageService';
+import { fetchPurchases } from './ReviewPageService';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
+import NewReviewPage from '../review-form/NewReviewPage';
 
 /**
  * @name useStyles
@@ -135,6 +141,41 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   // input box stuff. Defaults to 1.
   const [inputValue, setInputValue] = useState(1);
   const initialInput = useRef(Number.parseInt(inputValue, 10));
+  // Determining whether a user can write a review
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
+  const [apiError, setApiError] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Other constants
+  const history = useHistory();
+  const { url, path } = useRouteMatch();
+
+  // Checks if user is logged in
+  useEffect(() => {
+    const cookies = parseCookies();
+    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+    if (cookiesUser) {
+      setIsLoggedIn(true);
+      fetchUser(cookiesUser.email, setUser, setApiError);
+    } else {
+      setIsLoggedIn(false);
+      // setUserErrorMessage('You must be logged in to write a review.');
+      setUser(null); // Clear the user data
+    }
+  }, [setApiError]);
+
+  // Checks if user has made purchase of the product.
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      const userEmail = user.email;
+      fetchPurchases(userEmail, setHasMadePurchase, setApiError, product.id);
+    } else {
+      setHasMadePurchase(false);
+      // setUserErrorMessage('You must have purchased the product in order to leave a review.');
+    }
+  }, [isLoggedIn, product.id, setApiError, user]);
+
   // prevents user from inputing -, thus stopping negative numbers
   const validateKeyStroke = (e) => {
     if (e.key === '-') {
@@ -223,7 +264,17 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     updateLastActive();
   };
 
-  return (
+  const addReviewButton = (
+    <Button
+      disabled={false}
+      startIcon={<Add />}
+      onClick={() => history.push(`${url}/new/review`)}
+    >
+      New Review
+    </Button>
+  );
+
+  const modalComponent = (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
         <Toast
@@ -300,6 +351,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
+              {isLoggedIn && hasMadePurchase && !apiError && addReviewButton}
             </CardContent>
 
           </div>
@@ -307,6 +359,10 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       </Box>
     </ClickAwayListener>
   );
+    <Switch>
+      <Route path={`${path}/new/review`} render={() => <NewReviewPage productId={product.id} setApiError={setApiError} setToastData={setToastData} openToast={openToast} history={history} />} />
+      <Route path="" render={() => modalComponent} />
+    </Switch>;
 });
 
 export default ProductModalCard;
