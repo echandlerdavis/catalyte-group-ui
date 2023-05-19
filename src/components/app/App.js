@@ -20,7 +20,7 @@ const App = () => (
         <Header />
         <main>
           <Switch>
-            <Route exact path="/" render={() => <ProductPage />} />
+            <Route path="/" render={() => <ProductPage />} />
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
             <Route path="/maintenance" render={() => <MaintenancePage />} />
