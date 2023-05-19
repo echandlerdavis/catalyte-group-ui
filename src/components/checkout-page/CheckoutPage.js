@@ -5,7 +5,7 @@ import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
-import makePurchase, { fetchStateData, objectListToKeyList } from './CheckoutService';
+import makePurchase, { fetchStateData, stateDataToList } from './CheckoutService';
 import AppAlert from '../alert/Alert';
 import setLastActive from '../../utils/UpdateLastActive';
 import Toast from '../toast/Toast';
@@ -75,7 +75,7 @@ const CheckoutPage = () => {
   const phoneFormatIsValid = useRef(false);
   const { promoCode, setPromoCode } = usePromoCode();
 
-  const stateOptions = ['-', ...objectListToKeyList(stateData)];
+  const stateOptions = ['-', ...stateDataToList(stateData)];
   const showToast = () => setOpenToast(true);
   const closeToast = () => setOpenToast(false);
 

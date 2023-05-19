@@ -69,10 +69,10 @@ export const fetchStateData = async () => {
   throw new Error('Failed to get state information.');
 };
 
-export const objectListToKeyList = (list) => {
+export const stateDataToList = (list) => {
   let arr = [];
   if (list.length > 0) {
-    arr = list.map((obj) => Object.entries(obj).map((entry) => entry[0]));
+    arr = list.map((obj) => obj.fullName);
   }
   return arr;
 };
