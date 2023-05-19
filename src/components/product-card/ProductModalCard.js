@@ -121,7 +121,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   } = useCart();
   const { onClose } = props;
   const {
-    isLoggedIn, hasMadePurchase, history
+    isLoggedIn, hasMadePurchase, history, reviewApiError
   } = props;
   // toast stuff for errors
   const [open, setOpenToast] = useState(false);
@@ -239,10 +239,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     </Button>
   );
 
-  if (isLoggedIn && hasMadePurchase) {
-    console.log('something');
-  }
-
   return (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
@@ -320,7 +316,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {addReviewButton}
+              {isLoggedIn && hasMadePurchase && !reviewApiError && addReviewButton}
             </CardContent>
 
           </div>

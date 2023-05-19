@@ -62,6 +62,7 @@ const ProductPage = () => {
     const cookies = parseCookies();
     const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
     if (cookiesUser) {
+      console.log(cookiesUser);
       setIsLoggedIn(true);
       fetchUser(cookiesUser.email, setUser, setReviewApiError);
     } else {
@@ -73,15 +74,14 @@ const ProductPage = () => {
 
   // Checks if user has made purchase of the product.
   useEffect(() => {
-    if (isLoggedIn && user) {
+    if (isLoggedIn) {
       const userEmail = user.email;
       fetchPurchases(userEmail, setHasMadePurchase, setReviewApiError, modalProduct.id);
     } else {
       setHasMadePurchase(false);
-      console.log(reviewApiError);
       // setUserErrorMessage('You must have purchased the product in order to leave a review.');
     }
-  }, [isLoggedIn, modalProduct.id, setReviewApiError, user, reviewApiError]);
+  }, [isLoggedIn, modalProduct.id, setReviewApiError, user]);
 
   const mainComponent = (
     <article>
@@ -97,6 +97,7 @@ const ProductPage = () => {
           isLoggedIn={isLoggedIn}
           hasMadePurchase={hasMadePurchase}
           history={history}
+          reviewApiError={reviewApiError}
         />
       </Modal>
       <Toast

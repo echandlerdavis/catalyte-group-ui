@@ -100,12 +100,13 @@ const NewReviewPage = ({
   };
 
   if (!isLoggedIn || !hasMadePurchase) {
-    // return (
-    //   <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error"
-    // message="userErrorMessage placeolder" />
-    // );
-    console.log('not working');
-    console.log(SEVERITY_LEVELS.ERROR);
+    return (
+      <AppAlert
+        severity={SEVERITY_LEVELS.ERROR}
+        title="Error"
+        message="userErrorMessage placeolder"
+      />
+    );
   }
 
   return (
