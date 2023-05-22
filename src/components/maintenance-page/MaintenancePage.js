@@ -5,7 +5,7 @@ import {
   useHistory,
   useRouteMatch
 } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+import { Button, Modal } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import Toast from '../toast/Toast';
 import styles from './MaintenancePage.module.css';
@@ -14,7 +14,8 @@ import ProductTable from '../product-table/ProductsTable';
 import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
 import constants from '../../utils/constants';
-
+import CreatePromoModal from './CreatePromoModalCard';
+import savePromoCode from './CreatePromoService';
 /**
  * @name MaintenancePage
  * @description Fetches all products from the API and displays them in a table
@@ -27,22 +28,32 @@ const MaintenancePage = () => {
   const [apiError, setApiError] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
+  const [openPromoModal, setOpenPromoModal] = useState(false);
+  const openModal = () => setOpenPromoModal(true);
+  const closeModal = () => setOpenPromoModal(false);
 
   const closeToast = () => {
     setToastOpen(false);
   };
 
-  const openToast = () => {
+  const openToast = (message) => {
     setToastOpen(true);
+    setToastData(message);
   };
-
+  const handleSubmit = () => {
+    closeModal();
+    savePromoCode();
+    if (savePromoCode) {
+      openToast(constants.SAVE_PROMO_SUCCESS);
+    }
+    openToast(constants.SAVE_PROMO_FAILURE);
+  };
   useEffect(() => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
   const history = useHistory();
   const { url, path } = useRouteMatch();
-
   /**
    * Elements viewed on the main maintenance route
    *
@@ -65,18 +76,27 @@ const MaintenancePage = () => {
   const headerButtons = (
     <section>
       <h2>Create New</h2>
-      <div className={styles.buttonSection}>
-        <Button
-          style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
-          disabled={false}
-          size="small"
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => history.push(`${url}/new/product`)}
-        >
-          Product
-        </Button>
-      </div>
+      <div className={styles.buttonSection} />
+      <Button
+        style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
+        disabled={false}
+        size="small"
+        variant="contained"
+        startIcon={<Add />}
+        onClick={() => history.push(`${url}/new/product`)}
+      >
+        Product
+      </Button>
+      <Button
+        style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
+        disabled={false}
+        size="small"
+        variant="contained"
+        startIcon={<Add />}
+        onClick={openModal}
+      >
+        Promo Code
+      </Button>
     </section>
   );
 
@@ -88,11 +108,16 @@ const MaintenancePage = () => {
         severity={toastData.SEVERITY}
         handleClose={closeToast}
       />
+      <Modal open={openPromoModal}>
+        <CreatePromoModal
+          onClose={closeModal}
+          handleSubmit={handleSubmit}
+        />
+      </Modal>
       <div className={styles.maintenanceHeader}>
         <h1>Maintenance</h1>
         {headerButtons}
       </div>
-
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
       {/* add nested routes to allow for other routes
         * in relation to the maintenance route to appear with maintenance header and error alert

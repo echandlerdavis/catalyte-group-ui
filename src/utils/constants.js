@@ -51,5 +51,13 @@ module.exports = Object.freeze({
   }),
   LOGO_ALT: 'Jaba the Hutt drinking coffee',
   PROMOCODE_ENDPOINT: '/promotionalCodes',
-  INVALID_CODE: 'Invalid code'
+  INVALID_CODE: 'Invalid code',
+  SAVE_PROMO_SUCCESS: () => ({
+    MESSAGE: 'Promotional Code Saved Succesfully!',
+    SEVERITY: SEVERITY_LEVELS.SUCCESS
+  }),
+  SAVE_PROMO_FAILURE: () => ({
+    MESSAGE: 'Connection Failure, unable to save Promotional Code!',
+    SEVERITY: SEVERITY_LEVELS.ERROR
+  })
 });
