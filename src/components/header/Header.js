@@ -4,7 +4,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PersonIcon from '@material-ui/icons/Person';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import loginUser from './HeaderService';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
@@ -62,7 +61,6 @@ const Header = () => {
     setUser(null);
     setGoogleError('');
     sessionStorage.removeItem('token');
-    // Cookies.remove('user');
     history.push('/');
     window.dispatchEvent(new Event('logout'));
   };

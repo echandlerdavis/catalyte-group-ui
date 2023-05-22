@@ -32,6 +32,7 @@ const ProductPage = () => {
   });
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
   const history = useHistory();
 
@@ -59,10 +60,11 @@ const ProductPage = () => {
 
   // Checks if user is logged in
   useEffect(() => {
+    setHasToken(false);
     const cookies = parseCookies();
     const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-    if (cookiesUser) {
-      console.log(cookiesUser);
+    if (sessionStorage.length !== 0 && cookiesUser) {
+      setHasToken(true);
       setIsLoggedIn(true);
       fetchUser(cookiesUser.email, setUser, setReviewApiError);
     } else {
@@ -70,18 +72,18 @@ const ProductPage = () => {
       // setUserErrorMessage('You must be logged in to write a review.');
       setUser(null); // Clear the user data
     }
-  }, [setReviewApiError]);
+  }, [setReviewApiError, hasToken]);
 
   // Checks if user has made purchase of the product.
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && hasToken) {
       const userEmail = user.email;
       fetchPurchases(userEmail, setHasMadePurchase, setReviewApiError, modalProduct.id);
     } else {
       setHasMadePurchase(false);
       // setUserErrorMessage('You must have purchased the product in order to leave a review.');
     }
-  }, [isLoggedIn, modalProduct.id, setReviewApiError, user]);
+  }, [isLoggedIn, modalProduct.id, setReviewApiError, user, hasToken]);
 
   const mainComponent = (
     <article>
@@ -125,7 +127,22 @@ const ProductPage = () => {
   return (
     <>
       <Switch>
-        <Route path="/new/review" render={() => <NewReviewPage productId={modalProduct.id} setApiError={setReviewApiError} setToastData={setToastData} openToast={openToast} history={history} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} />} />
+
+        <Route
+          path="/new/review"
+          render={() => (
+            <NewReviewPage
+              productId={modalProduct.id}
+              setApiError={setReviewApiError}
+              setToastData={setToastData}
+              openToast={openToast}
+              history={history}
+              user={user}
+              isLoggedIn={isLoggedIn}
+              hasMadePurchase={hasMadePurchase}
+            />
+          )}
+        />
         <Route path="/" render={() => mainComponent} />
       </Switch>
     </>
