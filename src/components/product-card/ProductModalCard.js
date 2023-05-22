@@ -13,6 +13,7 @@ import {
   ClickAwayListener, TextField, Button
 } from '@material-ui/core';
 import { Close, Add } from '@material-ui/icons';
+import { Switch, useHistory, Route } from 'react-router-dom';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
@@ -20,6 +21,9 @@ import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
+import { parseCookies } from '../profile-page/ProfilePageService';
+import { fetchUser, fetchPurchases } from '../review-form/ReviewPageService';
+import NewReviewPage from '../review-form/NewReviewPage';
 
 /**
  * @name useStyles
@@ -120,15 +124,42 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     state: { products }
   } = useCart();
   const { onClose } = props;
-  const {
-    isLoggedIn, hasMadePurchase, history, reviewApiError
-  } = props;
   // toast stuff for errors
   const [open, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({
     MESSAGE: '',
     SEVERITY: Constants.SEVERITY_LEVELS.INFO
   });
+  // add Review content
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [apiError, setApiError] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
+  const history = useHistory();
+
+  // Checks if user is logged in
+  useEffect(() => {
+    const cookies = parseCookies();
+    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+    if (sessionStorage.length !== 0 && cookiesUser) {
+      setIsLoggedIn(true);
+      fetchUser(cookiesUser.email, setUser, setApiError);
+    } else {
+      setIsLoggedIn(false);
+      setUser(null); // Clear the user data
+    }
+  }, [setApiError]);
+
+  // Checks if user has made purchase of the product.
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      const userEmail = user.email;
+      fetchPurchases(userEmail, setHasMadePurchase, setApiError, product.id);
+    } else {
+      setHasMadePurchase(false);
+      // setUserErrorMessage('You must have purchased the product in order to leave a review.');
+    }
+  }, [isLoggedIn, product.id, setApiError, user]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -233,13 +264,13 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     <Button
       disabled={false}
       startIcon={<Add />}
-      onClick={() => history.push('/new/review')}
+      onClick={() => history.push(`${product.id}/new/review`)}
     >
       New Review
     </Button>
   );
 
-  return (
+  const modalComponent = (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
         <Toast
@@ -316,13 +347,20 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {isLoggedIn && hasMadePurchase && !reviewApiError && addReviewButton}
+              {isLoggedIn && hasMadePurchase && !apiError && addReviewButton}
             </CardContent>
 
           </div>
         </Card>
       </Box>
     </ClickAwayListener>
+  );
+
+  return (
+    <Switch>
+      <Route path={`${product.id}/new/review`} render={() => <NewReviewPage productId={product.id} setApiError={setApiError} setToastData={setToastData} openToast={openToast} history={history} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} />} />
+      <Route path="" render={() => modalComponent} />
+    </Switch>
   );
 });
 

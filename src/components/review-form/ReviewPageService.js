@@ -26,3 +26,12 @@ export const fetchPurchases = async (userEmail, setApiError, setHasMadePurchase,
     })
     .catch(() => setApiError(true));
 };
+
+export const fetchUser = async (email, setUser, setApiError) => {
+  await HttpHelper(`${constants.USERS_ENDPOINT}/${email}`, 'GET')
+    .then((response) => response.json())
+    .then((data) => setUser(data))
+    .catch(() => {
+      setApiError(true);
+    });
+};
