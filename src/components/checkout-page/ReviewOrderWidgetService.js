@@ -1,3 +1,4 @@
+import { FREE_SHIPPING_MIN } from '../../utils/constants';
 /**
  * converts a price to a formatted string
  * @param {number} price
@@ -6,7 +7,7 @@
 export const toPrice = (price) => `$${price.toFixed(2)}`;
 
 /**
- * Gets the subtotal of an order
+ * Gets the cart total of an order
  * @param {Object []} products
  * @returns Number
  */
@@ -18,3 +19,9 @@ export const getSubtotal = (products) => {
   }
   throw new Error('No products found');
 };
+/**
+ * Returns where or not shipping is free based on the value of products
+ * @param {Object[]} products
+ * @returns boolean
+ */
+export const shippingIsFree = (products) => getSubtotal(products) > FREE_SHIPPING_MIN;

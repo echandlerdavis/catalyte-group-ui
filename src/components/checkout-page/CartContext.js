@@ -1,6 +1,5 @@
 import React from 'react';
 import setLastActive from '../../utils/UpdateLastActive';
-import { FREE_SHIPPING_MIN } from '../../utils/constants';
 
 const CartContext = React.createContext();
 
@@ -82,12 +81,5 @@ function useCart() {
   }
   return context;
 }
-
-export const cartTotal = (products) => {
-  const runningTotal = (total, product) => total + product.quantity * product.price;
-  return products.reduce(runningTotal, 0);
-};
-
-export const shippingIsFree = (products) => cartTotal(products) > FREE_SHIPPING_MIN;
 
 export { CartProvider, useCart };

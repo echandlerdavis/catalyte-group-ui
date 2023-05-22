@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useCart, shippingIsFree } from './CartContext';
+import { useCart } from './CartContext';
 import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
@@ -11,6 +11,7 @@ import setLastActive from '../../utils/UpdateLastActive';
 import Toast from '../toast/Toast';
 import { usePromoCode } from './PromoCodeWidgetService';
 import Constants from '../../utils/constants';
+import { shippingIsFree } from './ReviewOrderWidgetService';
 
 /**
  * @name CheckoutPage
