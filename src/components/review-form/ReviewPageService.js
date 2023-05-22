@@ -11,14 +11,15 @@ export const saveReview = async (review, setApiError, productId) => {
   }
 };
 
+// Not working correctly.
 export const fetchPurchases = async (userEmail, setApiError, setHasMadePurchase, productId) => {
   await HttpHelper(constants.PURCHASE_BY_EMAIL_ENDPOINT(userEmail), 'GET')
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       console.log(productId);
 
       Object.keys(data).forEach((key) => {
+        console.log(data[key]);
         if (data[key].products.product.id === productId) {
           setHasMadePurchase(true);
         }

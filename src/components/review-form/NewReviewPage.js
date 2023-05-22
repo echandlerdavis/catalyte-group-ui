@@ -1,33 +1,57 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
+import { useHistory, useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import FormItem from '../form/FormItem';
-import { saveReview } from './ReviewPageService';
+import { saveReview, fetchPurchases, fetchUser } from './ReviewPageService';
+import { parseCookies } from '../profile-page/ProfilePageService';
 
-const NewReviewPage = ({
-  productId,
-  setApiError,
-  setToastData,
-  openToast,
-  history,
-  user,
-  isLoggedIn,
-  hasMadePurchase
-}) => {
+const NewReviewPage = () => {
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
-
+  const { productId } = useParams();
+  const [apiError, setApiError] = useState(false);
+  // const [toastData, setToastData] = useState('');
+  // const [openToast, setOpenToast] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
+  const [user, setUser] = useState(null);
+  const history = useHistory();
   // const [userErrorMessage, setUserErrorMessage] = useState('');
+
+  // Checks if user is logged in
+  useEffect(() => {
+    const cookies = parseCookies();
+    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+    if (sessionStorage.length !== 0 && cookiesUser) {
+      setIsLoggedIn(true);
+      fetchUser(cookiesUser.email, setUser, setApiError);
+    } else {
+      setIsLoggedIn(false);
+      setUser(null); // Clear the user data
+    }
+  }, [setApiError]);
+
+  // Checks if user has made purchase of the product.
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      const userEmail = user.email;
+      fetchPurchases(userEmail, setHasMadePurchase, setApiError, productId);
+    } else {
+      setHasMadePurchase(false);
+      // setUserErrorMessage('You must have purchased the product in order to leave a review.');
+    }
+  }, [isLoggedIn, productId, setApiError, user]);
 
   const initialFormData = {
     title: '',
     rating: '',
     review: '',
     createdAt: reviewDate,
-    userName: `${user.firstName} ${user.lastName}`,
-    userEmail: user.email
+    userName: '',
+    userEmail: ''
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -89,13 +113,12 @@ const NewReviewPage = ({
     if (!formHasError.current) {
       const newReview = await saveReview(formData, setApiError, productId);
       if (newReview) {
-        // setReviews((reviews) => [...reviews, newReview]);
-        setToastData(constants.SAVE_REVIEW_SUCCESS);
+        // setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
       } else {
-        setToastData(constants.SAVE_REVIEW_FAILURE);
+        // setToastData(constants.SAVE_REVIEW_FAILURE);
       }
-      openToast();
+      // openToast();
     }
   };
 
@@ -112,7 +135,7 @@ const NewReviewPage = ({
   return (
     <>
       <h2>New Review</h2>
-      {formHasError.current && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
+      {(formHasError.current || apiError) && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
       <form onSubmit={handleSubmit}>
         <FormItem
           placeholder="Review Title"

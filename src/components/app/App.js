@@ -9,6 +9,7 @@ import ProfilePage from '../profile-page/ProfilePage';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
 import FilterComponentExample from '../filter-component/FilterContainer';
+import NewReviewPage from '../review-form/NewReviewPage';
 /**
  * @name App
  * @returns component
@@ -20,12 +21,13 @@ const App = () => (
         <Header />
         <main>
           <Switch>
-            <Route path="/" render={() => <ProductPage />} />
+            <Route exact path="/" render={() => <ProductPage />} />
             <Route exact path="/checkout" render={() => <CheckoutPage />} />
             <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
             <Route path="/maintenance" render={() => <MaintenancePage />} />
             <Route exact path="/profilepage" render={() => <ProfilePage />} />
             <Route exact path="/filter" render={() => <FilterComponentExample />} />
+            <Route exact path="/:productId/new/review/" render={() => <NewReviewPage />} />
           </Switch>
         </main>
         <Footer />

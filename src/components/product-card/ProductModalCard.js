@@ -13,7 +13,7 @@ import {
   ClickAwayListener, TextField, Button
 } from '@material-ui/core';
 import { Close, Add } from '@material-ui/icons';
-import { Switch, useHistory, Route } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
@@ -23,7 +23,6 @@ import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
 import { parseCookies } from '../profile-page/ProfilePageService';
 import { fetchUser, fetchPurchases } from '../review-form/ReviewPageService';
-import NewReviewPage from '../review-form/NewReviewPage';
 
 /**
  * @name useStyles
@@ -155,11 +154,11 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     if (isLoggedIn && user) {
       const userEmail = user.email;
       fetchPurchases(userEmail, setHasMadePurchase, setApiError, product.id);
+      console.log(hasMadePurchase);
     } else {
       setHasMadePurchase(false);
-      // setUserErrorMessage('You must have purchased the product in order to leave a review.');
     }
-  }, [isLoggedIn, product.id, setApiError, user]);
+  }, [isLoggedIn, product.id, setApiError, user, setHasMadePurchase, hasMadePurchase]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -270,7 +269,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     </Button>
   );
 
-  const modalComponent = (
+  return (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
         <Toast
@@ -354,13 +353,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
         </Card>
       </Box>
     </ClickAwayListener>
-  );
-
-  return (
-    <Switch>
-      <Route path={`${product.id}/new/review`} render={() => <NewReviewPage productId={product.id} setApiError={setApiError} setToastData={setToastData} openToast={openToast} history={history} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} />} />
-      <Route path="" render={() => modalComponent} />
-    </Switch>
   );
 });
 
