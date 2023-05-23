@@ -9,7 +9,7 @@ import { Save, Cancel } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import AppAlert from '../alert/Alert';
-import { fetchUser, parseCookies } from './ProfilePageService';
+import { fetchUser, parseCookies, saveUserData } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
 
 const ProfilePage = () => {
@@ -18,17 +18,21 @@ const ProfilePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const [successToast, setSuccessToast] = useState(false);
-  const [cancelToast, setCancelToast] = useState(false);
   const history = useHistory();
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
+
+  const setApiError = (error) => {
+    // Handle the API error
+    console.log('API error:', error);
+  };
 
   useEffect(() => {
     const cookies = parseCookies();
     const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
     if (cookiesUser) {
       setIsLoggedIn(true);
-      fetchUser(cookiesUser.email, setUser, setApiError);
+      fetchUser(cookiesUser.email, setUser, setInitialUser, setApiError);
     } else {
       setIsLoggedIn(false);
       setUser(null); // Clear the user data
@@ -36,9 +40,9 @@ const ProfilePage = () => {
   }, []);
 
   useEffect(() => {
-    // Set initialUser wheuser data is fetched
+    // Set initialUser when user data is fetched
     if (user) {
-      setInitialUser(user);
+      setInitialUser(JSON.parse(JSON.stringify(user)));
     }
   }, [user]);
 
@@ -75,29 +79,6 @@ const ProfilePage = () => {
     return undefined;
   }, [isLoggedIn, history]);
 
-  const handleInputChange = (e, field) => {
-    const { value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [field]: value
-    }));
-  };
-
-  const handleCancel = () => {
-    // Reset user data to initial state
-    setUser(initialUser);
-    setCancelToast(true);
-  };
-
-  const handleSave = () => {
-    // Implement logic to save the updated user data
-    if (validateForm()) {
-      // Save the user data
-      // ...
-      setSuccessToast(true);
-    }
-  };
-
   const validateForm = () => {
     let hasError = false;
     const errors = {};
@@ -108,13 +89,12 @@ const ProfilePage = () => {
       emptyFields.current = ['firstName', 'lastName', 'email'];
     }
 
-    if (user.zipcode && (!/^\d{5}$/.test(user.zipcode) || isNaN(user.zipcode))) {
+    if (user.billingAddress && user.billingAddress.billingZipcode && (!/^\d{5}$/.test(user.billingAddress.billingZipcode) || Number.isNaN(Number(user.billingAddress.billingZipcode)))) {
       errors.zipcodeInvalid = true;
       hasError = true;
     }
 
-    if ((user.firstName && !/^[a-zA-Z]+$/.test(user.firstName)) ||
-        (user.lastName && !/^[a-zA-Z]+$/.test(user.lastName))) {
+    if ((user.firstName && !/^[a-zA-Z]+$/.test(user.firstName)) || (user.lastName && !/^[a-zA-Z]+$/.test(user.lastName))) {
       errors.nameInvalid = true;
       hasError = true;
     }
@@ -125,104 +105,160 @@ const ProfilePage = () => {
     return !hasError;
   };
 
-  const setApiError = (message) => {
-    setFormErrorMessage({ apiError: message });
+  const handleInputChange = (e, field) => {
+    const { value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [field]: value
+    }));
+  };
+
+  const handleCancelChanges = useCallback(() => {
+    setUser(initialUser);
+  }, [initialUser]);
+
+  const handleSaveChanges = () => {
+    if (validateForm()) {
+      // Make the API call to save the user data
+      saveUserData(user)
+        .then(() => {
+          setInitialUser(JSON.parse(JSON.stringify(user))); // Update the initial user data
+          setSuccessToast(true);
+        })
+        .catch((error) => {
+          setApiError(error);
+        });
+    }
   };
 
   return (
     <div className={styles.container}>
       {isLoggedIn ? (
-        <>
-          <h1>Welcome, {user?.firstName}!</h1>
-          <form className={styles.form}>
-            <div className={styles.formGroup}>
-              <label htmlFor="firstName">First Name:</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={user?.firstName || ''}
-                onChange={(e) => handleInputChange(e, 'firstName')}
-              />
+        <div>
+          <h1>
+            Welcome,
+            {' '}
+            {user.firstName}
+            !
+          </h1>
+          <form>
+            <div className={styles.fieldContainer}>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={user.firstName || ''}
+                  onChange={(e) => handleInputChange(e, 'firstName')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={user.lastName || ''}
+                  onChange={(e) => handleInputChange(e, 'lastName')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="email"
+                  name="email"
+                  value={user.email || ''}
+                  readOnly
+                />
+              </div>
+              <div className={styles.field}>
+                <h3>Billing Address:</h3>
+                <input
+                  type="text"
+                  id="billingStreet"
+                  name="billingStreet"
+                  value={user.billingAddress ? initialUser.billingAddress.billingStreet || '' : ''}
+                  onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="billingStreet2"
+                  name="Street 2"
+                  value={user.billingAddress ? initialUser.billingAddress.billingStreet2 || '' : ''}
+                  onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet2')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="billingCity"
+                  name="billingCity"
+                  value={user.billingAddress ? initialUser.billingAddress.billingCity || '' : ''}
+                  onChange={(e) => handleInputChange(e, 'billingAddress.billingCity')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="billingState"
+                  name="billingState"
+                  value={user.billingAddress ? initialUser.billingAddress.billingState || '' : ''}
+                  onChange={(e) => handleInputChange(e, 'billingAddress.billingState')}
+                />
+              </div>
+              <div className={styles.field}>
+                <input
+                  type="text"
+                  id="billingZip"
+                  name="billingZip"
+                  value={user.billingAddress ? initialUser.billingAddress.billingZip || '' : ''}
+                  onChange={(e) => handleInputChange(e, 'billingAddress.billingZip')}
+                />
+              </div>
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="lastName">Last Name:</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={user?.lastName || ''}
-                onChange={(e) => handleInputChange(e, 'lastName')}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={user?.email || ''}
-                onChange={(e) => handleInputChange(e, 'email')}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="zipcode">Zip Code:</label>
-              <input
-                type="text"
-                id="zipcode"
-                name="zipcode"
-                value={user?.zipcode || ''}
-                onChange={(e) => handleInputChange(e, 'zipcode')}
-              />
-            </div>
-            <div className={styles.buttons}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Save />}
-                onClick={handleSave}
-              >
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<Cancel />}
-                onClick={handleCancel}
-              >
-                Cancel
-              </Button>
-            </div>
+            {formErrorMessage && formErrorMessage.emptyFields && (
+              <p className={styles.error}>Please fill in all fields.</p>
+            )}
+            {formErrorMessage && formErrorMessage.zipcodeInvalid && (
+              <p className={styles.error}>Please enter a valid zip code.</p>
+            )}
+            {formErrorMessage && formErrorMessage.nameInvalid && (
+              <p className={styles.error}>Please enter a valid name (letters only).</p>
+            )}
           </form>
-          {formErrorMessage && (
-            <AppAlert type="error" message={formErrorMessage.apiError} />
-          )}
-          {formErrorMessage && formErrorMessage.emptyFields && (
-            <AppAlert type="error" message="Please fill in all fields." />
-          )}
-          {formErrorMessage && formErrorMessage.zipcodeInvalid && (
-            <AppAlert type="error" message="Invalid zip code." />
-          )}
-          {formErrorMessage && formErrorMessage.nameInvalid && (
-            <AppAlert type="error" message="Invalid name format." />
-          )}
-          {successToast && (
-            <AppToast
-              type="success"
-              message="Changes saved successfully!"
-              onClose={() => setSuccessToast(false)}
-            />
-          )}
-          {cancelToast && (
-            <AppToast
-              type="info"
-              message="Changes canceled."
-              onClose={() => setCancelToast(false)}
-            />
-          )}
-        </>
+          <div className={styles.formButtonContainer}>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<Cancel />}
+              onClick={handleCancelChanges}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Save />}
+              onClick={handleSaveChanges}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
       ) : (
-        <h1>Please log in to view your profile.</h1>
+        <div>
+          <h1>Please log in to view your profile.</h1>
+          <Button variant="contained" color="primary" onClick={handleLogout}>
+            Log Out
+          </Button>
+        </div>
+      )}
+      {successToast && (
+        <AppAlert
+          severity="success"
+          message="User data saved successfully!"
+          onClose={() => setSuccessToast(false)}
+        />
       )}
     </div>
   );
