@@ -154,10 +154,12 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     if (isLoggedIn && user) {
       const userEmail = user.email;
       fetchPurchases(userEmail, setHasMadePurchase, setApiError, product.id);
+      console.log(hasMadePurchase);
+      console.log(apiError);
     } else {
       setHasMadePurchase(false);
     }
-  }, [isLoggedIn, product.id, setApiError, user, setHasMadePurchase]);
+  }, [isLoggedIn, product.id, setApiError, user, setHasMadePurchase, hasMadePurchase, apiError]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -345,7 +347,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {isLoggedIn && hasMadePurchase && !apiError && addReviewButton}
+              {hasMadePurchase && addReviewButton}
             </CardContent>
 
           </div>
