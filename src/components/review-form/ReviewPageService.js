@@ -17,11 +17,16 @@ export const fetchPurchases = async (userEmail, setApiError, setHasMadePurchase,
     .then((response) => response.json())
     .then((data) => {
       console.log(productId);
-
       Object.keys(data).forEach((key) => {
-        console.log(data[key]);
-        if (data[key].products.product.id === productId) {
-          setHasMadePurchase(true);
+        const productsArray = data[key].products;
+        console.log(productsArray);
+        if (productsArray.length > 0) {
+          productsArray.forEach((item) => {
+            if (item.product.id === productId) {
+              console.log('Found it!');
+              setHasMadePurchase(true);
+            }
+          });
         }
       });
     })

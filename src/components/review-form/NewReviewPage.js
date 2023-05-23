@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { useHistory, useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
@@ -47,7 +47,7 @@ const NewReviewPage = () => {
 
   const initialFormData = {
     title: '',
-    rating: '',
+    rating: 2.5,
     review: '',
     createdAt: reviewDate,
     userName: '',
@@ -56,6 +56,8 @@ const NewReviewPage = () => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
+  // Rating hover functionality
+  // const [ratingValue, setRatingValue] = useState(0);
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
   const ratingIsInvalid = useRef(false);
@@ -104,7 +106,7 @@ const NewReviewPage = () => {
   };
 
   const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -140,20 +142,33 @@ const NewReviewPage = () => {
         <FormItem
           placeholder="Review Title"
           type="text"
-          id="title"
+          name="title"
           label="Title"
           onChange={handleFormChange}
           value={formData.title}
         />
         {/* Name of user (Just typography, I think) */}
         <Box component="fieldset" mb={3} borderColor="transparent">
-          <Typography component="legend">Rating</Typography>
-          <Rating name="pristine" defaultValue={null} value={formData.rating} precision={0.5} onChange={handleFormChange} />
+          <input
+            name="rating"
+            type="number"
+            value={formData.rating}
+            hidden
+            readOnly
+          />
+          <Rating
+            name="rating"
+            value={Number(formData.rating)}
+            label="Rating"
+            precision={0.5}
+            onChange={handleFormChange}
+          />
         </Box>
         <FormItem
           placeholder="Write review here"
           type="text"
-          id="content"
+          name="review"
+          label="Review"
           onChange={handleFormChange}
           value={formData.review}
         />
