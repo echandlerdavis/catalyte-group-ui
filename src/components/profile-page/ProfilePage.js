@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Typography,
-  Grid,
-  TextField,
-  Button
-} from '@material-ui/core';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} from 'react';
+import { Button } from '@material-ui/core';
+import { Save, Cancel } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import AppAlert from '../alert/Alert';
 import { fetchUser, parseCookies } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
 
@@ -14,8 +16,12 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [initialUser, setInitialUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [apiError, setApiError] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState(null);
+  const [successToast, setSuccessToast] = useState(false);
+  const [cancelToast, setCancelToast] = useState(false);
   const history = useHistory();
+  const formHasError = useRef(false);
+  const emptyFields = useRef([]);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -70,122 +76,153 @@ const ProfilePage = () => {
   }, [isLoggedIn, history]);
 
   const handleInputChange = (e, field) => {
+    const { value } = e.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [field]: e.target.value
+      [field]: value
     }));
   };
 
   const handleCancel = () => {
     // Reset user data to initial state
     setUser(initialUser);
+    setCancelToast(true);
   };
 
   const handleSave = () => {
     // Implement logic to save the updated user data
+    if (validateForm()) {
+      // Save the user data
+      // ...
+      setSuccessToast(true);
+    }
   };
 
-  if (!isLoggedIn) {
-    return (
-      <div>
-        Please log in to continue to your profile page
-      </div>
-    );
-  }
+  const validateForm = () => {
+    let hasError = false;
+    const errors = {};
+
+    if (!user.firstName || !user.lastName || !user.email) {
+      errors.emptyFields = true;
+      hasError = true;
+      emptyFields.current = ['firstName', 'lastName', 'email'];
+    }
+
+    if (user.zipcode && (!/^\d{5}$/.test(user.zipcode) || isNaN(user.zipcode))) {
+      errors.zipcodeInvalid = true;
+      hasError = true;
+    }
+
+    if ((user.firstName && !/^[a-zA-Z]+$/.test(user.firstName)) ||
+        (user.lastName && !/^[a-zA-Z]+$/.test(user.lastName))) {
+      errors.nameInvalid = true;
+      hasError = true;
+    }
+
+    formHasError.current = hasError;
+    setFormErrorMessage(errors);
+
+    return !hasError;
+  };
+
+  const setApiError = (message) => {
+    setFormErrorMessage({ apiError: message });
+  };
 
   return (
-    <div className={`${styles.container} ${styles.center}`}>
-      {apiError ? (
-        <div className={styles.errMsg}>
-          Error retrieving user data. Please try again later.
-        </div>
-      ) : (
-        <div>
-          <Typography variant="h6" gutterBottom className={styles.center}>
-            Account Details
-          </Typography>
-          <Grid container spacing={1} className={styles.gridContainer}>
-            <Grid item xs={4} sm={6} className={styles.gridItem}>
-              <div className={`${styles.label} ${styles.blackFont}`}>Name:</div>
-              <TextField
+    <div className={styles.container}>
+      {isLoggedIn ? (
+        <>
+          <h1>Welcome, {user?.firstName}!</h1>
+          <form className={styles.form}>
+            <div className={styles.formGroup}>
+              <label htmlFor="firstName">First Name:</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
                 value={user?.firstName || ''}
                 onChange={(e) => handleInputChange(e, 'firstName')}
-                fullWidth
-                className={styles.textField}
               />
-              <TextField
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="lastName">Last Name:</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
                 value={user?.lastName || ''}
                 onChange={(e) => handleInputChange(e, 'lastName')}
-                fullWidth
-                className={styles.textField}
               />
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={`${styles.labelColumn} ${styles.label}`}>Email:</div>
-              <div className={`${styles.dataColumn} ${styles.blackFont}`}>
-                <Typography>
-                  {user?.email || 'Error retrieving user data'}
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={`${styles.labelColumn} ${styles.label}`}>Billing Address:</div>
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={`${styles.label}`}>Street:</div>
-              <TextField
-                value={user?.billingAddress?.billingStreet || ''}
-                onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet')}
-                fullWidth
-                className={styles.textField}
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={user?.email || ''}
+                onChange={(e) => handleInputChange(e, 'email')}
               />
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={styles.label}>Street 2:</div>
-              <TextField
-                value={user?.billingAddress?.billingStreet2 || ''}
-                onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet2')}
-                fullWidth
-                className={styles.textField}
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="zipcode">Zip Code:</label>
+              <input
+                type="text"
+                id="zipcode"
+                name="zipcode"
+                value={user?.zipcode || ''}
+                onChange={(e) => handleInputChange(e, 'zipcode')}
               />
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={styles.label}>City:</div>
-              <TextField
-                value={user?.billingAddress?.billingCity || ''}
-                onChange={(e) => handleInputChange(e, 'billingAddress.billingCity')}
-                fullWidth
-                className={styles.textField}
-              />
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={styles.label}>State:</div>
-              <TextField
-                value={user?.billingAddress?.billingState || ''}
-                onChange={(e) => handleInputChange(e, 'billingAddress.billingState')}
-                fullWidth
-                className={styles.textField}
-              />
-            </Grid>
-            <Grid item xs={8} className={styles.gridItem}>
-              <div className={styles.label}>Zipcode:</div>
-              <TextField
-                value={user?.billingAddress?.billingZip || ''}
-                onChange={(e) => handleInputChange(e, 'billingAddress.billingZip')}
-                fullWidth
-                className={styles.textField}
-              />
-            </Grid>
-          </Grid>
-          <div className={styles.buttonContainer}>
-            <Button variant="contained" color="primary" size="small" onClick={handleSave}>
-              Save
-            </Button>
-            <Button variant="contained" size="small" onClick={handleCancel}>
-              Cancel
-            </Button>
-          </div>
-        </div>
+            </div>
+            <div className={styles.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Save />}
+                onClick={handleSave}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<Cancel />}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+          {formErrorMessage && (
+            <AppAlert type="error" message={formErrorMessage.apiError} />
+          )}
+          {formErrorMessage && formErrorMessage.emptyFields && (
+            <AppAlert type="error" message="Please fill in all fields." />
+          )}
+          {formErrorMessage && formErrorMessage.zipcodeInvalid && (
+            <AppAlert type="error" message="Invalid zip code." />
+          )}
+          {formErrorMessage && formErrorMessage.nameInvalid && (
+            <AppAlert type="error" message="Invalid name format." />
+          )}
+          {successToast && (
+            <AppToast
+              type="success"
+              message="Changes saved successfully!"
+              onClose={() => setSuccessToast(false)}
+            />
+          )}
+          {cancelToast && (
+            <AppToast
+              type="info"
+              message="Changes canceled."
+              onClose={() => setCancelToast(false)}
+            />
+          )}
+        </>
+      ) : (
+        <h1>Please log in to view your profile.</h1>
       )}
     </div>
   );
