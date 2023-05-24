@@ -21,7 +21,7 @@ const NewReviewPage = ({
     rating: 2.5,
     review: '',
     createdAt: reviewDate,
-    userName: `${user.firstName} ${user.LastName}`,
+    userName: '',
     userEmail: user.email
   };
 

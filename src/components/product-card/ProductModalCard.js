@@ -286,7 +286,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     <Button
       disabled={false}
       startIcon={<Add />}
-      onClick={() => history.push(`${product.id}/new/review`)}
+      onClick={() => history.push(`/${product.id}/new/review`)}
     >
       New Review
     </Button>
@@ -381,8 +381,8 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   return (
     <>
       <Switch>
-        <Route path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
-        <Route path="" render={() => modalCard} />
+        <Route exact path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
+        <Route exact path="" render={() => modalCard} />
       </Switch>
       ;
     </>
