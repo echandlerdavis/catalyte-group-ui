@@ -12,10 +12,15 @@ export const saveReview = async (review, setApiError, productId) => {
 };
 
 // Not working correctly.
-export const fetchPurchases = async (userEmail, setApiError, setPurchases) => {
+export const fetchPurchases = async (userEmail, setPurchases, setApiError) => {
   await HttpHelper(constants.PURCHASE_BY_EMAIL_ENDPOINT(userEmail), 'GET')
-    .then((response) => response.json())
-    .then((data) => setPurchases(data))
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(constants.API_ERROR);
+    })
+    .then(setPurchases)
     .catch(() => {
       console.log('Problem caught!');
       setApiError(true);
