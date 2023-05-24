@@ -31,36 +31,6 @@ const NewReviewPage = ({
   // const [openToast, setOpenToast] = useState(false);
   // const [userErrorMessage, setUserErrorMessage] = useState('');
 
-  // // Checks if user is logged in
-  // useEffect(() => {
-  //   const cookies = parseCookies();
-  //   const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-  //   if (sessionStorage.length !== 0 && cookiesUser) {
-  //     setIsLoggedIn(true);
-  //     fetchUser(cookiesUser.email, setUser, setApiError);
-  //   } else {
-  //     setIsLoggedIn(false);
-  //     setUser(null); // Clear the user data
-  //   }
-  // }, [setApiError, setFormData, user]);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     setFormData({ ...formData, userEmail:
-  //   user.email, userName: `${user.firstName} ${user.LastName}` });
-  //   }
-  // }, [setFormData, formData, user]);
-
-  // Checks if user has made purchase of the product.
-  // useEffect(() => {
-  //   if (isLoggedIn && user) {
-  //     const userEmail = user.email;
-  //     fetchPurchases(userEmail, setHasMadePurchase, setApiError, productId);
-  //   } else {
-  //     setHasMadePurchase(false);
-  //     // setUserErrorMessage('You must have purchased the product in order to leave a review.');
-  //   }
-  // }, [isLoggedIn, productId, setApiError, user, hasMadePurchase]);
 
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
@@ -141,7 +111,7 @@ const NewReviewPage = ({
 
   return (
     <>
-      <h2>New Review</h2>
+      <h2>New Review for {product.name}</h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <form onSubmit={handleSubmit}>
         <div>
