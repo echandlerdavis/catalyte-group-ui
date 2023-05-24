@@ -1,32 +1,39 @@
-import React, { useState, useRef } from 'react';
+import React, {
+  useState, useRef, useMemo
+} from 'react';
 import {
   Box, Button
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { Cancel, Save } from '@material-ui/icons';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import FormItem from '../form/FormItem';
-import { saveReview } from './ReviewPageService';
+import { saveReview, fetchUserAndFormData, fetchPurchases } from './ReviewPageService';
+import { parseCookies } from '../profile-page/ProfilePageService';
+import styles from './ReviewPage.module.css';
 
-const NewReviewPage = ({
-  product, user, isLoggedIn, hasMadePurchase, history, apiError
-}) => {
+const NewReviewPage = () => {
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
   const { productId } = useParams();
+  const history = useHistory();
   const initialFormData = {
     title: '',
     rating: 2.5,
     review: '',
     createdAt: reviewDate,
     userName: '',
-    userEmail: user.email
+    userEmail: ''
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const [user, setUser] = useState(null);
+  const [apiError, setApiError] = useState(false);
   const [reviewApiError, reviewSetApiError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
   // const [toastData, setToastData] = useState('');
   // const [openToast, setOpenToast] = useState(false);
   // const [userErrorMessage, setUserErrorMessage] = useState('');
@@ -35,6 +42,38 @@ const NewReviewPage = ({
   const formHasError = useRef(false);
   const inputsAreInvalid = useRef(false);
   const ratingIsInvalid = useRef(false);
+
+  // Checks if user is logged in
+  useMemo(() => {
+    const cookies = parseCookies();
+    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+    if (sessionStorage.length !== 0 && cookiesUser) {
+      setIsLoggedIn(true);
+      fetchUserAndFormData(cookiesUser.email, setUser, setFormData, formData, setApiError);
+    } else {
+      setIsLoggedIn(false);
+      setUser(null); // Clear the user data
+    }
+  }, [setApiError, setUser, setFormData, formData]);
+
+  useMemo(() => {
+    if (isLoggedIn && user) {
+      console.log(user);
+      fetchPurchases(user.email, setHasMadePurchase, setApiError, productId);
+      console.log(apiError);
+      console.log(hasMadePurchase);
+      console.log(reviewApiError);
+    }
+  }, [
+    isLoggedIn,
+    setApiError,
+    user,
+    setHasMadePurchase,
+    productId,
+    apiError,
+    hasMadePurchase,
+    reviewApiError
+  ]);
 
   const validateInputs = () => {
     const summary = formData.title;
@@ -98,26 +137,25 @@ const NewReviewPage = ({
     }
   };
 
-  if (!isLoggedIn || !hasMadePurchase) {
-    console.log(reviewApiError);
-    return (
-      <AppAlert
-        severity={SEVERITY_LEVELS.ERROR}
-        title="Error"
-        message="userErrorMessage placeolder"
-      />
-    );
-  }
+  // if (!isLoggedIn || !hasMadePurchase) {
+  //   console.log(reviewApiError);
+  //   return (
+  //     <AppAlert
+  //       severity={SEVERITY_LEVELS.ERROR}
+  //       title="Error"
+  //       message="userErrorMessage placeolder"
+  //     />
+  //   );
+  // }
 
   return (
     <>
       <h2>
-        New Review for
-        {product.name}
+        New Review
       </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className={styles.ratingContainer}>
           <Box component="fieldset" mb={3} borderColor="transparent">
             <input
               name="rating"
@@ -134,6 +172,8 @@ const NewReviewPage = ({
               onChange={handleFormChange}
             />
           </Box>
+        </div>
+        <div>
           <FormItem
             placeholder="Review Title"
             type="text"

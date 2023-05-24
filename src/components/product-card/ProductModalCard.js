@@ -15,7 +15,7 @@ import {
   ClickAwayListener, TextField, Button
 } from '@material-ui/core';
 import { Close, Add } from '@material-ui/icons';
-import { useHistory, Switch, Route } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
@@ -25,8 +25,6 @@ import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
 import { parseCookies } from '../profile-page/ProfilePageService';
 import { fetchUser, fetchPurchases } from '../review-form/ReviewPageService';
-
-import NewReviewPage from '../review-form/NewReviewPage';
 
 /**
  * @name useStyles
@@ -167,9 +165,10 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     if (isLoggedIn && user) {
       fetchPurchases(user.email, setHasMadePurchase, setApiError, product.id);
       console.log(apiError);
+      console.log(hasMadePurchase);
       // console.log(purchases);
     }
-  }, [isLoggedIn, setApiError, user, setHasMadePurchase, product, apiError]);
+  }, [isLoggedIn, setApiError, user, setHasMadePurchase, product, apiError, hasMadePurchase]);
 
   // const findIfUserHasMadePurchase = useCallback(() => {
   //   let purchaseFound = false;
@@ -304,7 +303,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     </div>
   );
 
-  const modalCard = (
+  return (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
         <Toast
@@ -388,16 +387,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
         </Card>
       </Box>
     </ClickAwayListener>
-  );
-
-  return (
-    <>
-      <Switch>
-        <Route exact path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
-        <Route path="" render={() => modalCard} />
-      </Switch>
-      ;
-    </>
   );
 });
 
