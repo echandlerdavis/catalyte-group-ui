@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState, useRef, useEffect, useMemo, useCallback
+} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -131,9 +133,9 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   });
   // add Review content
   const [user, setUser] = useState(null);
+  const [purchases, setPurchases] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
-  const [hasMadePurchase, setHasMadePurchase] = useState(false);
   const history = useHistory();
 
   // Checks if user is logged in
@@ -149,17 +151,32 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     }
   }, [setApiError]);
 
-  // Checks if user has made purchase of the product.
   useEffect(() => {
     if (isLoggedIn && user) {
-      const userEmail = user.email;
-      fetchPurchases(userEmail, setHasMadePurchase, setApiError, product.id);
-      console.log(hasMadePurchase);
-      console.log(apiError);
-    } else {
-      setHasMadePurchase(false);
+      fetchPurchases(user.email, setPurchases, setApiError);
     }
-  }, [isLoggedIn, product.id, setApiError, user, setHasMadePurchase, hasMadePurchase, apiError]);
+  }, [isLoggedIn, setApiError, user, setPurchases]);
+
+  const findIfUserHasMadePurchase = useCallback(() => {
+    let purchaseFound = false;
+    Object.keys(purchases).forEach((key) => {
+      const productsArray = purchases[key].products;
+      if (productsArray.length > 0) {
+        const found = productsArray.some((item) => item.id === product.id);
+        if (found) {
+          purchaseFound = true;
+          console.log(apiError);
+        }
+      }
+    });
+    return purchaseFound;
+  }, [apiError, product.id, purchases]);
+
+  // Checks if user has made purchase of the product.
+
+  const hasMadePurchase = useMemo(() => {
+    findIfUserHasMadePurchase();
+  }, [findIfUserHasMadePurchase]);
 
   const closeToast = () => {
     setOpenToast(false);
