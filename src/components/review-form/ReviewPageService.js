@@ -11,24 +11,8 @@ export const saveReview = async (review, setApiError, productId) => {
   }
 };
 
-// .then((data) => {
-//   console.log(productId);
-//   Object.keys(data).forEach((key) => {
-//     const productsArray = data[key].products;
-//     console.log(productsArray);
-//     if (productsArray.length > 0) {
-//       productsArray.forEach((item) => {
-//         if (item.product.id === productId) {
-//           console.log('Found it!');
-//           setHasMadePurchase(true);
-//         }
-//       });
-//     }
-//   });
-// })
-
 // Not working correctly.
-export const fetchPurchases = async (userEmail, setPurchases, setApiError) => {
+export const fetchPurchases = async (userEmail, setHasMadePurchase, setApiError, productId) => {
   await HttpHelper(constants.PURCHASE_BY_EMAIL_ENDPOINT(userEmail), 'GET')
     .then((response) => {
       if (response.ok) {
@@ -36,7 +20,22 @@ export const fetchPurchases = async (userEmail, setPurchases, setApiError) => {
       }
       throw new Error(constants.API_ERROR);
     })
-    .then(setPurchases)
+    // .then(setPurchases)
+    .then((data) => {
+      console.log(productId);
+      Object.keys(data).forEach((key) => {
+        const productsArray = data[key].products;
+        console.log(productsArray);
+        if (productsArray.length > 0) {
+          productsArray.forEach((item) => {
+            if (item.product.id === productId) {
+              console.log('Found it!');
+              setHasMadePurchase(true);
+            }
+          });
+        }
+      });
+    })
     .catch(() => {
       console.log('Problem caught!');
       setApiError(true);

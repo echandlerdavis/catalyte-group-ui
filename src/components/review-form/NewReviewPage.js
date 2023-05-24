@@ -11,7 +11,7 @@ import FormItem from '../form/FormItem';
 import { saveReview } from './ReviewPageService';
 
 const NewReviewPage = ({
-  product, user, isLoggedIn, hasMadePurchase, toastData, openToast, history, apiError
+  product, user, isLoggedIn, hasMadePurchase, history, apiError
 }) => {
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
@@ -26,11 +26,10 @@ const NewReviewPage = ({
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  // const [apiError, setApiError] = useState(false);
+  const [reviewApiError, reviewSetApiError] = useState(false);
   // const [toastData, setToastData] = useState('');
   // const [openToast, setOpenToast] = useState(false);
   // const [userErrorMessage, setUserErrorMessage] = useState('');
-
 
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
@@ -88,7 +87,7 @@ const NewReviewPage = ({
     setFormData({ ...formData, userEmail: user.email, userName: `${user.firstName} ${user.LastName}` });
     generateError();
     if (!formHasError.current) {
-      const newReview = await saveReview(formData, setApiError, productId);
+      const newReview = await saveReview(formData, reviewSetApiError, productId);
       if (newReview) {
         // setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
@@ -100,6 +99,7 @@ const NewReviewPage = ({
   };
 
   if (!isLoggedIn || !hasMadePurchase) {
+    console.log(reviewApiError);
     return (
       <AppAlert
         severity={SEVERITY_LEVELS.ERROR}
@@ -111,7 +111,10 @@ const NewReviewPage = ({
 
   return (
     <>
-      <h2>New Review for {product.name}</h2>
+      <h2>
+        New Review for
+        {product.name}
+      </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <form onSubmit={handleSubmit}>
         <div>

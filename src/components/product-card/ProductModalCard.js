@@ -135,7 +135,8 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   });
   // add Review content
   const [user, setUser] = useState(null);
-  const [purchases, setPurchases] = useState(false);
+  // const [purchases, setPurchases] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
@@ -155,11 +156,11 @@ const ProductModalCard = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isLoggedIn && user) {
-      fetchPurchases(user.email, setPurchases, setApiError, product.id);
+      fetchPurchases(user.email, setHasMadePurchase, setApiError, product.id);
       console.log(apiError);
-      console.log(purchases);
+      // console.log(purchases);
     }
-  }, [isLoggedIn, setApiError, user, setPurchases, product, apiError, purchases]);
+  }, [isLoggedIn, setApiError, user, setHasMadePurchase, product, apiError]);
 
   // const findIfUserHasMadePurchase = useCallback(() => {
   //   let purchaseFound = false;
@@ -368,7 +369,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {purchases && addReviewButton}
+              {hasMadePurchase && addReviewButton}
             </CardContent>
 
           </div>
@@ -380,7 +381,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   return (
     <>
       <Switch>
-        <Route exact path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
+        <Route path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
         <Route path="" render={() => modalCard} />
       </Switch>
       ;
