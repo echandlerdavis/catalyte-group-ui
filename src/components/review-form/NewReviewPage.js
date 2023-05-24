@@ -1,17 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box, Button
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { Cancel, Save } from '@material-ui/icons';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import FormItem from '../form/FormItem';
-import { saveReview, fetchPurchases, fetchUser } from './ReviewPageService';
-import { parseCookies } from '../profile-page/ProfilePageService';
+import { saveReview } from './ReviewPageService';
 
-const NewReviewPage = () => {
+const NewReviewPage = ({
+  product, user, isLoggedIn, hasMadePurchase, toastData, openToast, history, apiError
+}) => {
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
   const { productId } = useParams();
@@ -20,32 +21,28 @@ const NewReviewPage = () => {
     rating: 2.5,
     review: '',
     createdAt: reviewDate,
-    userName: '',
-    userEmail: ''
+    userName: `${user.firstName} ${user.LastName}`,
+    userEmail: user.email
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [apiError, setApiError] = useState(false);
+  // const [apiError, setApiError] = useState(false);
   // const [toastData, setToastData] = useState('');
   // const [openToast, setOpenToast] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [hasMadePurchase, setHasMadePurchase] = useState(false);
-  const [user, setUser] = useState(null);
-  const history = useHistory();
   // const [userErrorMessage, setUserErrorMessage] = useState('');
 
-  // Checks if user is logged in
-  useEffect(() => {
-    const cookies = parseCookies();
-    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-    if (sessionStorage.length !== 0 && cookiesUser) {
-      setIsLoggedIn(true);
-      fetchUser(cookiesUser.email, setUser, setApiError);
-    } else {
-      setIsLoggedIn(false);
-      setUser(null); // Clear the user data
-    }
-  }, [setApiError, setFormData, user]);
+  // // Checks if user is logged in
+  // useEffect(() => {
+  //   const cookies = parseCookies();
+  //   const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
+  //   if (sessionStorage.length !== 0 && cookiesUser) {
+  //     setIsLoggedIn(true);
+  //     fetchUser(cookiesUser.email, setUser, setApiError);
+  //   } else {
+  //     setIsLoggedIn(false);
+  //     setUser(null); // Clear the user data
+  //   }
+  // }, [setApiError, setFormData, user]);
 
   // useEffect(() => {
   //   if (user) {
@@ -55,15 +52,15 @@ const NewReviewPage = () => {
   // }, [setFormData, formData, user]);
 
   // Checks if user has made purchase of the product.
-  useEffect(() => {
-    if (isLoggedIn && user) {
-      const userEmail = user.email;
-      fetchPurchases(userEmail, setHasMadePurchase, setApiError, productId);
-    } else {
-      setHasMadePurchase(false);
-      // setUserErrorMessage('You must have purchased the product in order to leave a review.');
-    }
-  }, [isLoggedIn, productId, setApiError, user, hasMadePurchase]);
+  // useEffect(() => {
+  //   if (isLoggedIn && user) {
+  //     const userEmail = user.email;
+  //     fetchPurchases(userEmail, setHasMadePurchase, setApiError, productId);
+  //   } else {
+  //     setHasMadePurchase(false);
+  //     // setUserErrorMessage('You must have purchased the product in order to leave a review.');
+  //   }
+  // }, [isLoggedIn, productId, setApiError, user, hasMadePurchase]);
 
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
@@ -132,15 +129,15 @@ const NewReviewPage = () => {
     }
   };
 
-  // if (!isLoggedIn || !hasMadePurchase) {
-  //   return (
-  //     <AppAlert
-  //       severity={SEVERITY_LEVELS.ERROR}
-  //       title="Error"
-  //       message="userErrorMessage placeolder"
-  //     />
-  //   );
-  // }
+  if (!isLoggedIn || !hasMadePurchase) {
+    return (
+      <AppAlert
+        severity={SEVERITY_LEVELS.ERROR}
+        title="Error"
+        message="userErrorMessage placeolder"
+      />
+    );
+  }
 
   return (
     <>
