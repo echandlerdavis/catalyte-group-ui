@@ -107,14 +107,33 @@ const ProfilePage = () => {
 
   const handleInputChange = (e, field) => {
     const { value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [field]: value
-    }));
+    const fieldPath = field.split('.'); // Split the field path into an array
+
+    // Update the user object with nested field values
+    setUser((prevUser) => {
+      const updatedUser = { ...prevUser };
+      let nestedObject = updatedUser;
+
+      // Traverse the field path and update the nested object
+      fieldPath.forEach((key, index) => {
+        if (index === fieldPath.length - 1) {
+          // Update the final nested field value
+          nestedObject[key] = value;
+        } else {
+          // Traverse deeper into the nested object
+          nestedObject[key] = { ...nestedObject[key] };
+          nestedObject = nestedObject[key];
+        }
+      });
+
+      return updatedUser;
+    });
   };
 
   const handleCancelChanges = useCallback(() => {
-    setUser(initialUser);
+    console.log('handleCancelChanges triggered');
+    console.log('Initial user:', initialUser);
+    setUser(JSON.parse(JSON.stringify(initialUser)));
   }, [initialUser]);
 
   const handleSaveChanges = () => {
@@ -144,76 +163,108 @@ const ProfilePage = () => {
           <form>
             <div className={styles.fieldContainer}>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={user.firstName || ''}
-                  onChange={(e) => handleInputChange(e, 'firstName')}
-                />
+                <label htmlFor="firstName">
+                  First Name:
+                  {' '}
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={user.firstName || ''}
+                    onChange={(e) => handleInputChange(e, 'firstName')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={user.lastName || ''}
-                  onChange={(e) => handleInputChange(e, 'lastName')}
-                />
+                <label htmlFor="lastName">
+                  Last Name:
+                  {' '}
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={user.lastName || ''}
+                    onChange={(e) => handleInputChange(e, 'lastName')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="email"
-                  name="email"
-                  value={user.email || ''}
-                  readOnly
-                />
+                <label htmlFor="email">
+                  Email:
+                  {' '}
+                  <input
+                    type="email"
+                    name="email"
+                    value={user.email || ''}
+                    readOnly
+                  />
+                </label>
               </div>
               <div className={styles.field}>
                 <h3>Billing Address:</h3>
-                <input
-                  type="text"
-                  id="billingStreet"
-                  name="billingStreet"
-                  value={user.billingAddress ? initialUser.billingAddress.billingStreet || '' : ''}
-                  onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet')}
-                />
+                <label htmlFor="billingStreet">
+                  Street:
+                  {' '}
+                  <input
+                    type="text"
+                    id="billingStreet"
+                    name="billingStreet"
+                    value={user.billingAddress ? user.billingAddress.billingStreet || '' : ''}
+                    onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="billingStreet2"
-                  name="Street 2"
-                  value={user.billingAddress ? initialUser.billingAddress.billingStreet2 || '' : ''}
-                  onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet2')}
-                />
+                <label htmlFor="billingStreet2">
+                  Street 2:
+                  {' '}
+                  <input
+                    type="text"
+                    id="billingStreet2"
+                    name="Street 2"
+                    value={user.billingAddress ? user.billingAddress.billingStreet2 || '' : ''}
+                    onChange={(e) => handleInputChange(e, 'billingAddress.billingStreet2')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="billingCity"
-                  name="billingCity"
-                  value={user.billingAddress ? initialUser.billingAddress.billingCity || '' : ''}
-                  onChange={(e) => handleInputChange(e, 'billingAddress.billingCity')}
-                />
+                <label htmlFor="billingCity">
+                  City:
+                  {' '}
+                  <input
+                    type="text"
+                    id="billingCity"
+                    name="billingCity"
+                    value={user.billingAddress ? user.billingAddress.billingCity || '' : ''}
+                    onChange={(e) => handleInputChange(e, 'billingAddress.billingCity')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="billingState"
-                  name="billingState"
-                  value={user.billingAddress ? initialUser.billingAddress.billingState || '' : ''}
-                  onChange={(e) => handleInputChange(e, 'billingAddress.billingState')}
-                />
+                <label htmlFor="billingState">
+                  State:
+                  {' '}
+                  <input
+                    type="text"
+                    id="billingState"
+                    name="billingState"
+                    value={user.billingAddress ? user.billingAddress.billingState || '' : ''}
+                    onChange={(e) => handleInputChange(e, 'billingAddress.billingState')}
+                  />
+                </label>
               </div>
               <div className={styles.field}>
-                <input
-                  type="text"
-                  id="billingZip"
-                  name="billingZip"
-                  value={user.billingAddress ? initialUser.billingAddress.billingZip || '' : ''}
-                  onChange={(e) => handleInputChange(e, 'billingAddress.billingZip')}
-                />
+                <label htmlFor="billingZip">
+                  Zip Code:
+                  {' '}
+                  <input
+                    type="text"
+                    id="billingZip"
+                    name="billingZip"
+                    value={user.billingAddress ? user.billingAddress.billingZip || '' : ''}
+                    onChange={(e) => handleInputChange(e, 'billingAddress.billingZip')}
+                  />
+                </label>
               </div>
             </div>
             {formErrorMessage && formErrorMessage.emptyFields && (

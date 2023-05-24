@@ -10,16 +10,16 @@
 .formContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 2rem;
 }
 
 .fieldContainer {
   margin-bottom: 1rem;
-  display: block;
+  display: flexbox;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .field {
@@ -28,15 +28,15 @@
 }
 
 .input {
-  padding: 8px;
+  padding: 5px;
   border: 1px solid lightgray;
   border-radius: 4px;
-  width: 100%;
+  margin-left: auto;
 }
 
 .formButtonContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 1rem;
   width: 100%;
 }
@@ -44,9 +44,23 @@
 .formButtonContainer button {
   margin-left: 0.5rem;
   font-size: 8px;
-  padding: 4px 8px;
+  padding: 8px 16px;
 }
 
 .formButtonContainer button:first-child {
   margin-left: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+  text-align: center;
 }
