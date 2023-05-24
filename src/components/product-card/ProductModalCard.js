@@ -89,6 +89,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  reviewButtonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  reviewButton: {
+    margin: '1em',
+    backgroundColor: '#EE3710',
+    color: 'white'
   }
 }));
 /**
@@ -283,13 +292,16 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   };
 
   const addReviewButton = (
-    <Button
-      disabled={false}
-      startIcon={<Add />}
-      onClick={() => history.push(`/${product.id}/new/review`)}
-    >
-      New Review
-    </Button>
+    <div className={classes.reviewButtonContainer}>
+      <Button
+        disabled={false}
+        startIcon={<Add />}
+        onClick={() => history.push(`/${product.id}/new/review`)}
+        className={classes.reviewButton}
+      >
+        New Review
+      </Button>
+    </div>
   );
 
   const modalCard = (
@@ -382,7 +394,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     <>
       <Switch>
         <Route exact path="/:productId/new/review" render={() => <NewReviewPage product={product} user={user} isLoggedIn={isLoggedIn} hasMadePurchase={hasMadePurchase} toastData={toastData} openToast={openToast} history={history} apiError={apiError} />} />
-        <Route exact path="" render={() => modalCard} />
+        <Route path="" render={() => modalCard} />
       </Switch>
       ;
     </>
