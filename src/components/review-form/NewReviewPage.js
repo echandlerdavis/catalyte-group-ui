@@ -175,7 +175,7 @@ const NewReviewPage = () => {
         </div>
         <div>
           <FormItem
-            placeholder="Review Title"
+            placeholder="Review Summary"
             type="text"
             id="title"
             label="Summary"
@@ -183,8 +183,8 @@ const NewReviewPage = () => {
             value={formData.title}
           />
           <FormItem
-            placeholder="Write review here"
-            type="text"
+            placeholder="Write commentary here"
+            type="textarea"
             id="review"
             label="Commentary"
             onChange={handleFormChange}
