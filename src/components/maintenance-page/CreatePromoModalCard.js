@@ -9,7 +9,7 @@ import FormItem from '../form/FormItem';
 // import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 import {
-  validateRate, validateTitle, emptyFieldCheck, savePromoCode
+  validateFlatRate, validatePercentRate, validateTitle, emptyFieldCheck, savePromoCode
 } from './CreatePromoService';
 // import FormItemDropdown from '../form/FormItemDropdown';
 import Toast from '../toast/Toast';
@@ -76,8 +76,12 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
     formHasError.current = false;
 
     titleIsValid.current = validateTitle(promoData.title);
-    rateIsValid.current = validateRate(promoData.rate);
-
+    if (promoData.type === 'FLAT') {
+      rateIsValid.current = validateFlatRate(promoData.rate);
+    }
+    if (promoData.type === 'PERCENT') {
+      rateIsValid.current = validatePercentRate(promoData.rate);
+    }
     if (emptyFieldErrors.current.length) {
       setEmptyFieldErrors([...emptyFieldErrors.current]);
       formHasError.current = true;
@@ -113,7 +117,7 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
       setToastOpen(true);
       return false;
     }
-    setToastData({ MESSAGE: 'Please Correct errors on highlighted fields', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+    setToastData({ MESSAGE: 'Please Correct errors on highlighted fields \n All fields are required ', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
     setToastOpen(true);
     return false;
   };
@@ -146,7 +150,6 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
                 label={(emptyFieldErrors.includes('title') && (`Title - ${constants.EMPTY_FIELD}`))
                   || (invalidErrors.includes('title') && constants.PROMO_TITLE_INVALID)
                   || 'Title'}
-                autoCapitalize="characters"
                 onChange={handleTitleChangeForceCap}
                 value={promoData.title}
                 className={errors && errors.includes('title') && styles.invalidField}
@@ -204,13 +207,25 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
                 onChange={handleRadioChange}
                 id="type"
                 label="Rate Type"
-                style={{ color: '#395aa1' }}
+                className={styles.invalidRateField}
               >
-                <FormControlLabel value="FLAT" control={<Radio />} label="Flat" id="type" className={(errors && errors.includes('description') && styles.invalidField)} />
-                <FormControlLabel value="PERCENT" control={<Radio />} label="Percent" id="type" className={(errors && errors.includes('description') && styles.invalidField)} />
+                <FormControlLabel
+                  value="FLAT"
+                  label="Flat"
+                  id="type"
+                  control={(errors.includes('type') && <Radio style={{ color: 'red', backgroundColor: 'white' }} />) || <Radio style={{ color: 'green', backgroundColor: 'white' }} />}
+                  labelPlacement="bottom"
+                />
+                <FormControlLabel
+                  value="PERCENT"
+                  control={(errors.includes('type') && <Radio style={{ color: 'red', backgroundColor: 'white' }} />) || <Radio style={{ color: 'green', backgroundColor: 'white' }} />}
+                  label="Percent"
+                  id="type"
+                  labelPlacement="bottom"
+                />
               </RadioGroup>
               <br />
-              <ButtonGroup row="true">
+              <ButtonGroup row="true" style={{ display: 'flex', justifyContent: 'right' }} float="right">
                 <Button
                   style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
                   disabled={false}

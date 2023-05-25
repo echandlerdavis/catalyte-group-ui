@@ -28,19 +28,30 @@ export const savePromoCode = async (
     return saveReport;
   }
 };
-
-export const validateRate = (rate) => {
+/**
+ * Checks if input is a digit between 1-99
+ * @param {number} rate
+ * @returns boolean
+ */
+export const validatePercentRate = (rate) => {
   const regex = /^[1-9][0-9]?$|^99$/;
   return regex.test(rate);
 };
 
+export const validateFlatRate = (rate) => (rate > 0);
+
+/*
+* Checks if input is all capital characters/digits
+* @param {number} rate
+* @returns boolean
+*/
 export const validateTitle = (title) => {
   const regex = /^[A-Z0-9]*$/;
   return regex.test(title);
 };
 
 export const emptyFieldCheck = (object) => {
-  const requiredFields = ['title', 'description', 'rate', 'startDate', 'endDate'];
+  const requiredFields = ['title', 'description', 'rate', 'startDate', 'endDate', 'type'];
   const getEmptyFields = () => requiredFields.filter(
     (field) => !object[field] || object[field].trim().length === 0
   );

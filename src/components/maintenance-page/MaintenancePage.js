@@ -36,9 +36,8 @@ const MaintenancePage = () => {
     setToastOpen(false);
   };
 
-  const openToast = (message) => {
+  const openToast = () => {
     setToastOpen(true);
-    setToastData(message);
   };
 
   useEffect(() => {

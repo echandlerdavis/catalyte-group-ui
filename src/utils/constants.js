@@ -38,7 +38,7 @@ module.exports = Object.freeze({
   SAVE_PRODUCT_SUCCESS: { MESSAGE: 'Product Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
   SAVE_PRODUCT_FAILURE: { MESSAGE: 'Connection to Database Failed', SEVERITY: SEVERITY_LEVELS.ERROR },
   PROMO_TITLE_INVALID: 'Title - must be capitalized alphaNumeric values only',
-  PROMO_RATE_INVALID: 'Ratemust be a positive digit less than 100',
+  PROMO_RATE_INVALID: 'Rate - must be a positive digit less than 100',
   EMPTY_FIELD: 'This Field is reqiured',
   ADD_PRODUCT_FAILURE: (stringList) => ({
     MESSAGE: `Failed to add product: ${stringList.join('\n\r')}`,
