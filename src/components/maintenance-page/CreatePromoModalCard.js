@@ -8,8 +8,9 @@ import styles from '../checkout-page/forms/DeliveryAddress.module.css';
 import FormItem from '../form/FormItem';
 // import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
-import savePromoCode from './CreatePromoService';
-import { validateRate, validateTitle, emptyFieldCheck } from './CreatePromoValidation';
+import {
+  validateRate, validateTitle, emptyFieldCheck, savePromoCode
+} from './CreatePromoService';
 // import FormItemDropdown from '../form/FormItemDropdown';
 import Toast from '../toast/Toast';
 /**
@@ -19,31 +20,21 @@ import Toast from '../toast/Toast';
  */
 const useStyles = makeStyles(() => ({
   root: {
-    maxHeight: '65em',
     width: '65em'
-  },
-  media: {
-    height: 0,
-    paddingTop: '40%',
-    margin: '1em'
-  },
-  header: {
-    height: 5
   },
   box: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)'
-  },
-  FormItem: {
-    paddingLeft: '5px'
-  },
-  h2: {
-    paddingBottom: '0px'
   }
 }));
 
+/**
+ * @CreatePromoModal
+ * @description Component to submit new Promotional Codes to the database
+ * @return Modal Component
+ */
 const CreatePromoModal = React.forwardRef((props, ref) => {
   const { onClose } = props;
   const { setApiError } = props;
@@ -213,13 +204,10 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
                 onChange={handleRadioChange}
                 id="type"
                 label="Rate Type"
-                fullwidth
-                disableripple
-                disableelavtion
-                disablefocusripple
+                style={{ color: '#395aa1' }}
               >
-                <FormControlLabel value="FLAT" control={<Radio />} label="Flat" id="type" />
-                <FormControlLabel value="PERCENT" control={<Radio />} label="Percent" id="type" />
+                <FormControlLabel value="FLAT" control={<Radio />} label="Flat" id="type" className={(errors && errors.includes('description') && styles.invalidField)} />
+                <FormControlLabel value="PERCENT" control={<Radio />} label="Percent" id="type" className={(errors && errors.includes('description') && styles.invalidField)} />
               </RadioGroup>
               <br />
               <ButtonGroup row="true">
