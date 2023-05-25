@@ -59,13 +59,13 @@ const fetchUser = async (email, setUser, setInitialUser, setApiError) => {
  *
  * @name saveUserData
  * @description Utilizes HttpHelper to make a POST request to save user data.
- * @param {object} userData The user data to be saved
+ * @param {object} user The user data to be saved
  * @param {function} setApiError Function to update the 'apiError' state with an error, if necessary
  * @returns {Promise<object>} Saved user data if successful, otherwise returns false
  */
-const saveUserData = async (userData, setApiError) => {
+const saveUserData = async (user, setApiError) => {
   try {
-    const response = await HttpHelper(Constants.USERS_ENDPOINT, 'POST', userData);
+    const response = await HttpHelper(Constants.USERS_ENDPOINT, 'POST', user);
     return response.json();
   } catch {
     setApiError(true);
