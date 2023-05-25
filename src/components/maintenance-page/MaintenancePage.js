@@ -15,7 +15,6 @@ import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
 import constants from '../../utils/constants';
 import CreatePromoModal from './CreatePromoModalCard';
-import savePromoCode from './CreatePromoService';
 /**
  * @name MaintenancePage
  * @description Fetches all products from the API and displays them in a table
@@ -29,6 +28,7 @@ const MaintenancePage = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
   const [openPromoModal, setOpenPromoModal] = useState(false);
+
   const openModal = () => setOpenPromoModal(true);
   const closeModal = () => setOpenPromoModal(false);
 
@@ -40,14 +40,7 @@ const MaintenancePage = () => {
     setToastOpen(true);
     setToastData(message);
   };
-  const handleSubmit = () => {
-    closeModal();
-    savePromoCode();
-    if (savePromoCode) {
-      openToast(constants.SAVE_PROMO_SUCCESS);
-    }
-    openToast(constants.SAVE_PROMO_FAILURE);
-  };
+
   useEffect(() => {
     fetchProducts(setProducts, setApiError);
   }, []);
@@ -108,10 +101,16 @@ const MaintenancePage = () => {
         severity={toastData.SEVERITY}
         handleClose={closeToast}
       />
-      <Modal open={openPromoModal}>
+      <Modal open={openPromoModal} onClose={closeModal}>
         <CreatePromoModal
+          open={openPromoModal}
           onClose={closeModal}
-          handleSubmit={handleSubmit}
+          setApiError={setApiError}
+        // errors={`${invalidErrors} ${emptyFieldErrors}`}
+        // handleSubmit={handleSubmit}
+        // titleValue={titleValue}
+        // setTitleValue={setTitleValue}
+        // promoData={promoData}
         />
       </Modal>
       <div className={styles.maintenanceHeader}>
