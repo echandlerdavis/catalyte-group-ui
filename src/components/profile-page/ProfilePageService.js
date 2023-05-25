@@ -65,7 +65,7 @@ const fetchUser = async (email, setUser, setInitialUser, setApiError) => {
  */
 const saveUserData = async (user, setApiError) => {
   try {
-    const response = await HttpHelper(Constants.USERS_ENDPOINT, 'POST', user);
+    const response = await HttpHelper(Constants.USERS_ENDPOINT, 'PUT', user);
     return response.json();
   } catch {
     setApiError(true);
