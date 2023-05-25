@@ -424,7 +424,7 @@ const CheckoutPage = () => {
             promoCode={promoCode}
             promoCodeSetter={setPromoCode}
             onRemoveConfirmation={handleRemove}
-            shippingCost={shippingIsFree(products) || deliveryData.state === '-' || !deliveryData.state
+            shippingCost={shippingIsFree(products, deliveryData.state) || deliveryData.state === '-' || !deliveryData.state
               ? 0
               : stateData.filter(
                 (s) => s.fullName === deliveryData.state

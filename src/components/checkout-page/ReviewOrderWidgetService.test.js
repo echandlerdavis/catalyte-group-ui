@@ -33,7 +33,7 @@ describe('getSubtotal', () => {
 });
 
 describe('shippingIsFree', () => {
-  it('returns true when products total is under FREE_SHIPPING_MIN', () => {
+  it('returns false when products total is under or equal to FREE_SHIPPING_MIN', () => {
     const products = [
       {
         quantity: 5,
@@ -46,11 +46,11 @@ describe('shippingIsFree', () => {
     ];
     const expected = false;
 
-    expect(shippingIsFree(products)).toEqual(expected);
+    expect(shippingIsFree(products, 'Washington')).toEqual(expected);
   });
 });
 describe('shippingIsFree', () => {
-  it('returns false when products total is under FREE_SHIPPING_MIN', () => {
+  it('returns true when products total is over FREE_SHIPPING_MIN', () => {
     const products = [
       {
         quantity: 5,
@@ -63,6 +63,40 @@ describe('shippingIsFree', () => {
     ];
     const expected = true;
 
-    expect(shippingIsFree(products)).toEqual(expected);
+    expect(shippingIsFree(products, 'Idaho')).toEqual(expected);
+  });
+});
+describe('shippingIsFree', () => {
+  it('returns true when the state is Alaska', () => {
+    const products = [
+      {
+        quantity: 5,
+        price: 100.00
+      },
+      {
+        quantity: 1,
+        price: 0.04
+      }
+    ];
+    const expected = false;
+
+    expect(shippingIsFree(products, 'alaska')).toEqual(expected);
+  });
+});
+describe('shippingIsFree', () => {
+  it('returns true when the state is Hawaii', () => {
+    const products = [
+      {
+        quantity: 5,
+        price: 100.00
+      },
+      {
+        quantity: 1,
+        price: 0.04
+      }
+    ];
+    const expected = false;
+
+    expect(shippingIsFree(products, 'hawaii')).toEqual(expected);
   });
 });

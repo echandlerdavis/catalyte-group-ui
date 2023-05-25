@@ -20,8 +20,16 @@ export const getSubtotal = (products) => {
   throw new Error('No products found');
 };
 /**
- * Returns where or not shipping is free based on the value of products
+ * Returns where or not shipping is free based on the value of products and the state
  * @param {Object[]} products
  * @returns boolean
  */
-export const shippingIsFree = (products) => getSubtotal(products) > FREE_SHIPPING_MIN;
+export const shippingIsFree = (products, state) => {
+  if (state) {
+    const testState = state.toLowerCase();
+    if (testState === 'alaska' || testState === 'hawaii') {
+      return false;
+    }
+  }
+  return getSubtotal(products) > FREE_SHIPPING_MIN;
+};
