@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
 const CreatePromoModal = React.forwardRef((props, ref) => {
   const { onClose } = props;
   const { setApiError } = props;
-  const [promoData, setPromoData] = useState({});
+  const [promoData, setPromoData] = useState({ type: '' });
   const [emptyFieldErrors, setEmptyFieldErrors] = useState([]);
   const [invalidErrors, setInvalidErrors] = useState([]);
   const [toastOpen, setToastOpen] = useState(false);
@@ -213,6 +213,10 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
                 onChange={handleRadioChange}
                 id="type"
                 label="Rate Type"
+                fullwidth
+                disableripple
+                disableelavtion
+                disablefocusripple
               >
                 <FormControlLabel value="FLAT" control={<Radio />} label="Flat" id="type" />
                 <FormControlLabel value="PERCENT" control={<Radio />} label="Percent" id="type" />
