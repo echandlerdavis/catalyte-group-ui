@@ -133,13 +133,11 @@ const ProfilePage = () => {
     if (validateForm()) {
       // Make the API call to save the user data
       saveUserData(user, setApiError)
-        .then((response) => {
-          if (response && response.ok) {
-            setInitialUser(JSON.parse(JSON.stringify(user))); // Update the initial user data
-            setSuccessToast(true);
-          } else {
-            setApiError('Error saving user data');
-          }
+        .then((userData) => {
+          const userJson = JSON.stringify(userData);
+          setInitialUser(userData); // Update the initial user data
+          document.cookie = `user=${userJson}`;
+          setSuccessToast(true);
         })
         .catch((error) => {
           setApiError(error);
