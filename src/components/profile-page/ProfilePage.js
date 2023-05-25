@@ -39,13 +39,6 @@ const ProfilePage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    // Set initialUser when user data is fetched
-    if (user) {
-      setInitialUser(JSON.parse(JSON.stringify(user)));
-    }
-  }, [user]);
-
   const handleLogout = useCallback(() => {
     setIsLoggedIn(false);
     Cookies.remove('user');
