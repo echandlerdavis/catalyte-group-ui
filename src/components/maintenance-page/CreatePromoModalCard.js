@@ -6,7 +6,6 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import styles from '../checkout-page/forms/DeliveryAddress.module.css';
 import FormItem from '../form/FormItem';
-// import AppAlert from '../alert/Alert';
 import constants from '../../utils/constants';
 import {
   validateFlatRate, validatePercentRate, validateTitle, emptyFieldCheck, savePromoCode
@@ -36,6 +35,8 @@ const useStyles = makeStyles(() => ({
  * @return Modal Component
  */
 const CreatePromoModal = React.forwardRef((props, ref) => {
+  const { setToastSuccessData } = props;
+  const { openToastSuccess } = props;
   const { onClose } = props;
   const { setApiError } = props;
   const [promoData, setPromoData] = useState({ type: '' });
@@ -109,8 +110,9 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
     if (!formHasError.current) {
       const newPromoCode = await savePromoCode(promoData, setApiError);
       if (newPromoCode.success) {
-        setToastData({ MESSAGE: `${promoData.title} has been saved succesfully!`, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
-        setToastOpen(true);
+        setToastSuccessData({ MESSAGE: `${promoData.title} has been saved succesfully!`, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
+        openToastSuccess(true);
+        onClose();
         return true;
       }
       setToastData({ MESSAGE: `${promoData.title} was not saved due to server error. This most likely is becuase ${promoData.title} may have already been used.`, SEVERITY: constants.SEVERITY_LEVELS.ERROR });

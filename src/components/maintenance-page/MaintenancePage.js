@@ -15,6 +15,7 @@ import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
 import constants from '../../utils/constants';
 import CreatePromoModal from './CreatePromoModalCard';
+
 /**
  * @name MaintenancePage
  * @description Fetches all products from the API and displays them in a table
@@ -105,11 +106,9 @@ const MaintenancePage = () => {
           open={openPromoModal}
           onClose={closeModal}
           setApiError={setApiError}
-        // errors={`${invalidErrors} ${emptyFieldErrors}`}
-        // handleSubmit={handleSubmit}
-        // titleValue={titleValue}
-        // setTitleValue={setTitleValue}
-        // promoData={promoData}
+          openToastSuccess={openToast}
+          setToastSuccessData={setToastData}
+
         />
       </Modal>
       <div className={styles.maintenanceHeader}>

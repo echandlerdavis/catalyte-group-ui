@@ -49,4 +49,31 @@ const makePurchase = async (
     return purchaseReport;
   }
 };
+
+export const fetchStateData = async () => {
+  let data = null;
+  await HttpHelper(Constants.STATES_ENDPOINT, 'GET')
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      throw new Error('failed to get response.');
+    })
+    .then((d) => {
+      data = d;
+      return d;
+    });
+  if (data) {
+    return data;
+  }
+  throw new Error('Failed to get state information.');
+};
+
+export const stateDataToList = (list) => {
+  let arr = [];
+  if (list.length > 0) {
+    arr = list.map((obj) => obj.fullName);
+  }
+  return arr;
+};
 export default makePurchase;
