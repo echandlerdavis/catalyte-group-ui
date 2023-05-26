@@ -12,10 +12,3 @@
 .invalidField {
   border: .05em solid red;
 }
-.btnGroup{
-  display: flex;
-  justify-content: flex-end;
-}
-.invalidRateField {
-  
-}
