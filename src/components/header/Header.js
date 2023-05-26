@@ -17,8 +17,7 @@ import setLastActive from '../../utils/UpdateLastActive';
  * @description Displays the navigation header
  * @return component
  */
-const Header = () => {
-  const [user, setUser] = useState('');
+const Header = ({user, setUser}) => {
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
