@@ -23,7 +23,6 @@ const ProfilePage = ({ user, setUser }) => {
 
   const setApiError = (error) => {
     // Handle the API error
-    console.log('API error:', error);
   };
 
   useEffect(() => {
@@ -123,8 +122,6 @@ const ProfilePage = ({ user, setUser }) => {
   };
 
   const handleCancelChanges = useCallback(() => {
-    console.log('handleCancelChanges triggered');
-    console.log('Initial user:', initialUser);
     setUser(JSON.parse(JSON.stringify(initialUser)));
   }, [initialUser, setUser]);
 
