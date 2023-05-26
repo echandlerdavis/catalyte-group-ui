@@ -119,7 +119,7 @@ const CreatePromoModal = React.forwardRef((props, ref) => {
       setToastOpen(true);
       return false;
     }
-    setToastData({ MESSAGE: 'Please Correct errors on highlighted fields \n All fields are required ', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+    setToastData({ MESSAGE: 'Please Correct errors on highlighted fields -- All fields are required ', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
     setToastOpen(true);
     return false;
   };

@@ -9,12 +9,10 @@ export const savePromoCode = async (
     data: null
   };
   try {
-    console.log(promoCode);
     const response = await HttpHelper(Constants.PROMOCODE_ENDPOINT, 'POST', promoCode);
     if (response.status === 201) {
       saveReport.success = true;
       saveReport.data = response.json();
-      console.info(saveReport);
       return saveReport;
     }
     saveReport.data = response;

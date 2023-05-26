@@ -108,7 +108,6 @@ const MaintenancePage = () => {
           setApiError={setApiError}
           openToastSuccess={openToast}
           setToastSuccessData={setToastData}
-
         />
       </Modal>
       <div className={styles.maintenanceHeader}>
