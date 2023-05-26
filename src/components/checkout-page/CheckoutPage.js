@@ -5,12 +5,13 @@ import styles from './CheckoutPage.module.css';
 import ReviewOrderWidget from './ReviewOrderWidget';
 import DeliveryAddress from './forms/DeliveryAddress';
 import BillingDetails from './forms/BillingDetails';
-import makePurchase from './CheckoutService';
+import makePurchase, { fetchStateData, stateDataToList } from './CheckoutService';
 import AppAlert from '../alert/Alert';
 import setLastActive from '../../utils/UpdateLastActive';
 import Toast from '../toast/Toast';
 import { usePromoCode } from './PromoCodeWidgetService';
 import Constants from '../../utils/constants';
+import { shippingIsFree } from './ReviewOrderWidgetService';
 
 /**
  * @name CheckoutPage
@@ -27,6 +28,7 @@ const CheckoutPage = () => {
   });
   const [openToast, setOpenToast] = useState(false);
   const [errors, setErrors] = useState('');
+  const [stateData, setStateData] = useState([]);
 
   const { state: { products }, dispatch } = useCart();
 
@@ -74,6 +76,7 @@ const CheckoutPage = () => {
   const phoneFormatIsValid = useRef(false);
   const { promoCode, setPromoCode } = usePromoCode();
 
+  const stateOptions = ['-', ...stateDataToList(stateData)];
   const showToast = () => setOpenToast(true);
   const closeToast = () => setOpenToast(false);
 
@@ -386,6 +389,15 @@ const CheckoutPage = () => {
     }
   }, [errors]);
 
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchStateData();
+      setStateData(data);
+    };
+    getData();
+  },
+  []);
+
   if (products.length === 0) {
     return (
       <div className={styles.checkoutContainer}>
@@ -412,6 +424,11 @@ const CheckoutPage = () => {
             promoCode={promoCode}
             promoCodeSetter={setPromoCode}
             onRemoveConfirmation={handleRemove}
+            shippingCost={shippingIsFree(products, deliveryData.state) || deliveryData.state === '-' || !deliveryData.state
+              ? 0
+              : stateData.filter(
+                (s) => s.fullName === deliveryData.state
+              )[0].shippingCost}
           />
         </div>
       </section>
@@ -424,6 +441,7 @@ const CheckoutPage = () => {
             onChange={onDeliveryChange}
             deliveryData={deliveryData}
             errors={`${deliveryEmptyErrors} ${deliveryInvalidErrors}`}
+            stateList={stateOptions}
           />
           <label htmlFor="useSame" className={styles.sameAddressText}>
             <div className={styles.useSameAddress}>
@@ -449,6 +467,7 @@ const CheckoutPage = () => {
             billingData={billingData}
             useShippingForBilling={useSameAddress}
             errors={`${billingEmptyErrors} ${billingInvalidErrors}`}
+            stateList={stateOptions}
           />
           {billingEmptyErrors && billingEmptyErrors.length > 0 && <AppAlert severity="error" title="Missing Requried Fields" message={billingEmptyFieldMessage.current} />}
           {billingInvalidErrors && billingInvalidErrors.length > 0 && <AppAlert severity="error" title="Please Correct The Following Errors:" message={billingErrorMessage.current} />}

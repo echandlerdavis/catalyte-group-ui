@@ -12,6 +12,7 @@ module.exports = Object.freeze({
   BASE_URL_API: 'http://localhost:8085',
   PLACEHOLDER_IMAGE: 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png',
   PURCHASE_ENDPOINT: '/purchases',
+  STATES_ENDPOINT: '/purchases/StateOptions',
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
   REVIEWS_ENDPOINT: (productId) => `/products/${productId}/reviews`,
@@ -62,5 +63,6 @@ module.exports = Object.freeze({
   SAVE_PROMO_FAILURE: () => ({
     MESSAGE: 'Connection Failure, unable to save Promotional Code!',
     SEVERITY: SEVERITY_LEVELS.ERROR
-  })
+  }),
+  FREE_SHIPPING_MIN: 50.00
 });
