@@ -21,7 +21,7 @@ const ProfilePage = ({ user, setUser }) => {
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
 
-  const setApiError = (error) => {
+  const setApiError = () => {
     // Handle the API error
   };
 
@@ -30,12 +30,12 @@ const ProfilePage = ({ user, setUser }) => {
     const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
     if (cookiesUser) {
       setIsLoggedIn(true);
-      fetchUser(cookiesUser.email, setUser, setInitialUser, setApiError);
+      fetchUser(cookiesUser.email, setUser, setInitialUser, setInitialUser, setApiError);
     } else {
       setIsLoggedIn(false);
       setUser(null); // Clear the user data
     }
-  }, [setUser]);
+  }, [setUsersetUser]);
 
   const handleLogout = useCallback(() => {
     setIsLoggedIn(false);
@@ -78,6 +78,20 @@ const ProfilePage = ({ user, setUser }) => {
       errors.emptyFields = true;
       hasError = true;
       emptyFields.current = ['firstName', 'lastName', 'email'];
+    }
+
+    if (user.billingAddress) {
+      const {
+        billingStreet,
+        billingCity,
+        billingState,
+        billingZip
+      } = user.billingAddress;
+      if (!billingStreet || !billingCity || !billingState || !billingZip) {
+        errors.emptyBillingFields = true;
+        hasError = true;
+        emptyFields.current = [...emptyFields.current, 'billingAddress.billingStreet', 'billingAddress.billingCity', 'billingAddress.billingState', 'billingAddress.billingZip'];
+      }
     }
 
     if (user.billingAddress && user.billingAddress.billingZip && (!/^\d{5}$/.test(user.billingAddress.billingZip) || Number.isNaN(Number(user.billingAddress.billingZip)))) {
