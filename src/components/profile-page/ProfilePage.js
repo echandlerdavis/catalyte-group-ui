@@ -8,9 +8,9 @@ import { Button } from '@material-ui/core';
 import { Save, Cancel } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import AppAlert from '../alert/Alert';
 import { fetchUser, parseCookies, saveUserData } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
+import Toast from '../toast/Toast';
 
 const ProfilePage = ({ user, setUser }) => {
   const [initialUser, setInitialUser] = useState(null);
@@ -361,13 +361,12 @@ const ProfilePage = ({ user, setUser }) => {
           </Button>
         </div>
       )}
-      {successToast && (
-        <AppAlert
-          severity="success"
-          message="User data saved successfully!"
-          onClose={() => setSuccessToast(false)}
-        />
-      )}
+      <Toast
+        open={successToast}
+        severity="success"
+        message="User data saved successfully!"
+        onClose={() => setSuccessToast(false)}
+      />
     </div>
   );
 };
