@@ -9,7 +9,7 @@ import styles from './FormItem.module.css';
  * @return component
  */
 const FormItem = ({
-  onChange, value, id, label, placeholder, type, className, min, step, autoCapitalize
+  onChange, value, id, label, placeholder, type, className, min, step
 }) => {
   const checkbox = (
     <Checkbox
@@ -33,7 +33,6 @@ const FormItem = ({
       checked={value}
       min={min}
       step={step}
-      autoCapitalize={autoCapitalize}
     />
   );
 
