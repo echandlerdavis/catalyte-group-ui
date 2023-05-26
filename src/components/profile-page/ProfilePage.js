@@ -365,7 +365,7 @@ const ProfilePage = ({ user, setUser }) => {
         open={successToast}
         severity="success"
         message="User data saved successfully!"
-        onClose={() => setSuccessToast(false)}
+        handleClose={() => setSuccessToast(false)}
       />
     </div>
   );
