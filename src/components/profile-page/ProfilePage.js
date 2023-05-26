@@ -106,7 +106,6 @@ const ProfilePage = ({ user, setUser }) => {
 
     formHasError.current = hasError;
     setFormErrorMessage(errors);
-    console.log(formErrorMessage);
 
     return !hasError;
   };
