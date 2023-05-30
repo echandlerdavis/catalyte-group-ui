@@ -9,6 +9,7 @@ import ProfilePage from '../profile-page/ProfilePage';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
 import FilterComponentExample from '../filter-component/FilterContainer';
+import { UserProvider } from './userContext';
 /**
  * @name App
  * @returns component
@@ -19,18 +20,22 @@ const App = () => {
     <div className="App">
       <div className="Container">
         <BrowserRouter>
-          <Header user={user} setUser={setUser} />
-          <main>
-            <Switch>
-              <Route exact path="/" render={() => <ProductPage />} />
-              <Route exact path="/checkout" render={() => <CheckoutPage />} />
-              <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
-              <Route path="/maintenance" render={() => <MaintenancePage />} />
-              <Route exact path="/profilepage" render={() => <ProfilePage user={user} setUser={setUser} />} />
-              <Route exact path="/filter" render={() => <FilterComponentExample />} />
-            </Switch>
-          </main>
-          <Footer />
+          <UserProvider
+            value={{ user, setUser }}
+          >
+            <Header />
+            <main>
+              <Switch>
+                <Route exact path="/" render={() => <ProductPage />} />
+                <Route exact path="/checkout" render={() => <CheckoutPage />} />
+                <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
+                <Route path="/maintenance" render={() => <MaintenancePage />} />
+                <Route exact path="/profilepage" render={() => <ProfilePage user={user} setUser={setUser} />} />
+                <Route exact path="/filter" render={() => <FilterComponentExample />} />
+              </Switch>
+            </main>
+            <Footer />
+          </UserProvider>
         </BrowserRouter>
       </div>
     </div>
