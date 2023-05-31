@@ -12,7 +12,7 @@ import setLastActive from '../../utils/UpdateLastActive';
  * @description Displays order items and subtotal
  * @return component
  */
-const ReviewOrderWidget = ({ promoCode, promoCodeSetter }) => {
+const ReviewOrderWidget = ({ promoCode, promoCodeSetter, shippingCost }) => {
   const { state: { products }, dispatch } = useCart();
   const [showModal, setShowModal] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
@@ -113,16 +113,20 @@ const ReviewOrderWidget = ({ promoCode, promoCodeSetter }) => {
       <hr />
       <div className={styles.subtotal}>
         <div>
-          {discount > 0 && <p>Discount</p>}
-          <br />
           <p>Subtotal</p>
+          {discount > 0 && <p>Discount</p>}
+          <p>Shipping</p>
+          <br />
+          <p>Total</p>
         </div>
         <div className={styles.price}>
+          <p>{toPrice(noDiscount)}</p>
           {discount > 0 && (
           <p>
             {`(${toPrice(discount)})`}
           </p>
           )}
+          <p>{toPrice(shippingCost)}</p>
           <br />
           <p>{toPrice(applyPromoCode(noDiscount, discount))}</p>
         </div>

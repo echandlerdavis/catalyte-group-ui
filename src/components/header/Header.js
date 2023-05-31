@@ -11,6 +11,7 @@ import styles from './Header.module.css';
 import constants from '../../utils/constants';
 import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
 import setLastActive from '../../utils/UpdateLastActive';
+import { useUser } from '../app/userContext';
 
 /**
  * @name Header
@@ -18,13 +19,13 @@ import setLastActive from '../../utils/UpdateLastActive';
  * @return component
  */
 const Header = () => {
-  const [user, setUser] = useState('');
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
   const {
     state: { products }
   } = useCart();
+  const { user, setUser } = useUser();
 
   // useEffect(() => {
   //   sessionStorage.clear();

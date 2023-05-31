@@ -5,7 +5,7 @@ import {
   useHistory,
   useRouteMatch
 } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+import { Button, Modal } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import Toast from '../toast/Toast';
 import styles from './MaintenancePage.module.css';
@@ -14,6 +14,7 @@ import ProductTable from '../product-table/ProductsTable';
 import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
 import constants from '../../utils/constants';
+import CreatePromoModal from './CreatePromoModalCard';
 
 /**
  * @name MaintenancePage
@@ -27,6 +28,10 @@ const MaintenancePage = () => {
   const [apiError, setApiError] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
+  const [openPromoModal, setOpenPromoModal] = useState(false);
+
+  const openModal = () => setOpenPromoModal(true);
+  const closeModal = () => setOpenPromoModal(false);
 
   const closeToast = () => {
     setToastOpen(false);
@@ -42,7 +47,6 @@ const MaintenancePage = () => {
 
   const history = useHistory();
   const { url, path } = useRouteMatch();
-
   /**
    * Elements viewed on the main maintenance route
    *
@@ -65,18 +69,27 @@ const MaintenancePage = () => {
   const headerButtons = (
     <section>
       <h2>Create New</h2>
-      <div className={styles.buttonSection}>
-        <Button
-          style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
-          disabled={false}
-          size="small"
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => history.push(`${url}/new/product`)}
-        >
-          Product
-        </Button>
-      </div>
+      <div className={styles.buttonSection} />
+      <Button
+        style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
+        disabled={false}
+        size="small"
+        variant="contained"
+        startIcon={<Add />}
+        onClick={() => history.push(`${url}/new/product`)}
+      >
+        Product
+      </Button>
+      <Button
+        style={{ backgroundColor: '#395aa1', color: 'white', borderRadius: 20 }}
+        disabled={false}
+        size="small"
+        variant="contained"
+        startIcon={<Add />}
+        onClick={openModal}
+      >
+        Promo Code
+      </Button>
     </section>
   );
 
@@ -88,11 +101,19 @@ const MaintenancePage = () => {
         severity={toastData.SEVERITY}
         handleClose={closeToast}
       />
+      <Modal open={openPromoModal} onClose={closeModal}>
+        <CreatePromoModal
+          open={openPromoModal}
+          onClose={closeModal}
+          setApiError={setApiError}
+          openToastSuccess={openToast}
+          setToastSuccessData={setToastData}
+        />
+      </Modal>
       <div className={styles.maintenanceHeader}>
         <h1>Maintenance</h1>
         {headerButtons}
       </div>
-
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
       {/* add nested routes to allow for other routes
         * in relation to the maintenance route to appear with maintenance header and error alert
