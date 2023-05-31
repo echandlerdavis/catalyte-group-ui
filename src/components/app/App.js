@@ -27,7 +27,7 @@ const App = () => (
             <Route path="/maintenance" render={() => <MaintenancePage />} />
             <Route exact path="/profilepage" render={() => <ProfilePage />} />
             <Route exact path="/filter" render={() => <FilterComponentExample />} />
-            <Route exact path="/:productid/new/review" render={() => <NewReviewPage />} />
+            <Route exact path="/:productId/new/review" render={() => <NewReviewPage />} />
 
           </Switch>
         </main>

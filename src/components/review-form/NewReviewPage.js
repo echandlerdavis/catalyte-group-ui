@@ -1,5 +1,5 @@
 import React, {
-  useState, useRef, useMemo
+  useState, useRef, useEffect
 } from 'react';
 import {
   Box, Button
@@ -10,29 +10,30 @@ import { useHistory, useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import FormItem from '../form/FormItem';
-import { saveReview, fetchUserAndFormData, fetchPurchases } from './ReviewPageService';
-import { parseCookies } from '../profile-page/ProfilePageService';
+import { saveReview, fetchProductIdsPurchased } from './ReviewPageService';
 import styles from './ReviewPage.module.css';
+import { useUser } from '../app/userContext';
 
 const NewReviewPage = () => {
   const date = new Date();
   const reviewDate = date.toISOString().split('T')[0];
   const { productId } = useParams();
+  const { user } = useUser();
   const history = useHistory();
   const initialFormData = {
     title: '',
     rating: 2.5,
     review: '',
     createdAt: reviewDate,
-    userName: '',
-    userEmail: ''
+    editedAt: reviewDate,
+    userName: `${user.firstName} ${user.lastName}`,
+    userEmail: user.email,
+    isActive: true
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [user, setUser] = useState(null);
   const [apiError, setApiError] = useState(false);
   const [reviewApiError, reviewSetApiError] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
   // const [toastData, setToastData] = useState('');
   // const [openToast, setOpenToast] = useState(false);
@@ -43,29 +44,19 @@ const NewReviewPage = () => {
   const inputsAreInvalid = useRef(false);
   const ratingIsInvalid = useRef(false);
 
-  // Checks if user is logged in
-  useMemo(() => {
-    const cookies = parseCookies();
-    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-    if (sessionStorage.length !== 0 && cookiesUser) {
-      setIsLoggedIn(true);
-      fetchUserAndFormData(cookiesUser.email, setUser, setFormData, formData, setApiError);
-    } else {
-      setIsLoggedIn(false);
-      setUser(null); // Clear the user data
-    }
-  }, [setApiError, setUser, setFormData, formData]);
+  useEffect(() => {
+    console.log(typeof productId);
+  });
 
-  useMemo(() => {
-    if (isLoggedIn && user) {
+  useEffect(() => {
+    if (user) {
       console.log(user);
-      fetchPurchases(user.email, setHasMadePurchase, setApiError, productId);
+      fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, productId);
       console.log(apiError);
       console.log(hasMadePurchase);
       console.log(reviewApiError);
     }
   }, [
-    isLoggedIn,
     setApiError,
     user,
     setHasMadePurchase,
@@ -123,7 +114,6 @@ const NewReviewPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormData({ ...formData, userEmail: user.email, userName: `${user.firstName} ${user.LastName}` });
     generateError();
     if (!formHasError.current) {
       const newReview = await saveReview(formData, reviewSetApiError, productId);

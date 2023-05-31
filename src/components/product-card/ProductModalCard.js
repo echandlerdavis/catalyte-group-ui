@@ -23,8 +23,8 @@ import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
-import { parseCookies } from '../profile-page/ProfilePageService';
-import { fetchUser, fetchPurchases } from '../review-form/ReviewPageService';
+import { fetchProductIdsPurchased } from '../review-form/ReviewPageService';
+import { useUser } from '../app/userContext';
 
 /**
  * @name useStyles
@@ -141,55 +141,16 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     SEVERITY: Constants.SEVERITY_LEVELS.INFO
   });
   // add Review content
-  const [user, setUser] = useState(null);
-  // const [purchases, setPurchases] = useState(false);
+  const { user } = useUser();
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
 
-  // Checks if user is logged in
   useEffect(() => {
-    const cookies = parseCookies();
-    const cookiesUser = cookies.user ? JSON.parse(cookies.user) : null;
-    if (sessionStorage.length !== 0 && cookiesUser) {
-      setIsLoggedIn(true);
-      fetchUser(cookiesUser.email, setUser, setApiError);
-    } else {
-      setIsLoggedIn(false);
-      setUser(null); // Clear the user data
+    if (user) {
+      fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, product.id);
     }
-  }, [setApiError]);
-
-  useEffect(() => {
-    if (isLoggedIn && user) {
-      fetchPurchases(user.email, setHasMadePurchase, setApiError, product.id);
-      console.log(apiError);
-      console.log(hasMadePurchase);
-      // console.log(purchases);
-    }
-  }, [isLoggedIn, setApiError, user, setHasMadePurchase, product, apiError, hasMadePurchase]);
-
-  // const findIfUserHasMadePurchase = useCallback(() => {
-  //   let purchaseFound = false;
-  //   Object.keys(purchases).forEach((key) => {
-  //     const productsArray = purchases[key].products;
-  //     if (productsArray.length > 0) {
-  //       const found = productsArray.some((item) => item.id === product.id);
-  //       if (found) {
-  //         purchaseFound = true;
-  //         console.log(apiError);
-  //       }
-  //     }
-  //   });
-  //   return purchaseFound;
-  // }, [apiError, product.id, purchases]);
-
-  // Checks if user has made purchase of the product.
-
-  // const hasMadePurchase = useMemo(() => {
-  //   findIfUserHasMadePurchase();
-  // }, [findIfUserHasMadePurchase]);
+  }, [user, setHasMadePurchase, setApiError, product]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -380,7 +341,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {hasMadePurchase && addReviewButton}
+              {hasMadePurchase && !apiError && addReviewButton}
             </CardContent>
 
           </div>

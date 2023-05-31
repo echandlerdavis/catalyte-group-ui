@@ -13,6 +13,7 @@ module.exports = Object.freeze({
   PLACEHOLDER_IMAGE: 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png',
   PURCHASE_ENDPOINT: '/purchases',
   PURCHASE_BY_EMAIL_ENDPOINT: (email) => `/purchases/${email}`,
+  PURCHASE_PRODUCT_IDS_BY_EMAIL_ENDPOINT: (email) => `/purchases/${email}/productIds`,
   STATES_ENDPOINT: '/purchases/StateOptions',
   ACTIVE_PRODUCT_ENDPOINT: '/products?active=true',
   PRODUCTS_ENPOINT: '/products',
