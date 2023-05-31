@@ -29,7 +29,6 @@ const App = () => (
           </Switch>
         </main>
         <Footer />
-        {/* </UserProvider> */}
       </BrowserRouter>
     </div>
   </div>
