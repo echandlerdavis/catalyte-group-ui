@@ -50,7 +50,7 @@ export default function SingleReview({ review }) {
               </Typography>
             </Grid>
             <Grid item xs={3} container justifyContent="flex-end">
-              <Rating name="read-only" className={styles.span} value={review.rating} size="small" readOnly />
+              <Rating name="read-only" className={styles.span} value={review.rating} size="small" precision={0.5} readOnly />
             </Grid>
           </Grid>
           <Grid item xs={12} container>

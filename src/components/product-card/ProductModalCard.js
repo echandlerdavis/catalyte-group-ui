@@ -1,5 +1,5 @@
 import React, {
-  useState, useRef, useEffect
+  useState, useRef, useEffect, useCallback
 } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -146,11 +146,24 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
 
+  const validateUserCanReview = useCallback(() => {
+    const reviewList = product.reviews;
+    if (reviewList.length !== 0) {
+      Object.keys(reviewList).forEach((key) => {
+        if (reviewList[key].userEmail === user.email && reviewList[key].isActive) {
+          return false;
+        }
+        return true;
+      });
+    }
+    return true;
+  }, [product, user]);
+
   useEffect(() => {
-    if (user) {
+    if (user && validateUserCanReview) {
       fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, product.id);
     }
-  }, [user, setHasMadePurchase, setApiError, product]);
+  }, [user, validateUserCanReview, setHasMadePurchase, setApiError, product]);
 
   const closeToast = () => {
     setOpenToast(false);

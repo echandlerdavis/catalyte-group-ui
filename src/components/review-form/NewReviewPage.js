@@ -45,12 +45,7 @@ const NewReviewPage = () => {
   const ratingIsInvalid = useRef(false);
 
   useEffect(() => {
-    console.log(typeof productId);
-  });
-
-  useEffect(() => {
     if (user) {
-      console.log(user);
       fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, productId);
       console.log(apiError);
       console.log(hasMadePurchase);
@@ -127,16 +122,16 @@ const NewReviewPage = () => {
     }
   };
 
-  // if (!isLoggedIn || !hasMadePurchase) {
-  //   console.log(reviewApiError);
-  //   return (
-  //     <AppAlert
-  //       severity={SEVERITY_LEVELS.ERROR}
-  //       title="Error"
-  //       message="userErrorMessage placeolder"
-  //     />
-  //   );
-  // }
+  if (!user || !hasMadePurchase) {
+    console.log(reviewApiError);
+    return (
+      <AppAlert
+        severity={SEVERITY_LEVELS.ERROR}
+        title="Error"
+        message="userErrorMessage placeolder"
+      />
+    );
+  }
 
   return (
     <>
