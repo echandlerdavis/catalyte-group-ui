@@ -27,10 +27,6 @@ const Header = () => {
   } = useCart();
   const { user, setUser } = useUser();
 
-  // useEffect(() => {
-  //   sessionStorage.clear();
-  // });
-
   /**
    * @name handleGoogleLoginSuccess
    * @description Function to run if google login was successful
