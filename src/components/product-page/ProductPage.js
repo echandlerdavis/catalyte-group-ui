@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from '@material-ui/core';
+import { Switch, Route } from 'react-router-dom';
 import ProductCard from '../product-card/ProductCard';
 import styles from './ProductPage.module.css';
 import Constants from '../../utils/constants';
@@ -7,6 +8,7 @@ import fetchProducts from './ProductPageService';
 import AppAlert from '../alert/Alert';
 import ProductModalCard from '../product-card/ProductModalCard';
 import Toast from '../toast/Toast';
+import NewReviewPage from '../review-form/NewReviewPage';
 
 /**
  * @name ProductPage
@@ -46,8 +48,8 @@ const ProductPage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
-  return (
-    <article>
+  const mainComponent = (
+    <>
       <Modal
         open={showModal}
       >
@@ -58,13 +60,6 @@ const ProductPage = () => {
           setToastCallback={setToastData}
         />
       </Modal>
-      <Toast
-        message={toastData.MESSAGE}
-        open={open}
-        severity={toastData.SEVERITY}
-        handleClose={closeToast}
-      />
-      {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <section className={styles.app}>
         {products.map((product) => (
           <div key={product.id}>
@@ -77,6 +72,21 @@ const ProductPage = () => {
           </div>
         ))}
       </section>
+    </>
+  );
+  return (
+    <article>
+      <Toast
+        message={toastData.MESSAGE}
+        open={open}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
+      {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
+      <Switch>
+        <Route path="/:productId/new/review" render={() => <NewReviewPage product={modalProduct} />} />
+        <Route path="" render={() => mainComponent} />
+      </Switch>
     </article>
   );
 };

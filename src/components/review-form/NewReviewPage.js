@@ -14,13 +14,13 @@ import { saveReview, fetchProductIdsPurchased } from './ReviewPageService';
 import styles from './ReviewPage.module.css';
 import { useUser } from '../app/userContext';
 
-const NewReviewPage = () => {
-  const date = new Date();
-  const reviewDate = date.toISOString().split('T')[0];
+const NewReviewPage = ({ product }) => {
   const { productId } = useParams();
   const { user } = useUser();
+  const date = new Date();
+  const reviewDate = date.toISOString().split('T')[0];
   const history = useHistory();
-  const initialFormData = {
+  const initialFormData = user ? {
     title: '',
     rating: 2.5,
     review: '',
@@ -28,6 +28,15 @@ const NewReviewPage = () => {
     editedAt: reviewDate,
     userName: `${user.firstName} ${user.lastName}`,
     userEmail: user.email,
+    isActive: true
+  } : {
+    title: '',
+    rating: 2.5,
+    review: '',
+    createdAt: reviewDate,
+    editedAt: reviewDate,
+    userName: '',
+    userEmail: '',
     isActive: true
   };
 
@@ -37,7 +46,7 @@ const NewReviewPage = () => {
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
   // const [toastData, setToastData] = useState('');
   // const [openToast, setOpenToast] = useState(false);
-  // const [userErrorMessage, setUserErrorMessage] = useState('');
+  const [userErrorMessage, setUserErrorMessage] = useState('');
 
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
@@ -50,6 +59,8 @@ const NewReviewPage = () => {
       console.log(apiError);
       console.log(hasMadePurchase);
       console.log(reviewApiError);
+    } else {
+      setUserErrorMessage('You must be logged in to write a new review.');
     }
   }, [
     setApiError,
@@ -58,7 +69,8 @@ const NewReviewPage = () => {
     productId,
     apiError,
     hasMadePurchase,
-    reviewApiError
+    reviewApiError,
+    setUserErrorMessage
   ]);
 
   const validateInputs = () => {
@@ -122,13 +134,14 @@ const NewReviewPage = () => {
     }
   };
 
-  if (!user || !hasMadePurchase) {
+  // potentially as hasMadePurchase - call in review page
+  if (!user) {
     console.log(reviewApiError);
     return (
       <AppAlert
         severity={SEVERITY_LEVELS.ERROR}
         title="Error"
-        message="userErrorMessage placeolder"
+        message={userErrorMessage}
       />
     );
   }
@@ -136,7 +149,9 @@ const NewReviewPage = () => {
   return (
     <>
       <h2>
-        New Review
+        New Review for
+        {' '}
+        {product.name}
       </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <form onSubmit={handleSubmit}>
