@@ -14,7 +14,7 @@ import { saveReview, fetchProductIdsPurchased } from './ReviewPageService';
 import styles from './ReviewPage.module.css';
 import { useUser } from '../app/userContext';
 
-const NewReviewPage = ({ product }) => {
+const NewReviewPage = ({ product, openToast, setToastData }) => {
   const { productId } = useParams();
   const { user } = useUser();
   const date = new Date();
@@ -125,12 +125,12 @@ const NewReviewPage = ({ product }) => {
     if (!formHasError.current) {
       const newReview = await saveReview(formData, reviewSetApiError, productId);
       if (newReview) {
-        // setToastData(constants.SAVE_REVIEW_SUCCESS);
+        setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
       } else {
-        // setToastData(constants.SAVE_REVIEW_FAILURE);
+        setToastData(constants.SAVE_REVIEW_FAILURE);
       }
-      // openToast();
+      openToast();
     }
   };
 

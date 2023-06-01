@@ -84,7 +84,7 @@ const ProductPage = () => {
       />
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <Switch>
-        <Route path="/:productId/new/review" render={() => <NewReviewPage product={modalProduct} />} />
+        <Route path="/:productId/new/review" render={() => <NewReviewPage product={modalProduct} openToast={openToast} setToastData={setToastData} />} />
         <Route path="" render={() => mainComponent} />
       </Switch>
     </article>
