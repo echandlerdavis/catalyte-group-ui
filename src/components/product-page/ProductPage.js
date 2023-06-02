@@ -66,20 +66,22 @@ const ProductPage = () => {
         handleClose={closeToast}
       />
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
-      <section className={styles.app}>
+      <section className={styles.appContainer}>
         <div className={styles.sideBar}>
           <FilterMenu />
         </div>
-        {products.map((product) => (
-          <div key={product.id}>
-            <ProductCard
-              product={product}
-              clickAction={displayModal}
-              openToast={openToast}
-              setToastData={setToastData}
-            />
-          </div>
-        ))}
+        <div className={styles.app}>
+          {products.map((product) => (
+            <div key={product.id}>
+              <ProductCard
+                product={product}
+                clickAction={displayModal}
+                openToast={openToast}
+                setToastData={setToastData}
+              />
+            </div>
+          ))}
+        </div>
       </section>
     </article>
   );

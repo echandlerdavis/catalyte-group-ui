@@ -79,16 +79,14 @@ const FilterMenu = () => {
   };
 
   return (
-    <aside>
+    <aside style={{ height: '100%' }}>
       <button
         type="button"
         style={{
-          float: 'right', width: 'fit-content', height: '100%', cursor: 'pointer', margin: '1px'
+          float: 'right', width: '1px', height: '100%', cursor: 'pointer', margin: '1px'
         }}
         onClick={toggleOpen}
-      >
-        Filters
-      </button>
+      />
       <div className={styles.filterContainer} style={{ display: displayMenu }}>
         {Object.keys(testFilters).map((filterName) => {
           const filterOptions = Object.keys(testFilters[filterName]);

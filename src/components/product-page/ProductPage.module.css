@@ -2,14 +2,16 @@
   display: grid;
   grid-gap: 15px;
   grid-template-columns: repeat(6, auto);
-  grid-template-rows: repeat(auto, auto);
   justify-content: space-evenly;
   margin: 20px;
   width: fit-content;
 }
+.appContainer {
+  display: grid;
+  grid-template-areas: 'sideBar app';
+}
 .sideBar {
-    grid-column: 1;
-    grid-row: 1/1000;
+    grid-area: 'sideBar';
     float: 'left';
     width: 'fit-content';
     height: '100%';
