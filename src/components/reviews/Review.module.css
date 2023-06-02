@@ -3,3 +3,15 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.review {
+  margin-bottom: 1em!important;
+}
+
+.writtenDate {
+  flex-basis: 95%;
+}
+
+.trashcan:hover {
+  cursor: pointer
+}

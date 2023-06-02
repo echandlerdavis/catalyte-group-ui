@@ -1,4 +1,5 @@
 import HttpHelper from '../../utils/HttpHelper';
+import { getUserFromCookies } from '../../utils/UpdateLastActive';
 
 /**
  * @name getUserByEmail
@@ -64,6 +65,14 @@ const loginUser = async (googleUser, setUser, setApiError) => {
   const userByEmailExists = await getUserByEmail(googleUser.email, setUser);
   if (!userByEmailExists) {
     createUser(googleUser, setUser, setApiError);
+  }
+};
+
+export const clearUserCookie = () => {
+  const user = getUserFromCookies();
+  if (user) {
+    const now = new Date();
+    document.cookie = `user=${JSON.stringify(user)}; expires=${now.toUTCString()};`;
   }
 };
 
