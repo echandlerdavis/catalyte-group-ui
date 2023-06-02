@@ -2,7 +2,7 @@ import React, {
   useState, useRef, useEffect
 } from 'react';
 import {
-  Box, Button
+  Box, Button, Card
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { Cancel, Save } from '@material-ui/icons';
@@ -10,7 +10,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import FormItem from '../form/FormItem';
-import { saveReview, fetchProductIdsPurchased } from './ReviewPageService';
+import { saveReview } from './ReviewPageService';
 import styles from './ReviewPage.module.css';
 import { useUser } from '../app/userContext';
 
@@ -42,10 +42,6 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [apiError, setApiError] = useState(false);
-  const [reviewApiError, reviewSetApiError] = useState(false);
-  const [hasMadePurchase, setHasMadePurchase] = useState(false);
-  // const [toastData, setToastData] = useState('');
-  // const [openToast, setOpenToast] = useState(false);
   const [userErrorMessage, setUserErrorMessage] = useState('');
 
   const [formErrorMessage, setFormErrorMessage] = useState(null);
@@ -54,24 +50,10 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
   const ratingIsInvalid = useRef(false);
 
   useEffect(() => {
-    if (user) {
-      fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, productId);
-      console.log(apiError);
-      console.log(hasMadePurchase);
-      console.log(reviewApiError);
-    } else {
-      setUserErrorMessage('You must be logged in to write a new review.');
+    if (!user) {
+      setUserErrorMessage('You must be logged in to write a review.');
     }
-  }, [
-    setApiError,
-    user,
-    setHasMadePurchase,
-    productId,
-    apiError,
-    hasMadePurchase,
-    reviewApiError,
-    setUserErrorMessage
-  ]);
+  }, [user]);
 
   const validateInputs = () => {
     const summary = formData.title;
@@ -123,8 +105,9 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
     e.preventDefault();
     generateError();
     if (!formHasError.current) {
-      const newReview = await saveReview(formData, reviewSetApiError, productId);
-      if (newReview) {
+      const newReview = await saveReview(formData, setApiError, productId);
+      console.log(newReview);
+      if (newReview && !newReview.error) {
         setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
       } else {
@@ -134,9 +117,7 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
     }
   };
 
-  // potentially as hasMadePurchase - call in review page
   if (!user) {
-    console.log(reviewApiError);
     return (
       <AppAlert
         severity={SEVERITY_LEVELS.ERROR}
@@ -147,50 +128,54 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
   }
 
   return (
-    <>
+    <div className={styles.pageContainer}>
       <h2>
         New Review for
         {' '}
         {product.name}
       </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
-      <form onSubmit={handleSubmit}>
-        <div className={styles.ratingContainer}>
-          <Box component="fieldset" mb={3} borderColor="transparent">
-            <input
-              name="rating"
-              type="number"
-              value={formData.rating}
-              hidden
-              readOnly
-            />
-            <Rating
-              name="rating"
-              value={Number(formData.rating)}
-              label="Rating"
-              precision={0.5}
-              onChange={handleFormChange}
-            />
-          </Box>
-        </div>
-        <div>
-          <FormItem
-            placeholder="Review Summary"
-            type="text"
-            id="title"
-            label="Summary"
-            onChange={handleFormChange}
-            value={formData.title}
-          />
-          <FormItem
-            placeholder="Write commentary here"
-            type="textarea"
-            id="review"
-            label="Commentary"
-            onChange={handleFormChange}
-            value={formData.review}
-          />
+      <Card className={styles.formCard}>
+        <form onSubmit={handleSubmit}>
+
           <div>
+            <FormItem
+              placeholder="Review Summary"
+              type="text"
+              id="title"
+              label="Summary"
+              onChange={handleFormChange}
+              value={formData.title}
+            />
+            <FormItem
+              placeholder="Write commentary here"
+              type="textarea"
+              id="review"
+              label="Commentary"
+              onChange={handleFormChange}
+              value={formData.review}
+            />
+          </div>
+
+          <div className={styles.ratingContainer}>
+            <Box component="fieldset" mb={3} borderColor="transparent">
+              <input
+                name="rating"
+                type="number"
+                value={formData.rating}
+                hidden
+                readOnly
+              />
+              <Rating
+                name="rating"
+                value={Number(formData.rating)}
+                precision={0.5}
+                onChange={handleFormChange}
+              />
+            </Box>
+          </div>
+
+          <div className={styles.buttonContainer}>
             <Button
               type="button"
               startIcon={<Cancel />}
@@ -219,9 +204,9 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
               Submit
             </Button>
           </div>
-        </div>
-      </form>
-    </>
+        </form>
+      </Card>
+    </div>
   );
 };
 

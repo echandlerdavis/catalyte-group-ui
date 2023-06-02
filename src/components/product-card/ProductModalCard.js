@@ -143,6 +143,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   // add Review content
   const { user } = useUser();
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
+  const [hasNotReviewed, setHasNotReviewed] = useState(false);
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
 
@@ -154,16 +155,28 @@ const ProductModalCard = React.forwardRef((props, ref) => {
 
   const validateUserCanReview = useCallback(() => {
     const reviewList = product.reviews;
-    if (reviewList.length !== 0) {
-      Object.keys(reviewList).forEach((key) => {
-        if (reviewList[key].userEmail === user.email && reviewList[key].isActive) {
-          return false;
-        }
-        return true;
-      });
+    const activeReviewList = [];
+    reviewList.forEach((review) => {
+      if (review.active) {
+        activeReviewList.push(review.userEmail);
+      }
+    });
+    if (activeReviewList.length !== 0) {
+      if (activeReviewList.includes(user.email)) {
+        setHasNotReviewed(false);
+      } else {
+        setHasNotReviewed(true);
+      }
+    } else {
+      setHasNotReviewed(true);
     }
-    return true;
   }, [product, user]);
+
+  useEffect(() => {
+    if (user) {
+      validateUserCanReview();
+    }
+  }, [user, validateUserCanReview]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -354,7 +367,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                 </CardActions>
               </div>
               <Reviews productId={product.id} />
-              {hasMadePurchase && validateUserCanReview && !apiError && addReviewButton}
+              {hasMadePurchase && hasNotReviewed && !apiError && addReviewButton}
             </CardContent>
 
           </div>
