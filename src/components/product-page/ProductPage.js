@@ -7,6 +7,7 @@ import fetchProducts from './ProductPageService';
 import AppAlert from '../alert/Alert';
 import ProductModalCard from '../product-card/ProductModalCard';
 import Toast from '../toast/Toast';
+import FilterMenu from '../filter-component/FilterContainer';
 
 /**
  * @name ProductPage
@@ -47,7 +48,7 @@ const ProductPage = () => {
   }, []);
 
   return (
-    <article>
+    <article style={{ width: 'fit-content' }}>
       <Modal
         open={showModal}
       >
@@ -66,6 +67,9 @@ const ProductPage = () => {
       />
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <section className={styles.app}>
+        <div className={styles.sideBar}>
+          <FilterMenu />
+        </div>
         {products.map((product) => (
           <div key={product.id}>
             <ProductCard

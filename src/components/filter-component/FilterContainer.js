@@ -7,7 +7,7 @@ import styles from './FilterContainer.module.css';
  *  - Implementation will vary based on how you set the filters and pass the value of the options
  * @returns card housing the filter component
  */
-const FilterComponentExample = () => {
+const FilterMenu = () => {
   const testFilters = {
     Types: { Shorts: false, Hat: false, Gloves: false },
     Demographics: { Men: false, Women: false, Kids: false },
@@ -17,6 +17,21 @@ const FilterComponentExample = () => {
       Champion: false,
       'New Balance': false
     }
+  };
+  const [displayMenu, setDisplayMenu] = useState('none');
+  const toggleOpen = () => {
+    switch (displayMenu) {
+      case 'none':
+        setDisplayMenu('block');
+        break;
+      case 'block':
+        setDisplayMenu('none');
+        break;
+      default:
+        setDisplayMenu('none');
+        break;
+    }
+    console.log('toggled open: ', displayMenu);
   };
 
   const [filters, setFilters] = useState({ ...testFilters });
@@ -64,26 +79,33 @@ const FilterComponentExample = () => {
   };
 
   return (
-    <article>
-      <section>
-        <div className={styles.filterContainer}>
-          {Object.keys(testFilters).map((filterName) => {
-            const filterOptions = Object.keys(testFilters[filterName]);
-            return (
-              <FilterComponent
-                key={filterName}
-                fieldName={filterName}
-                id={filterName}
-                options={filterOptions}
-                value={selected.current.value}
-                onChange={onChange}
-              />
-            );
-          })}
-        </div>
-      </section>
-    </article>
+    <aside>
+      <button
+        type="button"
+        style={{
+          float: 'right', width: 'fit-content', height: '100%', cursor: 'pointer', margin: '1px'
+        }}
+        onClick={toggleOpen}
+      >
+        Filters
+      </button>
+      <div className={styles.filterContainer} style={{ display: displayMenu }}>
+        {Object.keys(testFilters).map((filterName) => {
+          const filterOptions = Object.keys(testFilters[filterName]);
+          return (
+            <FilterComponent
+              key={filterName}
+              fieldName={filterName}
+              id={filterName}
+              options={filterOptions}
+              value={selected.current.value}
+              onChange={onChange}
+            />
+          );
+        })}
+      </div>
+    </aside>
   );
 };
 
-export default FilterComponentExample;
+export default FilterMenu;
