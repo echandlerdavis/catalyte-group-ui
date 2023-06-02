@@ -9,7 +9,8 @@ import {
   TableRow,
   Checkbox
 } from '@material-ui/core';
-import { Lens, TripOrigin, Delete } from '@material-ui/icons';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlined';
+import { Lens, TripOrigin } from '@material-ui/icons';
 import './ProductsTable.module.css';
 
 /**
@@ -18,7 +19,7 @@ import './ProductsTable.module.css';
  * @param {*} props products
  * @returns component
  */
-const ProductTable = ({ products }) => {
+const ProductTable = ({ products, handleDelete }) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
@@ -102,6 +103,12 @@ const ProductTable = ({ products }) => {
     return value;
   };
 
+  const handleDeleteClick = (ProductId) => {
+    if (handleDelete) {
+      handleDelete(productId);
+    }
+  };
+
   // Map the row data for each product
   const rowData = products.map(((product) => {
     // For each product get the data columns by returning the product's attribute value
@@ -115,8 +122,22 @@ const ProductTable = ({ products }) => {
         </TableCell>
       );
     });
+
+    const deleteButton = (
+      <TableCell>
+        <IconButton onClick={() => handleDeleteClick(product.id)} color="secondary">
+          <DeleteOutlineIcon />
+        </IconButton>
+      </TableCell>
+    );
+
     // Return the row with each data column
-    return <TableRow key={product.id}>{productColumns}</TableRow>;
+    return (
+      <TableRow key={product.id}>
+        {productColumns}
+        {deleteButton}
+      </TableRow>
+    );
   }));
 
   return (
@@ -126,17 +147,11 @@ const ProductTable = ({ products }) => {
           <TableHead>
             <TableRow>
               {tableHeaders}
-              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {/* Display row data for the number of rows chosen in pagination options */}
             {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
-            <TableRow key={rowData.key}>
-              <TableCell>
-                <Delete />
-              </TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
