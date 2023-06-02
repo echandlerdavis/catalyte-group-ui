@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProductPage from '../product-page/ProductPage';
@@ -12,26 +12,23 @@ import Footer from '../footer/Footer';
  * @name App
  * @returns component
  */
-const App = () => {
-  const [user, setUser] = useState(null);
-  return (
-    <div className="App">
-      <div className="Container">
-        <BrowserRouter>
-          <Header user={user} setUser={setUser} />
-          <main>
-            <Switch>
-              <Route exact path="/" render={() => <ProductPage />} />
-              <Route exact path="/checkout" render={() => <CheckoutPage />} />
-              <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
-              <Route path="/maintenance" render={() => <MaintenancePage />} />
-              <Route exact path="/profilepage" render={() => <ProfilePage user={user} setUser={setUser} />} />
-            </Switch>
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </div>
+const App = () => (
+  <div className="App">
+    <div className="Container">
+      <BrowserRouter>
+        <Header />
+        <main>
+          <Switch>
+            <Route exact path="/" render={() => <ProductPage />} />
+            <Route exact path="/checkout" render={() => <CheckoutPage />} />
+            <Route exact path="/confirmation" render={() => <ConfirmationPage />} />
+            <Route path="/maintenance" render={() => <MaintenancePage />} />
+            <Route exact path="/profilepage" render={() => <ProfilePage />} />
+          </Switch>
+        </main>
+        <Footer />
+      </BrowserRouter>
     </div>
-  );
-};
+  </div>
+);
 export default App;

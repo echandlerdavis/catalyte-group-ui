@@ -4,26 +4,28 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PersonIcon from '@material-ui/icons/Person';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import loginUser from './HeaderService';
+import loginUser, { clearUserCookie } from './HeaderService';
 import iconWithBadge from './IconWithBadge';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './Header.module.css';
 import constants from '../../utils/constants';
 import javaTheHuttLogo from '../../assets/images/javaTheHuttLogo.jpg';
 import setLastActive from '../../utils/UpdateLastActive';
+import { useUser } from '../app/userContext';
 
 /**
  * @name Header
  * @description Displays the navigation header
  * @return component
  */
-const Header = ({ user, setUser }) => {
+const Header = () => {
   const [googleError, setGoogleError] = useState('');
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
   const {
     state: { products }
   } = useCart();
+  const { user, setUser } = useUser();
 
   /**
    * @name handleGoogleLoginSuccess
@@ -60,6 +62,7 @@ const Header = ({ user, setUser }) => {
     setUser(null);
     setGoogleError('');
     sessionStorage.removeItem('token');
+    clearUserCookie();
     history.push('/');
     window.dispatchEvent(new Event('logout'));
   };
