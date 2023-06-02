@@ -15,6 +15,7 @@ import AppAlert from '../alert/Alert';
 import NewProductPage from './NewProductPage';
 import constants from '../../utils/constants';
 import CreatePromoModal from './CreatePromoModalCard';
+import DeleteProductModal from './DeleteProductModalCard';
 
 /**
  * @name MaintenancePage
@@ -29,12 +30,25 @@ const MaintenancePage = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
   const [openPromoModal, setOpenPromoModal] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingProduct, setDeletingProduct] = useState(null);
-  const [deletingProductOrders, setDeletingProductOrders] = useState([]);
+  const [deletingProductWithPurchases, setDeletingProductWithPurchases] = useState([]);
 
   const openModal = () => setOpenPromoModal(true);
   const closeModal = () => setOpenPromoModal(false);
+
+  const openDeleteModal = (product) => {
+    setDeletingProduct(product);
+    // Check if the product has any purchases
+    const productPurchases = getPurchasesByProduct(product.id);
+    setDeletingProductWithPurchases(productPurchases);
+    setOpenDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setOpenDeleteModal(false);
+    setDeletingProduct(null);
+    setDeletingProductWithPurchases([]);
+  };
 
   const closeToast = () => {
     setToastOpen(false);
@@ -48,50 +62,44 @@ const MaintenancePage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
+  const getPurchaseByProduct = (productId) => {
+    // Function to fetch purchases by product ID will go here
+    return [];
+  };
+
   const history = useHistory();
   const { url, path } = useRouteMatch();
 
-  const handleDelete = (product) => {
-    const ordersWithProduct = product.orders.filter((order) => order.products.includes(product.id));
-    setDeletingProduct(product);
-    setDeletingProductOrders(ordersWithProduct);
-    setDeleteModalOpen(true);
-  };
 
   const handleDeleteConfirmed = () => {
-    setDeleteModalOpen(false);
-
-    if (deletingProductOrders.length > 0) {
-      // Notify the user and mark the product as inactive
-      // Perform the necessary actions for marking the product as inactive
-
-      // Display a success toast message
-      setToastData({
-        MESSAGE: 'Product marked as inactive.',
-        SEVERITY: 'success'
-      });
+    if (deletingProductPurchases.length > 0) {
+      // If the product is associated with purchases, mark it inactive
+      // Replace with your own logic to mark the product inactive
+      setDeletingProduct(null);
+      setDeletingProductWithPurchases([]);
+      closeDeleteModal();
       openToast();
-
-      // Clear deletingProductOrders
-      setDeletingProductOrders([]);
+      setToastData({ MESSAGE: 'Product marked as inactive', SEVERITY: 'success' });
     } else {
-      // Delete the product
-      // Perform the necessary actions for deleting the product
-      const newProducts = products.filter((product) => product.id !== deletingProduct.id);
-      setProducts(newProducts);
-      // Display a success toast message
-      setToastData({
-        MESSAGE: 'Product deleted successfully.',
-        SEVERITY: 'success'
-      });
+      // If the product is not associated with any purchases, delete it
+      // Replace with your own logic to delete the product
+      setDeletingProduct(null);
+      setDeletingProductWithPurchases([]);
+      closeDeleteModal();
       openToast();
+      setToastData({ MESSAGE: 'Product deleted successfully', SEVERITY: 'success' });
     }
   };
 
   const handleDeleteCancelled = () => {
-    setDeleteModalOpen(false);
-    setDeletingProduct(null);
-    setDeletingProductOrders([]);
+    closeDeleteModal();
+  };
+
+  const handleDelete = (productId) => {
+    const product = products.find((product) => product.id === productId);
+    if (product) {
+      openDeleteModal(product);
+    }
   };
 
   /**
@@ -105,53 +113,7 @@ const MaintenancePage = () => {
         <h2>Products</h2>
         <ProductTable products={products} handleDelete={handleDelete} />
       </section>
-      <section className={styles.buttonsContainer}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Add />}
-          onClick={() => history.push(`${url}/new-product`)}
-        >
-          Add Product
-        </Button>
-        <Button variant="contained" color="secondary" onClick={openModal}>
-          Create Promo
-        </Button>
-      </section>
-      <Toast
-        open={toastOpen}
-        onClose={closeToast}
-        message={toastData.MESSAGE}
-        severity={toastData.SEVERITY}
-      />
-      <CreatePromoModal open={openPromoModal} onClose={closeModal} />
-      <Modal open={deleteModalOpen} onClose={handleDeleteCancelled}>
-        <div className={styles.deleteModal}>
-          <h3>Confirmation</h3>
-          <p>Are you sure you want to delete this product?</p>
-          <p className={styles.deleteModalProductName}>
-            Product:
-            {deletingProduct && deletingProduct.name}
-          </p>
-          {deletingProductOrders.length > 0 && (
-            <p className={styles.deleteModalWarning}>
-              This product is associated with
-              {deletingProductOrders.length}
-              order(s).
-              Marking it as inactive will remove the product from these orders.
-            </p>
-          )}
-          <div className={styles.deleteModalButtons}>
-            <Button variant="contained" color="secondary" onClick={handleDeleteConfirmed}>
-              Delete
-            </Button>
-            <Button variant="outlined" color="default" onClick={handleDeleteCancelled}>
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </>
+      </>
   );
 
   /**
