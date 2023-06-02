@@ -9,7 +9,7 @@ import {
   TableRow,
   Checkbox
 } from '@material-ui/core';
-import { Lens, TripOrigin } from '@material-ui/icons';
+import { Lens, TripOrigin, Delete } from '@material-ui/icons';
 import './ProductsTable.module.css';
 
 /**
@@ -126,11 +126,17 @@ const ProductTable = ({ products }) => {
           <TableHead>
             <TableRow>
               {tableHeaders}
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {/* Display row data for the number of rows chosen in pagination options */}
             {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+            <TableRow key={rowData.key}>
+              <TableCell>
+                <Delete />
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

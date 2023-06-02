@@ -6,7 +6,7 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 import { Button, Modal } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Delete } from '@material-ui/icons';
 import Toast from '../toast/Toast';
 import styles from './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
@@ -29,6 +29,9 @@ const MaintenancePage = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
   const [openPromoModal, setOpenPromoModal] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingProduct, setDeletingProduct] = useState(null);
+  const [deletingProductOrders, setDeletingProductOrders] = useState([]);
 
   const openModal = () => setOpenPromoModal(true);
   const closeModal = () => setOpenPromoModal(false);
@@ -47,6 +50,47 @@ const MaintenancePage = () => {
 
   const history = useHistory();
   const { url, path } = useRouteMatch();
+
+  const handleDelete = (product) => {
+    setDeletingProduct(product);
+    const ordersWithProduct = product.orders.filter(order => order.products.includes(product.id));
+    setDeletingProductOrders(ordersWithProduct);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirmed = () => {
+    setDeleteModalOpen(false);
+
+    if (deletingProductOrders.length > 0) {
+      // Notify the user and mark the product as inactive
+      // Perform the necessary actions for marking the product as inactive
+      setDeletingProductOrders([]);
+      // Display a success toast message
+      setToastData({
+        MESSAGE: 'Product marked as inactive.',
+        SEVERITY: 'success'
+      });
+      openToast();
+    } else {
+      // Delete the product
+      // Perform the necessary actions for deleting the product
+      const newProducts = products.filter(product => product.id !== deletingProduct.id);
+      setProducts(newProducts);
+      // Display a success toast message
+      setToastData({
+        MESSAGE: 'Product deleted successfully.',
+        SEVERITY: 'success'
+      });
+      openToast();
+    }
+  };
+
+  const handleDeleteCancelled = () => {
+    setDeleteModalOpen(false);
+    setDeletingProduct(null);
+    setDeletingProductOrders([]);
+  };
+
   /**
    * Elements viewed on the main maintenance route
    *
@@ -56,8 +100,51 @@ const MaintenancePage = () => {
     <>
       <section>
         <h2>Products</h2>
-        <ProductTable products={products} />
+        <ProductTable products={products} handleDelete={handleDelete} />
       </section>
+      <section className={styles.buttonsContainer}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Add />}
+          onClick={() => history.push(`${url}/new-product`)}
+        >
+          Add Product
+        </Button>
+        <Button variant="contained" color="secondary" onClick={openModal}>
+          Create Promo
+        </Button>
+      </section>
+      <Toast
+        open={toastOpen}
+        onClose={closeToast}
+        message={toastData.MESSAGE}
+        severity={toastData.SEVERITY}
+      />
+      <CreatePromoModal open={openPromoModal} onClose={closeModal} />
+      <Modal open={deleteModalOpen} onClose={handleDeleteCancelled}>
+        <div className={styles.deleteModal}>
+          <h3>Confirmation</h3>
+          <p>Are you sure you want to delete this product?</p>
+          <p className={styles.deleteModalProductName}>
+            Product: {deletingProduct && deletingProduct.name}
+          </p>
+          {deletingProductOrders.length > 0 && (
+            <p className={styles.deleteModalWarning}>
+              This product is associated with {deletingProductOrders.length} order(s).
+              Marking it as inactive will remove the product from these orders.
+            </p>
+          )}
+          <div className={styles.deleteModalButtons}>
+            <Button variant="contained" color="secondary" onClick={handleDeleteConfirmed}>
+              Delete
+            </Button>
+            <Button variant="outlined" color="default" onClick={handleDeleteCancelled}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 
