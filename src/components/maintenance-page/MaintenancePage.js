@@ -56,7 +56,7 @@ const MaintenancePage = () => {
     <>
       <section>
         <h2>Products</h2>
-        <ProductTable products={products} />
+        <ProductTable products={products} setProducts={setProducts} />
       </section>
     </>
   );

@@ -7,10 +7,18 @@ import {
   TablePagination,
   TableHead,
   TableRow,
-  Checkbox
+  Checkbox,
+  Input
 } from '@material-ui/core';
-import { Lens, TripOrigin } from '@material-ui/icons';
+import {
+  Lens,
+  TripOrigin
+} from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/EditOutlined';
 import './ProductsTable.module.css';
+import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
+import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
+import IconButton from '@material-ui/core/IconButton';
 
 /**
  * @name ProductTable
@@ -18,19 +26,52 @@ import './ProductsTable.module.css';
  * @param {*} props products
  * @returns component
  */
-const ProductTable = ({ products }) => {
+const ProductTable = ({ products, setProducts }) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [previous, setPrevious] = React.useState({});
+
+  const onToggleEditMode = (id) => {
+    setProducts(() => products.map((row) => {
+      if (row.id === id) {
+        if (!row.isEditMode) {
+          setPrevious((state) => ({ ...state, [row.id]: row }));
+        }
+        return { ...row, isEditMode: !row.isEditMode };
+      }
+      return row;
+    }));
+  };
+
+  const onRevert = (id) => {
+    const newRows = products.map((row) => {
+      if (row.id === id) {
+        console.log('previous', previous[id]);
+        return previous[id] ? previous[id] : row;
+      }
+      return row;
+    });
+    console.log('newRows', newRows.filter((row) => row.id === id));
+    setProducts(() => newRows);
+    console.log('products', products.filter((row) => row.id === id));
+
+    setPrevious((state) => {
+      // eslint-disable-next-line no-param-reassign
+      delete state[id];
+      return state;
+    });
+    onToggleEditMode(id);
+  };
 
   // When products are passed set the attributes of a product to be displayed
   useEffect(() => {
     if (products.length) {
       const attributes = [];
       Object.keys(products[0]).forEach((key) => {
-        if (key !== 'reviews') {
+        if (key !== 'reviews' && key !== 'isEditMode') {
           attributes.push(key);
         }
       });
@@ -81,6 +122,7 @@ const ProductTable = ({ products }) => {
     const restOfWord = attribute.slice(1);
     return <TableCell key={attribute}>{firstLetter + restOfWord}</TableCell>;
   });
+  tableHeaders.unshift(<TableCell key="edit">Edit</TableCell>);
 
   /**
    * Checks the attribute name and value of a product and formats it accordingly
@@ -101,21 +143,86 @@ const ProductTable = ({ products }) => {
     }
     return value;
   };
-
+  const CustomTableCell = ({ row, name, onChange }) => {
+    const { isEditMode } = row;
+    return (
+      <TableCell align="left">
+        {isEditMode ? (
+          <Input
+            value={row[name]}
+            name={name}
+            onChange={(e) => onChange(e, row)}
+          />
+        ) : (
+          row[name]
+        )}
+      </TableCell>
+    );
+  };
+  const onChange = (e, row) => {
+    const { value, name } = e.target;
+    console.log('name', name);
+    const { id } = row;
+    const newRows = products.map((r) => {
+      if (r.id === id) {
+        console.log('we did it');
+        return { ...r, [name]: value };
+      }
+      return r;
+    });
+    setProducts(newRows);
+  };
   // Map the row data for each product
   const rowData = products.map(((product) => {
     // For each product get the data columns by returning the product's attribute value
     // ex: products brand, price, qty etc
     const productColumns = productAttributes.map((attribute) => {
       const data = product[attribute];
+
       // If the value is a boolean get the string of the boolean
+      if (attribute === 'id') {
+        let count = 0;
+        // eslint-disable-next-line no-plusplus
+        console.log('count', count++);
+        return (
+          <TableCell key={`${product.id} - ${attribute}`}>
+            {formattedData(attribute, data)}
+          </TableCell>
+        );
+      }
       return (
-        <TableCell key={`${product.id} - ${attribute}`}>
-          {formattedData(attribute, data)}
-        </TableCell>
+        <CustomTableCell {...{ row: product, name: attribute, onChange }} />
       );
     });
+    productColumns.unshift(
+      <TableCell>
+        {product.isEditMode ? (
+          <>
+            <IconButton
+              aria-label="done"
+              onClick={() => onToggleEditMode(product.id)}
+            >
+              <DoneIcon />
+            </IconButton>
+            <IconButton
+              aria-label="revert"
+              onClick={() => onRevert(product.id)}
+            >
+              <RevertIcon />
+            </IconButton>
+          </>
+        ) : (
+          <IconButton
+            aria-label="delete"
+            onClick={() => onToggleEditMode(product.id)}
+          >
+            <EditIcon align="left" />
+          </IconButton>
+        )}
+      </TableCell>
+    );
     // Return the row with each data column
+
     return <TableRow key={product.id}>{productColumns}</TableRow>;
   }));
 
