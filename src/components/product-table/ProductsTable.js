@@ -7,7 +7,8 @@ import {
   TablePagination,
   TableHead,
   TableRow,
-  Checkbox
+  Checkbox,
+  IconButton
 } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlined';
 import { Lens, TripOrigin } from '@material-ui/icons';
@@ -103,9 +104,9 @@ const ProductTable = ({ products, handleDelete }) => {
     return value;
   };
 
-  const handleDeleteClick = (ProductId) => {
+  const handleDeleteClick = (product) => {
     if (handleDelete) {
-      handleDelete(productId);
+      handleDelete(product);
     }
   };
 
@@ -125,9 +126,11 @@ const ProductTable = ({ products, handleDelete }) => {
 
     const deleteButton = (
       <TableCell>
-        <IconButton onClick={() => handleDeleteClick(product.id)} color="secondary">
-          <DeleteOutlineIcon />
-        </IconButton>
+        {product.reviews.length === 0 && (
+          <IconButton onClick={() => handleDeleteClick(product.id)} color="secondary">
+            <DeleteOutlineIcon />
+          </IconButton>
+        )}
       </TableCell>
     );
 

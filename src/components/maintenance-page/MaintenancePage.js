@@ -6,7 +6,7 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 import { Button, Modal } from '@material-ui/core';
-import { Add, Delete } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import Toast from '../toast/Toast';
 import styles from './MaintenancePage.module.css';
 import fetchProducts from './MaintenancePageService';
@@ -52,8 +52,8 @@ const MaintenancePage = () => {
   const { url, path } = useRouteMatch();
 
   const handleDelete = (product) => {
+    const ordersWithProduct = product.orders.filter((order) => order.products.includes(product.id));
     setDeletingProduct(product);
-    const ordersWithProduct = product.orders.filter(order => order.products.includes(product.id));
     setDeletingProductOrders(ordersWithProduct);
     setDeleteModalOpen(true);
   };
@@ -64,17 +64,20 @@ const MaintenancePage = () => {
     if (deletingProductOrders.length > 0) {
       // Notify the user and mark the product as inactive
       // Perform the necessary actions for marking the product as inactive
-      setDeletingProductOrders([]);
+
       // Display a success toast message
       setToastData({
         MESSAGE: 'Product marked as inactive.',
         SEVERITY: 'success'
       });
       openToast();
+
+      // Clear deletingProductOrders
+      setDeletingProductOrders([]);
     } else {
       // Delete the product
       // Perform the necessary actions for deleting the product
-      const newProducts = products.filter(product => product.id !== deletingProduct.id);
+      const newProducts = products.filter((product) => product.id !== deletingProduct.id);
       setProducts(newProducts);
       // Display a success toast message
       setToastData({
@@ -127,11 +130,14 @@ const MaintenancePage = () => {
           <h3>Confirmation</h3>
           <p>Are you sure you want to delete this product?</p>
           <p className={styles.deleteModalProductName}>
-            Product: {deletingProduct && deletingProduct.name}
+            Product:
+            {deletingProduct && deletingProduct.name}
           </p>
           {deletingProductOrders.length > 0 && (
             <p className={styles.deleteModalWarning}>
-              This product is associated with {deletingProductOrders.length} order(s).
+              This product is associated with
+              {deletingProductOrders.length}
+              order(s).
               Marking it as inactive will remove the product from these orders.
             </p>
           )}
