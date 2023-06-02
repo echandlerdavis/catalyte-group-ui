@@ -43,14 +43,27 @@ const parseCookies = () => {
 const errorSetter = () => null;
 
 /**
+ * Parse cookies to get a user object. If there is no user set or no token in session storage,
+ * return null.
+ *
+ * @returns {Object}
+ */
+export const getUserFromCookies = () => {
+  const biscuits = parseCookies();
+  if (Object.keys(biscuits).includes('user')) {
+    return JSON.parse(biscuits.user);
+  }
+  return null;
+};
+
+/**
  * Custom hook to update the lastActive time on a user.
  * @returns {React.MutableRefObject, function}
  */
 const setLastActive = () => {
-  const biscuits = parseCookies();
-  // if no user in cookies or no token in sessionStorage, return without doing anything
-  if (Object.keys(biscuits).includes('user') && sessionStorage.getItem('token')) {
-    const user = JSON.parse(biscuits.user);
+  const user = getUserFromCookies();
+  // if no user, don't do anything
+  if (user) {
     updateLastActive(user, errorSetter);
   }
 };
