@@ -6,17 +6,36 @@
 }
 
 .formCard {
-    max-width: 100em;
+    display: flex;
+    width: 60%;
     
 }
 
-form {
+.reviewForm {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    padding: 1em 3em!important;
+    margin: 2em 2em!important;
 }
 
 .ratingContainer span{
     margin: 0!important;
 }
 
+.inputFields {
+    width: 100%;
+    padding: 0.5em;  
+}
+
+.buttonContainer button{
+    margin:0.5em;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}

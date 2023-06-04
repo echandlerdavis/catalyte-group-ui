@@ -136,22 +136,22 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
       </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <Card className={styles.formCard}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.reviewForm}>
 
-          <div>
+          <div className={styles.inputFields}>
             <FormItem
               placeholder="Review Summary"
               type="text"
               id="title"
-              label="Summary"
+              label="Summary:"
               onChange={handleFormChange}
               value={formData.title}
             />
             <FormItem
               placeholder="Write commentary here"
-              type="textarea"
               id="review"
-              label="Commentary"
+              type="textarea"
+              label="Commentary:"
               onChange={handleFormChange}
               value={formData.review}
             />
@@ -159,18 +159,19 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
 
           <div className={styles.ratingContainer}>
             <Box component="fieldset" mb={3} borderColor="transparent">
-              <input
+              <FormItem
                 name="rating"
                 type="number"
+                label="Rating:"
                 value={formData.rating}
                 hidden
-                readOnly
               />
               <Rating
                 name="rating"
                 value={Number(formData.rating)}
                 precision={0.5}
                 onChange={handleFormChange}
+                size="large"
               />
             </Box>
           </div>
