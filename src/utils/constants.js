@@ -61,7 +61,7 @@ module.exports = Object.freeze({
   REVIEW_FORM_INVALID_INPUTS: 'Either "summary" or "commentary" needs to be filled in',
   REVIEW_FORM_COMMENTARY_LENGTH: 'Commentary must be 500 characters or less',
   SAVE_REVIEW_SUCCESS: { MESSAGE: 'Review Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
-  SAVE_REVIEW_FAILURE: { MESSAGE: 'Oops! Something went wrong when saving your review.', SEVERITY: SEVERITY_LEVELS.ERROR },
+  SAVE_REVIEW_FAILURE: { MESSAGE: 'Sorry, the review could not be saved at this time. Please refresh your page and try again.', SEVERITY: SEVERITY_LEVELS.ERROR },
   LOGO_ALT: 'Jaba the Hutt drinking coffee',
   PROMOCODE_ENDPOINT: '/promotionalCodes',
   INVALID_CODE: 'Invalid code',

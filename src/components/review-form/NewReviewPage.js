@@ -2,7 +2,7 @@ import React, {
   useState, useRef, useEffect
 } from 'react';
 import {
-  Box, Button, Card
+  Box, Button, Card, FormHelperText
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { Cancel, Save } from '@material-ui/icons';
@@ -121,7 +121,6 @@ const NewReviewPage = ({
     generateError();
     if (!formHasError.current) {
       const newReview = await saveReview(formData, setApiError, productId);
-      console.log(newReview);
       if (newReview && !newReview.error) {
         setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
@@ -160,18 +159,40 @@ const NewReviewPage = ({
               type="text"
               id="title"
               label="Summary:"
-              className={styles.summaryInput}
+              className={!inputsAreInvalid.current ? styles.summaryInput : styles.invalidField}
               onChange={handleFormChange}
               value={formData.title}
             />
+            {inputsAreInvalid.current
+            && (
+            <FormHelperText className={styles.helperTextFirstInput}>
+              Either summary or commentary must be filled in.
+            </FormHelperText>
+            )}
             <FormItem
               placeholder="Write commentary here"
               id="review"
               type="textarea"
               label="Commentary:"
+              className={
+                (inputsAreInvalid.current || commentaryLengthIsInvalid.current)
+                && styles.invalidField
+              }
               onChange={handleFormChange}
               value={formData.review}
             />
+            {inputsAreInvalid.current
+            && (
+            <FormHelperText className={styles.helperTextSecondInput}>
+              Either summary or commentary must be filled in.
+            </FormHelperText>
+            )}
+            {commentaryLengthIsInvalid.current
+            && (
+            <FormHelperText className={styles.helperTextSecondInput}>
+              Commentary must be less than 500 characters.
+            </FormHelperText>
+            )}
           </div>
 
           <div className={styles.ratingContainer}>
@@ -218,6 +239,7 @@ const NewReviewPage = ({
                 color: '#2f662f',
                 borderRadius: 20
               }}
+              disabled={formHasError.current}
             >
               Submit
             </Button>

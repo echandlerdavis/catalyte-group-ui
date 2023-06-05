@@ -20,10 +20,9 @@ h2{
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 1em 3em!important;
+    padding: 1em 2em!important;
     margin: 2em 2em!important;
 }
-
 
 .inputFields {
     width: 100%;
@@ -34,6 +33,23 @@ h2{
     margin-bottom: 1.5em;
 }
 
+.invalidField{
+    border: .05em solid red;
+}
+
+.helperTextFirstInput {
+    color: red!important;;
+    margin-top:0;
+    margin-bottom: 1.5em!important;
+    padding-top:0;
+}
+
+.helperTextSecondInput {
+    color: red!important;;
+    margin-top:0;
+    margin-bottom: 0em!important;
+    padding-top:0;
+}
 .ratingContainer span{
     margin: 0!important;
 }
