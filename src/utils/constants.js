@@ -58,6 +58,7 @@ module.exports = Object.freeze({
   }),
   REVIEW_FORM_INVALID_RATING: 'You must choose a rating between 0.5 and 5 stars',
   REVIEW_FORM_INVALID_INPUTS: 'Either "summary" or "commentary" needs to be filled in',
+  REVIEW_FORM_COMMENTARY_LENGTH: 'Commentary must be 500 characters or less',
   SAVE_REVIEW_SUCCESS: { MESSAGE: 'Review Successfully Created!', SEVERITY: SEVERITY_LEVELS.SUCCESS },
   SAVE_REVIEW_FAILURE: { MESSAGE: 'Oops! Something went wrong when saving your review.', SEVERITY: SEVERITY_LEVELS.ERROR },
   LOGO_ALT: 'Jaba the Hutt drinking coffee',

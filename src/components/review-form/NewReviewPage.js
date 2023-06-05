@@ -43,10 +43,10 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [apiError, setApiError] = useState(false);
   const [userErrorMessage, setUserErrorMessage] = useState('');
-
   const [formErrorMessage, setFormErrorMessage] = useState(null);
   const formHasError = useRef(false);
   const inputsAreInvalid = useRef(false);
+  const commentaryLengthIsInvalid = useRef(false);
   const ratingIsInvalid = useRef(false);
 
   useEffect(() => {
@@ -55,11 +55,16 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
     }
   }, [user]);
 
-  const validateInputs = () => {
+  const validateInputsNotEmpty = () => {
     const summary = formData.title;
     const commentary = formData.review;
     return (summary.trim().length === 0 && commentary.trim().length === 0);
   };
+
+  const validateCommentaryLength = () => {
+    const commentary = formData.review;
+    return (commentary.trim().length > 500)
+  }
 
   const validateRating = () => {
     const { rating } = formData;
@@ -67,9 +72,10 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
   };
 
   const validateFormData = () => {
-    inputsAreInvalid.current = validateInputs();
+    inputsAreInvalid.current = validateInputsNotEmpty();
+    commentaryLengthIsInvalid = validateCommentaryLength();
     ratingIsInvalid.current = validateRating();
-    if (inputsAreInvalid.current || ratingIsInvalid.current) {
+    if (inputsAreInvalid.current || ratingIsInvalid.current || commentaryLengthIsInvalid.current) {
       formHasError.current = true;
     } else {
       formHasError.current = false;
@@ -88,6 +94,13 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
         errorMessage = errorMessage.concat(' ** AND ** ', constants.REVIEW_FORM_INVALID_RATING);
       } else {
         errorMessage = constants.REVIEW_FORM_INVALID_RATING;
+      }
+    }
+    if(commentaryLengthIsInvalid.current){
+      if(errorMessage){
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.REVIEW_FORM_COMMENTARY_LENGTH);
+      }else{
+        errorMessage = constants.REVIEW_FORM_COMMENTARY_LENGTH;
       }
     }
     setFormErrorMessage(errorMessage);
