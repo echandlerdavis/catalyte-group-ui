@@ -8,6 +8,7 @@ import AppAlert from '../alert/Alert';
 import ProductModalCard from '../product-card/ProductModalCard';
 import Toast from '../toast/Toast';
 import FilterMenu from '../filter-component/FilterContainer';
+import { FilterProvider } from '../filter-component/FilterContext';
 
 /**
  * @name ProductPage
@@ -48,42 +49,44 @@ const ProductPage = () => {
   }, []);
 
   return (
-    <article style={{ width: 'fit-content' }}>
-      <Modal
-        open={showModal}
-      >
-        <ProductModalCard
-          product={modalProduct}
-          onClose={closeModal}
-          openToastCallback={openToast}
-          setToastCallback={setToastData}
+    <FilterProvider>
+      <article style={{ width: 'fit-content' }}>
+        <Modal
+          open={showModal}
+        >
+          <ProductModalCard
+            product={modalProduct}
+            onClose={closeModal}
+            openToastCallback={openToast}
+            setToastCallback={setToastData}
+          />
+        </Modal>
+        <Toast
+          message={toastData.MESSAGE}
+          open={open}
+          severity={toastData.SEVERITY}
+          handleClose={closeToast}
         />
-      </Modal>
-      <Toast
-        message={toastData.MESSAGE}
-        open={open}
-        severity={toastData.SEVERITY}
-        handleClose={closeToast}
-      />
-      {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
-      <section className={styles.appContainer}>
-        <div className={styles.sideBar}>
-          <FilterMenu />
-        </div>
-        <div className={styles.app}>
-          {products.map((product) => (
-            <div key={product.id}>
-              <ProductCard
-                product={product}
-                clickAction={displayModal}
-                openToast={openToast}
-                setToastData={setToastData}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-    </article>
+        {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
+        <section className={styles.appContainer}>
+          <div className={styles.sideBar}>
+            <FilterMenu />
+          </div>
+          <div className={styles.app}>
+            {products.map((product) => (
+              <div key={product.id}>
+                <ProductCard
+                  product={product}
+                  clickAction={displayModal}
+                  openToast={openToast}
+                  setToastData={setToastData}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      </article>
+    </FilterProvider>
   );
 };
 

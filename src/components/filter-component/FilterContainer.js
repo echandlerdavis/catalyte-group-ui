@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import FilterComponent from './FilterComponent';
 import styles from './FilterContainer.module.css';
+import { useFilter } from './FilterContext';
 /**
  * @description
  *  - Example implementation of the filter compnent
@@ -8,6 +9,7 @@ import styles from './FilterContainer.module.css';
  * @returns card housing the filter component
  */
 const FilterMenu = () => {
+  const { currentFilter, dispatch } = useFilter();
   const testFilters = {
     Types: { Shorts: false, Hat: false, Gloves: false },
     Demographics: { Men: false, Women: false, Kids: false },
@@ -45,7 +47,7 @@ const FilterMenu = () => {
    * @param {Object} filtersSet the object of the filters that are to be implemented
    * @returns Object of only selected filters and options
    */
-  const selectedFilters = (filtersSet) => (
+  const dispatchFilters = (filtersSet) => (
     Object.keys(filtersSet).reduce((acc, filterField) => {
       const filterOptions = Object.keys(filtersSet[filterField]);
       const selectedOptions = filterOptions.filter((option) => (
@@ -54,13 +56,18 @@ const FilterMenu = () => {
       if (selectedOptions.length !== 0) {
         acc[filterField] = selectedOptions;
       }
+      dispatch({
+        type: 'add',
+        prop: filterField,
+        values: selectedOptions
+      });
       return acc;
     }, {})
   );
 
   useEffect(() => {
-    console.log('Selected Filters', selectedFilters(filters));
-  }, [filters]);
+    console.log(currentFilter);
+  }, [currentFilter]);
 
   /**
    * On change event handler
@@ -76,6 +83,7 @@ const FilterMenu = () => {
       ...filters,
       [filterName]: { ...options, [option]: selected.current.value }
     });
+    dispatchFilters(filters);
   };
 
   return (
