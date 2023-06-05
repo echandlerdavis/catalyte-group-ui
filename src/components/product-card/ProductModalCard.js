@@ -1,5 +1,5 @@
 import React, {
-  useState, useRef, useEffect, useCallback
+  useState, useRef, useEffect
 } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -126,7 +126,7 @@ const colorDot = (hexColor) => (
  * @return component
  */
 const ProductModalCard = React.forwardRef((props, ref) => {
-  const { product } = props;
+  const { product, hasNotReviewed, setHasNotReviewed } = props;
   const { setToastCallback, openToastCallback } = props;
   const classes = useStyles();
   const { dispatch } = useCart();
@@ -143,7 +143,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
   // add Review content
   const { user } = useUser();
   const [hasMadePurchase, setHasMadePurchase] = useState(false);
-  const [hasNotReviewed, setHasNotReviewed] = useState(false);
   const [apiError, setApiError] = useState(false);
   const history = useHistory();
 
@@ -152,31 +151,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
       fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, product.id);
     }
   }, [user, setHasMadePurchase, setApiError, product]);
-
-  const validateUserCanReview = useCallback(() => {
-    const reviewList = product.reviews;
-    const activeReviewList = [];
-    reviewList.forEach((review) => {
-      if (review.active) {
-        activeReviewList.push(review.userEmail);
-      }
-    });
-    if (activeReviewList.length !== 0) {
-      if (activeReviewList.includes(user.email)) {
-        setHasNotReviewed(false);
-      } else {
-        setHasNotReviewed(true);
-      }
-    } else {
-      setHasNotReviewed(true);
-    }
-  }, [product, user]);
-
-  useEffect(() => {
-    if (user) {
-      validateUserCanReview();
-    }
-  }, [user, validateUserCanReview]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -366,7 +340,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                   </IconButton>
                 </CardActions>
               </div>
-              <Reviews productId={product.id} />
+              <Reviews productId={product.id} setHasNotReviewed={setHasNotReviewed} />
               {hasMadePurchase && hasNotReviewed && !apiError && addReviewButton}
             </CardContent>
 

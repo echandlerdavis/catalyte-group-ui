@@ -14,7 +14,9 @@ import { saveReview } from './ReviewPageService';
 import styles from './ReviewPage.module.css';
 import { useUser } from '../app/userContext';
 
-const NewReviewPage = ({ product, openToast, setToastData }) => {
+const NewReviewPage = ({
+  reviewProduct, openToast, setToastData, setHasNotReviewed
+}) => {
   const { productId } = useParams();
   const { user } = useUser();
   const date = new Date();
@@ -63,8 +65,8 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
 
   const validateCommentaryLength = () => {
     const commentary = formData.review;
-    return (commentary.trim().length > 500)
-  }
+    return (commentary.trim().length > 500);
+  };
 
   const validateRating = () => {
     const { rating } = formData;
@@ -73,7 +75,7 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
 
   const validateFormData = () => {
     inputsAreInvalid.current = validateInputsNotEmpty();
-    commentaryLengthIsInvalid = validateCommentaryLength();
+    commentaryLengthIsInvalid.current = validateCommentaryLength();
     ratingIsInvalid.current = validateRating();
     if (inputsAreInvalid.current || ratingIsInvalid.current || commentaryLengthIsInvalid.current) {
       formHasError.current = true;
@@ -96,10 +98,10 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
         errorMessage = constants.REVIEW_FORM_INVALID_RATING;
       }
     }
-    if(commentaryLengthIsInvalid.current){
-      if(errorMessage){
+    if (commentaryLengthIsInvalid.current) {
+      if (errorMessage) {
         errorMessage = errorMessage.concat(' ** AND ** ', constants.REVIEW_FORM_COMMENTARY_LENGTH);
-      }else{
+      } else {
         errorMessage = constants.REVIEW_FORM_COMMENTARY_LENGTH;
       }
     }
@@ -127,6 +129,7 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
         setToastData(constants.SAVE_REVIEW_FAILURE);
       }
       openToast();
+      setHasNotReviewed(false);
     }
   };
 
@@ -145,7 +148,7 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
       <h2>
         New Review for
         {' '}
-        {product.name}
+        { reviewProduct.name}
       </h2>
       {(formHasError.current || apiError) && <AppAlert severity={SEVERITY_LEVELS.ERROR} title="Error" message={formErrorMessage} />}
       <Card className={styles.formCard}>
@@ -157,6 +160,7 @@ const NewReviewPage = ({ product, openToast, setToastData }) => {
               type="text"
               id="title"
               label="Summary:"
+              className={styles.summaryInput}
               onChange={handleFormChange}
               value={formData.title}
             />
