@@ -1,3 +1,7 @@
+h2{
+    margin-bottom: 0!important;
+}
+
 .pageContainer {
     display: flex;
     flex-direction: column;
@@ -8,7 +12,7 @@
 .formCard {
     display: flex;
     width: 60%;
-    
+    margin-top: 1em;
 }
 
 .reviewForm {
