@@ -109,6 +109,7 @@ const NewReviewPage = ({
   };
 
   const handleFormChange = (e) => {
+    formHasError.current = false;
     if (e.target.name) {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     } else {
