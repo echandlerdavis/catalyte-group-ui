@@ -19,6 +19,7 @@ import './ProductsTable.module.css';
 import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
 import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import IconButton from '@material-ui/core/IconButton';
+// import { validatePriceTwoDecimals, validateQuantityNotNegative } from './ProductsTableService';
 
 /**
  * @name ProductTable
@@ -33,12 +34,19 @@ const ProductTable = ({ products, setProducts }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [previous, setPrevious] = React.useState({});
+  // const formHasError = useRef(false);
+  // const emptyFields = useRef([]);
+  // const priceIsInvalid = useRef(false);
+  // const quantityInvalid = useRef(false);
 
+  /**
+   * Toggles edit mode for the selected product row
+   */
   const onToggleEditMode = (id) => {
     setProducts(() => products.map((row) => {
       if (row.id === id) {
         if (!row.isEditMode) {
-          setPrevious((state) => ({ ...state, [row.id]: row }));
+          setPrevious(() => ({ [row.id]: row }));
         }
         return { ...row, isEditMode: !row.isEditMode };
       }
@@ -46,24 +54,53 @@ const ProductTable = ({ products, setProducts }) => {
     }));
   };
 
+  /**
+   * Reverts the changes made to the product row
+   */
   const onRevert = (id) => {
     const newRows = products.map((row) => {
       if (row.id === id) {
         console.log('previous', previous[id]);
         return previous[id] ? previous[id] : row;
       }
+      console.log(previous[id]);
       return row;
     });
-    console.log('newRows', newRows.filter((row) => row.id === id));
-    setProducts(() => newRows);
-    console.log('products', products.filter((row) => row.id === id));
-
-    setPrevious((state) => {
-      // eslint-disable-next-line no-param-reassign
-      delete state[id];
-      return state;
-    });
+    console.log(onToggleEditMode(id));
     onToggleEditMode(id);
+    console.log('newRows', newRows.filter((row) => row.id === id));
+    setProducts(newRows[id]);
+    console.log('pro', products.filter((row) => row.id === id));
+
+    // setPrevious((state) => {
+    //   // eslint-disable-next-line no-param-reassign
+    //   delete state[id];
+    //   return state;
+    // });
+    onToggleEditMode(id);
+  };
+
+  /**
+   * sets previous state of product row and enables edit mode
+  */
+  const onClickEdit = (e, row) => {
+    if (!previous[row.id]) {
+      setPrevious((state) => ({ ...state, [row.id]: row }));
+
+      onToggleEditMode(row.id);
+    }
+  };
+
+  const onChange = (e, row) => {
+    const { value, name } = e.target;
+    const { id } = row;
+    const newRows = products.map((r) => {
+      if (r.id === id) {
+        return { ...r, [name]: value };
+      }
+      return r;
+    });
+    setProducts(newRows);
   };
 
   // When products are passed set the attributes of a product to be displayed
@@ -77,7 +114,7 @@ const ProductTable = ({ products, setProducts }) => {
       });
       setProductAttributes(attributes);
     }
-  }, [products]);
+  }, [products, setProducts]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -143,7 +180,8 @@ const ProductTable = ({ products, setProducts }) => {
     }
     return value;
   };
-  const CustomTableCell = ({ row, name, onChange }) => {
+
+  const CustomTableCell = ({ row, name }) => {
     const { isEditMode } = row;
     return (
       <TableCell align="left">
@@ -159,18 +197,10 @@ const ProductTable = ({ products, setProducts }) => {
       </TableCell>
     );
   };
-  const onChange = (e, row) => {
-    const { value, name } = e.target;
-    console.log('name', name);
-    const { id } = row;
-    const newRows = products.map((r) => {
-      if (r.id === id) {
-        console.log('we did it');
-        return { ...r, [name]: value };
-      }
-      return r;
-    });
-    setProducts(newRows);
+
+  const handleSave = () => {
+    // getFieldsNotEmpty(products);
+    onToggleEditMode(products.id);
   };
   // Map the row data for each product
   const rowData = products.map(((product) => {
@@ -181,9 +211,6 @@ const ProductTable = ({ products, setProducts }) => {
 
       // If the value is a boolean get the string of the boolean
       if (attribute === 'id') {
-        let count = 0;
-        // eslint-disable-next-line no-plusplus
-        console.log('count', count++);
         return (
           <TableCell key={`${product.id} - ${attribute}`}>
             {formattedData(attribute, data)}
@@ -191,7 +218,7 @@ const ProductTable = ({ products, setProducts }) => {
         );
       }
       return (
-        <CustomTableCell {...{ row: product, name: attribute, onChange }} />
+        <CustomTableCell {...{ row: product, name: attribute }} />
       );
     });
     productColumns.unshift(
@@ -200,7 +227,7 @@ const ProductTable = ({ products, setProducts }) => {
           <>
             <IconButton
               aria-label="done"
-              onClick={() => onToggleEditMode(product.id)}
+              onClick={() => handleSave(product)}
             >
               <DoneIcon />
             </IconButton>
@@ -213,8 +240,8 @@ const ProductTable = ({ products, setProducts }) => {
           </>
         ) : (
           <IconButton
-            aria-label="delete"
-            onClick={() => onToggleEditMode(product.id)}
+            aria-label="edit"
+            onClick={(e) => onClickEdit(e, product)}
           >
             <EditIcon align="left" />
           </IconButton>
