@@ -1,9 +1,9 @@
 import HttpHelper from '../../utils/HttpHelper';
 import Constants from '../../utils/constants';
 
-export const SaveProduct = async (product, setApiError) => {
+export const UpdateProduct = async (product, setApiError) => {
   try {
-    const response = await HttpHelper(Constants.PRODUCTS_ENPOINT, 'POST', product);
+    const response = await HttpHelper(Constants.UPDATE_PRODUCT_ENDPOINT(product.id), 'PUT', product);
     return response.json();
   } catch {
     setApiError(true);

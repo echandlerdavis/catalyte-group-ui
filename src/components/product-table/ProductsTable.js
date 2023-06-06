@@ -19,7 +19,7 @@ import './ProductsTable.module.css';
 import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
 import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import IconButton from '@material-ui/core/IconButton';
-import { SaveProduct } from './ProductsTableService';
+import { UpdateProduct } from './ProductsTableService';
 // import { validatePriceTwoDecimals, validateQuantityNotNegative } from './ProductsTableService';
 
 /**
@@ -217,7 +217,7 @@ const ProductTable = ({ products, setProducts, setApiError }) => {
   };
 
   const handleSave = (product) => {
-    SaveProduct(product, setApiError);
+    UpdateProduct(product, setApiError);
     offToggleEditMode(product.id, products);
   };
 
