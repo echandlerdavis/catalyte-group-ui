@@ -34,24 +34,29 @@ const ProductTable = ({ products, setProducts }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [previous, setPrevious] = React.useState({});
+  const [isToggled, setIsToggled] = React.useState(false);
   // const formHasError = useRef(false);
   // const emptyFields = useRef([]);
   // const priceIsInvalid = useRef(false);
   // const quantityInvalid = useRef(false);
+  // const [displayInputData, setDisplayInputData] = useState([]);
 
   /**
    * Toggles edit mode for the selected product row
    */
   const onToggleEditMode = (id) => {
-    setProducts(() => products.map((row) => {
-      if (row.id === id) {
-        if (!row.isEditMode) {
+    if (!isToggled) {
+      console.log('isToggled', isToggled);
+      setProducts(() => products.map((row) => {
+        if (row.id === id) {
           setPrevious(() => ({ [row.id]: row }));
+          console.log('iseditmode?', row.isEditMode);
+          setIsToggled(!isToggled.current);
+          return { ...row, isEditMode: !row.isEditMode };
         }
-        return { ...row, isEditMode: !row.isEditMode };
-      }
-      return row;
-    }));
+        return row;
+      }));
+    }
   };
 
   /**
@@ -61,16 +66,15 @@ const ProductTable = ({ products, setProducts }) => {
     const newRows = products.map((row) => {
       if (row.id === id) {
         console.log('previous', previous[id]);
-        return previous[id] ? previous[id] : row;
+        return previous[id];
       }
-      console.log(previous[id]);
       return row;
     });
     console.log(onToggleEditMode(id));
     onToggleEditMode(id);
     console.log('newRows', newRows.filter((row) => row.id === id));
-    setProducts(newRows[id]);
-    console.log('pro', products.filter((row) => row.id === id));
+    setProducts(newRows);
+    console.log('product', products.filter((row) => row.id === id));
 
     // setPrevious((state) => {
     //   // eslint-disable-next-line no-param-reassign
@@ -78,16 +82,17 @@ const ProductTable = ({ products, setProducts }) => {
     //   return state;
     // });
     onToggleEditMode(id);
+    setIsToggled(false);
   };
 
   /**
    * sets previous state of product row and enables edit mode
   */
-  const onClickEdit = (e, row) => {
-    if (!previous[row.id]) {
-      setPrevious((state) => ({ ...state, [row.id]: row }));
-
-      onToggleEditMode(row.id);
+  const onClickEdit = (product) => {
+    if (!isToggled) {
+      console.log('onClick productID', product.id);
+      setPrevious((state) => ({ ...state, [product.id]: product }));
+      onToggleEditMode(product.id);
     }
   };
 
@@ -184,7 +189,7 @@ const ProductTable = ({ products, setProducts }) => {
   const CustomTableCell = ({ row, name }) => {
     const { isEditMode } = row;
     return (
-      <TableCell align="left">
+      <TableCell key={row.id} align="left">
         {isEditMode ? (
           <Input
             value={row[name]}
@@ -198,17 +203,18 @@ const ProductTable = ({ products, setProducts }) => {
     );
   };
 
-  const handleSave = () => {
-    // getFieldsNotEmpty(products);
-    onToggleEditMode(products.id);
+  const handleSave = (id) => {
+    setIsToggled(false);
+    onToggleEditMode(id);
   };
+
   // Map the row data for each product
   const rowData = products.map(((product) => {
     // For each product get the data columns by returning the product's attribute value
     // ex: products brand, price, qty etc
     const productColumns = productAttributes.map((attribute) => {
       const data = product[attribute];
-
+      // setDisplayInputData(data);
       // If the value is a boolean get the string of the boolean
       if (attribute === 'id') {
         return (
@@ -218,7 +224,7 @@ const ProductTable = ({ products, setProducts }) => {
         );
       }
       return (
-        <CustomTableCell {...{ row: product, name: attribute }} />
+        <CustomTableCell {...{ row: product, name: attribute, key: `${product.id} - ${attribute}` }} />
       );
     });
     productColumns.unshift(
@@ -227,7 +233,7 @@ const ProductTable = ({ products, setProducts }) => {
           <>
             <IconButton
               aria-label="done"
-              onClick={() => handleSave(product)}
+              onClick={() => handleSave(product.id)}
             >
               <DoneIcon />
             </IconButton>
@@ -241,7 +247,7 @@ const ProductTable = ({ products, setProducts }) => {
         ) : (
           <IconButton
             aria-label="edit"
-            onClick={(e) => onClickEdit(e, product)}
+            onClick={() => onClickEdit(product)}
           >
             <EditIcon align="left" />
           </IconButton>
