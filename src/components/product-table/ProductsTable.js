@@ -19,6 +19,7 @@ import './ProductsTable.module.css';
 import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
 import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import { SaveProduct } from './ProductsTableService';
 // import { validatePriceTwoDecimals, validateQuantityNotNegative } from './ProductsTableService';
 
 /**
@@ -27,7 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
  * @param {*} props products
  * @returns component
  */
-const ProductTable = ({ products, setProducts }) => {
+const ProductTable = ({ products, setProducts, setApiError }) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
@@ -215,8 +216,9 @@ const ProductTable = ({ products, setProducts }) => {
     );
   };
 
-  const handleSave = (id) => {
-    offToggleEditMode(id, products);
+  const handleSave = (product) => {
+    SaveProduct(product, setApiError);
+    offToggleEditMode(product.id, products);
   };
 
   // Map the row data for each product
@@ -244,7 +246,7 @@ const ProductTable = ({ products, setProducts }) => {
           <>
             <IconButton
               aria-label="done"
-              onClick={() => handleSave(product.id)}
+              onClick={() => handleSave(product)}
             >
               <DoneIcon />
             </IconButton>
