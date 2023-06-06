@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Modal } from '@material-ui/core';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import ProductCard from '../product-card/ProductCard';
 import styles from './ProductPage.module.css';
 import Constants from '../../utils/constants';
@@ -120,10 +120,12 @@ const ProductPage = () => {
         handleClose={closeToast}
       />
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
-      <Switch>
-        <Route path="/:productId/new/review" render={() => <NewReviewPage reviewProduct={modalProduct} openToast={openToast} setToastData={setToastData} setHasNotReviewed={setHasNotReviewed} />} />
-        <Route path="" render={() => mainComponent} />
-      </Switch>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/:productId/new/review" render={() => <NewReviewPage reviewProduct={modalProduct} openToast={openToast} setToastData={setToastData} setHasNotReviewed={setHasNotReviewed} />} />
+          <Route path="" render={() => mainComponent} />
+        </Switch>
+      </BrowserRouter>
     </article>
   );
 };

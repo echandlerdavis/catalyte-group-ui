@@ -3,6 +3,7 @@ import { unmountComponentAtNode } from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import ProductPage from './ProductPage';
 import fetchProducts from './ProductPageService';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 
 jest.mock('./ProductPageService');
 let container = null;
@@ -26,7 +27,8 @@ describe('ProductPage Component Tests', () => {
       setApiError(true);
     });
     render(
-      <ProductPage />, container
+          <ProductPage />, container, {wrapper: BrowserRouter}
+      
     );
     expect(screen.getByTestId('errMsg')).toHaveTextContent('Oops, something went wrong');
   });
