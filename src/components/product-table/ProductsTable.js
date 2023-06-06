@@ -236,10 +236,10 @@ const ProductTable = ({
       if (results.SUCCESS) {
         setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
         openToast(true);
-      // } else if (results.MESSAGE === constants.API_ERROR) {
-      //   // revert but no toast
-      //   onRevert(product.id);
-      //   return;
+      } else if (results.MESSAGE === constants.API_ERROR) {
+        // revert but no toast
+        onRevert(product.id);
+        return;
       } else {
         // rever and toast
         onRevert(product.id);
