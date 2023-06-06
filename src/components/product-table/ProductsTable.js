@@ -19,16 +19,36 @@ import './ProductsTable.module.css';
 import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
 import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import IconButton from '@material-ui/core/IconButton';
-import { UpdateProduct } from './ProductsTableService';
-// import { validatePriceTwoDecimals, validateQuantityNotNegative } from './ProductsTableService';
+import {
+  UpdateProduct
+} from './ProductsTableService';
+import constants from '../../utils/constants';
 
+const CustomTableCell = ({ row, name, onChange }) => {
+  const { isEditMode } = row;
+  return (
+    <TableCell key={row.id} align="left">
+      {isEditMode ? (
+        <Input
+          value={row[name]}
+          name={name}
+          onChange={(e) => onChange(e, row)}
+        />
+      ) : (
+        row[name]
+      )}
+    </TableCell>
+  );
+};
 /**
  * @name ProductTable
  * @description Renders table of product data
  * @param {*} props products
  * @returns component
  */
-const ProductTable = ({ products, setProducts, setApiError }) => {
+const ProductTable = ({
+  products, setProducts, setApiError, setToastData, openToast
+}) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
@@ -199,26 +219,36 @@ const ProductTable = ({ products, setProducts, setApiError }) => {
     return value;
   };
 
-  const CustomTableCell = ({ row, name }) => {
-    const { isEditMode } = row;
-    return (
-      <TableCell key={row.id} align="left">
-        {isEditMode ? (
-          <Input
-            value={row[name]}
-            name={name}
-            onChange={(e) => onChange(e, row)}
-          />
-        ) : (
-          row[name]
-        )}
-      </TableCell>
-    );
-  };
+  // const validateFormData = (input) => {
+  //   // emptyFields.current = getFieldsNotEmpty(input);
+  //   priceIsInvalid.current = validatePriceTwoDecimals(input);
+  //   quantityInvalid.current = validateQuantityNotNegative(input);
+  //   if (priceIsInvalid.current || quantityInvalid.current) {
+  //     formHasError.current = true;
+  //   } else {
+  //     formHasError.current = false;
+  //   }
+  // };
 
   const handleSave = (product) => {
-    UpdateProduct(product, setApiError);
-    offToggleEditMode(product.id, products);
+    const resultsPromise = UpdateProduct(product, setApiError);
+    resultsPromise.then((results) => {
+      if (results.SUCCESS) {
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
+        openToast(true);
+      // } else if (results.MESSAGE === constants.API_ERROR) {
+      //   // revert but no toast
+      //   onRevert(product.id);
+      //   return;
+      } else {
+        // rever and toast
+        onRevert(product.id);
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+        openToast(true);
+        return;
+      }
+      offToggleEditMode(product.id, products);
+    });
   };
 
   // Map the row data for each product
@@ -236,8 +266,15 @@ const ProductTable = ({ products, setProducts, setApiError }) => {
           </TableCell>
         );
       }
+      if (attribute === 'releaseDate') {
+        return (
+          <TableCell key={`${product.releaseDate} - ${attribute}`}>
+            {formattedData(attribute, data)}
+          </TableCell>
+        );
+      }
       return (
-        <CustomTableCell {...{ row: product, name: attribute, key: `${product.id} - ${attribute}` }} />
+        <CustomTableCell {...{ row: product, name: attribute, key: `${product.id} - ${attribute}` }} onChange={onChange} />
       );
     });
     productColumns.unshift(
