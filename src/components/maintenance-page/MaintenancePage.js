@@ -56,7 +56,13 @@ const MaintenancePage = () => {
     <>
       <section>
         <h2>Products</h2>
-        <ProductTable products={products} setProducts={setProducts} />
+        <ProductTable
+          products={products}
+          setProducts={setProducts}
+          setApiError={setApiError}
+          setToastData={setToastData}
+          openToast={openToast}
+        />
       </section>
     </>
   );
