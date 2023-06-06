@@ -50,9 +50,21 @@ const ProductTable = ({ products, setProducts }) => {
       setProducts(() => products.map((row) => {
         if (row.id === id) {
           setPrevious(() => ({ [row.id]: row }));
-          console.log('iseditmode?', row.isEditMode);
-          setIsToggled(!isToggled.current);
+          setIsToggled(!isToggled);
           return { ...row, isEditMode: !row.isEditMode };
+        }
+        return row;
+      }));
+    }
+  };
+  const offToggleEditMode = (id, updatedProducts) => {
+    if (isToggled) {
+      console.log('isToggled', isToggled);
+      setProducts(() => updatedProducts.map((row) => {
+        if (row.id === id) {
+          setPrevious(() => ({}));
+          setIsToggled(false);
+          return { ...row, isEditMode: false };
         }
         return row;
       }));
@@ -81,7 +93,7 @@ const ProductTable = ({ products, setProducts }) => {
     //   delete state[id];
     //   return state;
     // });
-    onToggleEditMode(id);
+    offToggleEditMode(id, newRows);
     setIsToggled(false);
   };
 
@@ -204,8 +216,7 @@ const ProductTable = ({ products, setProducts }) => {
   };
 
   const handleSave = (id) => {
-    setIsToggled(false);
-    onToggleEditMode(id);
+    offToggleEditMode(id, products);
   };
 
   // Map the row data for each product
