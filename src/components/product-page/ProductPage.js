@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal } from '@material-ui/core';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import ProductCard from '../product-card/ProductCard';
 import styles from './ProductPage.module.css';
 import Constants from '../../utils/constants';
@@ -7,6 +8,8 @@ import fetchProducts from './ProductPageService';
 import AppAlert from '../alert/Alert';
 import ProductModalCard from '../product-card/ProductModalCard';
 import Toast from '../toast/Toast';
+import NewReviewPage from '../review-form/NewReviewPage';
+import { useUser } from '../app/userContext';
 
 /**
  * @name ProductPage
@@ -14,10 +17,12 @@ import Toast from '../toast/Toast';
  * @return component
  */
 const ProductPage = () => {
+  const { user } = useUser();
   const [products, setProducts] = useState([]);
   const [apiError, setApiError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalProduct, setModalProduct] = useState('');
+  const [hasNotReviewed, setHasNotReviewed] = useState(false);
   const [open, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({
     MESSAGE: '',
@@ -35,7 +40,10 @@ const ProductPage = () => {
   const openModal = () => {
     setShowModal(true);
   };
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setShowModal(false);
+    setModalProduct('');
+  };
 
   const displayModal = (p) => {
     setModalProduct(p);
@@ -46,8 +54,34 @@ const ProductPage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
-  return (
-    <article>
+  const validateUserHasNotReviewed = useCallback(() => {
+    const reviewList = modalProduct.reviews;
+    const activeReviewList = [];
+    if (!user) {
+      return false;
+    }
+    reviewList.forEach((review) => {
+      if (review.active) {
+        activeReviewList.push(review.userEmail);
+      }
+    });
+    if (activeReviewList.length !== 0) {
+      if (activeReviewList.includes(user.email)) {
+        return false;
+      }
+      return true;
+    }
+    return true;
+  }, [modalProduct, user]);
+
+  useEffect(() => {
+    if (modalProduct) {
+      setHasNotReviewed(validateUserHasNotReviewed());
+    }
+  }, [validateUserHasNotReviewed, user, modalProduct]);
+
+  const mainComponent = (
+    <>
       <Modal
         open={showModal}
       >
@@ -56,15 +90,10 @@ const ProductPage = () => {
           onClose={closeModal}
           openToastCallback={openToast}
           setToastCallback={setToastData}
+          hasNotReviewed={hasNotReviewed}
+          setHasNotReviewed={setHasNotReviewed}
         />
       </Modal>
-      <Toast
-        message={toastData.MESSAGE}
-        open={open}
-        severity={toastData.SEVERITY}
-        handleClose={closeToast}
-      />
-      {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <section className={styles.app}>
         {products.map((product) => (
           <div key={product.id}>
@@ -77,6 +106,23 @@ const ProductPage = () => {
           </div>
         ))}
       </section>
+    </>
+  );
+  return (
+    <article>
+      <Toast
+        message={toastData.MESSAGE}
+        open={open}
+        severity={toastData.SEVERITY}
+        handleClose={closeToast}
+      />
+      {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/:productId/new/review" render={() => <NewReviewPage reviewProduct={modalProduct} openToast={openToast} setToastData={setToastData} setHasNotReviewed={setHasNotReviewed} />} />
+          <Route exact path="" render={() => mainComponent} />
+        </Switch>
+      </BrowserRouter>
     </article>
   );
 };

@@ -9,7 +9,7 @@ import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import styles from './Review.module.css';
 import Toast from '../toast/Toast';
 
-export default function Reviews({ productId }) {
+export default function Reviews({ productId, setHasNotReviewed }) {
   const [reviews, setReviews] = useState([]);
   const [apiError, setApiError] = useState(false);
   const [reviewOrder, setReviewOrder] = useState('');
@@ -63,6 +63,7 @@ export default function Reviews({ productId }) {
         toastData={toastData}
         toastDataSetter={setToastData}
         toastOpener={setOpenToast}
+        setHasNotReviewed={setHasNotReviewed}
       />
     </Grid>
   ));

@@ -1,0 +1,69 @@
+h2{
+    margin-bottom: 0!important;
+}
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.formCard {
+    display: flex;
+    width: 60%;
+    margin-top: 1em;
+}
+
+.reviewForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1em 2em!important;
+    margin: 2em 2em!important;
+}
+
+.inputFields {
+    width: 100%;
+    padding: 0.5em;  
+}
+
+.summaryInput {
+    margin-bottom: 1.5em;
+}
+
+.invalidField{
+    border: .05em solid red;
+}
+
+.helperTextFirstInput {
+    color: red!important;;
+    margin-top:0;
+    margin-bottom: 1.5em!important;
+    padding-top:0;
+}
+
+.helperTextSecondInput {
+    color: red!important;;
+    margin-top:0;
+    margin-bottom: 0em!important;
+    padding-top:0;
+}
+.ratingContainer span{
+    margin: 0!important;
+}
+
+.ratingContainer fieldset {
+    margin-bottom: 0!important;
+}
+.buttonContainer button{
+    margin:0.5em;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
