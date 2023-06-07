@@ -28,19 +28,51 @@ const CustomTableCell = ({
   product, attribute, onChange, data, formattedData
 }) => {
   const { isEditMode } = product;
-  return (
-    <TableCell key={product.id} align="left">
-      {isEditMode ? (
+  if (isEditMode) {
+    if (attribute === 'active') {
+      return (
+        <TableCell key={product.id} align="left">
+          <Checkbox
+            checked={product[attribute]}
+            onChange={(e) => onChange(e, product)}
+            name={attribute}
+            color="primary"
+            type="checkbox"
+            icon={<TripOrigin />}
+            checkedIcon={<Lens style={{ color: 'green' }} />}
+          />
+        </TableCell>
+      );
+    }
+    return (
+      <TableCell key={product.id} align="left">
         <Input
           value={product[attribute]}
           name={attribute}
           onChange={(e) => onChange(e, product)}
         />
-      ) : (
-        formattedData(attribute, data)
-      )}
+      </TableCell>
+    );
+  }
+  return (
+    <TableCell>
+      {(formattedData(attribute, data))}
     </TableCell>
   );
+
+  // return (
+  //   <TableCell key={product.id} align="left">
+  //     {isEditMode ? (
+  //       <Input
+  //         value={product[attribute]}
+  //         name={attribute}
+  //         onChange={(e) => onChange(e, product)}
+  //       />
+  //     ) : (
+  //       formattedData(attribute, data)
+  //     )}
+  //   </TableCell>
+  // );
 };
 /**
  * @name ProductTable
@@ -125,8 +157,12 @@ const ProductTable = ({
   };
 
   const onChange = (e, row) => {
-    const { value, name } = e.target;
+    const { name, type } = e.target;
+    let { value } = e.target;
     const { id } = row;
+    if (type === 'checkbox') {
+      value = !row[name];
+    }
     const newRows = products.map((r) => {
       if (r.id === id) {
         return { ...r, [name]: value };
@@ -202,7 +238,7 @@ const ProductTable = ({
    * @returns component, or value passed
    */
   const formattedData = (attribute, value) => {
-    if (typeof value === 'boolean') {
+    if (attribute === 'active') {
       return isActiveCheckbox(value);
     }
     if (attribute === 'price') {
@@ -278,6 +314,8 @@ const ProductTable = ({
         offToggleEditMode(product.id, products);
       });
     }
+    setToastData({ MESSAGE: 'Product not updated, check to make sure all fields are valid', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+    openToast(true);
   };
 
   // Map the row data for each product

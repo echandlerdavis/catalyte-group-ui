@@ -32,7 +32,7 @@ export const getFieldsNotEmpty = (product) => (
 
 export const validateQuantityNotNegative = (product) => {
   const { quantity } = product;
-  return (quantity && quantity <= 0);
+  return (quantity && quantity < 0);
 };
 
 export const validatePriceTwoDecimals = (product) => {
