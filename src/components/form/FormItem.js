@@ -9,7 +9,7 @@ import styles from './FormItem.module.css';
  * @return component
  */
 const FormItem = ({
-  onChange, value, id, label, placeholder, type, className, min, step, autoCapitalize
+  onChange, value, id, label, placeholder, type, className, min, step, autoCapitalize, hidden
 }) => {
   const checkbox = (
     <Checkbox
@@ -43,6 +43,41 @@ const FormItem = ({
         <div className={styles.priceInputIcon}>$</div>
         {inputBox}
       </div>
+    );
+  }
+
+  if (type === 'textarea') {
+    inputBox = (
+      <textarea
+        className={`${styles.textarea} ${className}`}
+        id={id}
+        onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        min={min}
+        step={step}
+        autoCapitalize={autoCapitalize}
+      />
+    );
+  }
+
+  if (hidden === true) {
+    inputBox = (
+      <input
+        className={`${styles.input} ${className}`}
+        id={id}
+        onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        checked={value}
+        min={min}
+        step={step}
+        autoCapitalize={autoCapitalize}
+        hidden
+        readOnly
+      />
     );
   }
 
