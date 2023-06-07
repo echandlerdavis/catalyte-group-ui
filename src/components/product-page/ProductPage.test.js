@@ -28,8 +28,7 @@ describe('ProductPage Component Tests', () => {
       setApiError(true);
     });
     render(
-      <UserProvider><ProductPage /></UserProvider>, container, {wrapper: BrowserRouter}
-
+      <UserProvider><ProductPage /></UserProvider>, container, { wrapper: BrowserRouter }
     );
     expect(screen.getByTestId('errMsg')).toHaveTextContent('Oops, something went wrong');
   });

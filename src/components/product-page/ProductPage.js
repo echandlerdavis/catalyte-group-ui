@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal } from '@material-ui/core';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import ProductCard from '../product-card/ProductCard';
@@ -11,25 +11,6 @@ import Toast from '../toast/Toast';
 import NewReviewPage from '../review-form/NewReviewPage';
 import { useUser } from '../app/userContext';
 
-export const validateUserHasNotReviewed = (user, modalProduct) => {
-  const reviewList = modalProduct.reviews;
-  const activeReviewList = [];
-  if (!user) {
-    return false;
-  }
-  reviewList.forEach((review) => {
-    if (review.active) {
-      activeReviewList.push(review.userEmail);
-    }
-  });
-  if (activeReviewList.length !== 0) {
-    if (activeReviewList.includes(user.email)) {
-      return false;
-    }
-    return true;
-  }
-  return true;
-};
 /**
  * @name ProductPage
  * @description fetches products from API and displays products as product cards
@@ -73,11 +54,32 @@ const ProductPage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
-  useEffect(() => {
-    if (modalProduct && validateUserHasNotReviewed(user, modalProduct)) {
-      setHasNotReviewed(true);
+  const validateUserHasNotReviewed = useCallback(() => {
+    const reviewList = modalProduct.reviews;
+    const activeReviewList = [];
+    if (!user) {
+      return false;
     }
-  }, [user, modalProduct]);
+    reviewList.forEach((review) => {
+      if (review.active) {
+        activeReviewList.push(review.userEmail);
+      }
+    });
+    if (activeReviewList.length !== 0) {
+      if (activeReviewList.includes(user.email)) {
+        console.log(activeReviewList);
+        return false;
+      }
+      return true;
+    }
+    return true;
+  }, [modalProduct, user]);
+
+  useEffect(() => {
+    if (modalProduct) {
+      setHasNotReviewed(validateUserHasNotReviewed());
+    }
+  }, [validateUserHasNotReviewed, user, modalProduct]);
 
   const mainComponent = (
     <>
