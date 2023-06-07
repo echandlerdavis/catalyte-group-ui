@@ -14,6 +14,7 @@ export const UpdateProduct = async (product, setApiError) => {
     return result;
   } catch {
     result.MESSAGE = Constants.API_ERROR;
+    console.log('Failed to update product');
     setApiError(true);
     return result;
   }
@@ -22,7 +23,7 @@ export const UpdateProduct = async (product, setApiError) => {
 export const getFieldsNotEmpty = (product) => (
   Object.keys(product).filter((key) => {
     let formInput = product[key];
-    if (typeof formInput === 'string') {
+    if (typeof formInput === 'string' && key !== 'reviews') {
       formInput = formInput.trim();
     }
     return formInput.length === 0;
@@ -35,6 +36,8 @@ export const validateQuantityNotNegative = (product) => {
 };
 
 export const validatePriceTwoDecimals = (product) => {
-  const priceArray = product.price.split('.');
+  console.log(product.price);
+  const priceString = product.price.toString();
+  const priceArray = priceString.split('.');
   return (priceArray.length !== 2 || priceArray[1].length !== 2 || product.price <= 0);
 };

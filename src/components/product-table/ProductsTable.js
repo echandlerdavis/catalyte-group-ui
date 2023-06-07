@@ -69,7 +69,6 @@ const ProductTable = ({
    */
   const onToggleEditMode = (id) => {
     if (!isToggled) {
-      console.log('isToggled', isToggled);
       setProducts(() => products.map((row) => {
         if (row.id === id) {
           setPrevious(() => ({ [row.id]: row }));
@@ -82,7 +81,6 @@ const ProductTable = ({
   };
   const offToggleEditMode = (id, updatedProducts) => {
     if (isToggled) {
-      console.log('isToggled', isToggled);
       setProducts(() => updatedProducts.map((row) => {
         if (row.id === id) {
           setPrevious(() => ({}));
@@ -100,16 +98,12 @@ const ProductTable = ({
   const onRevert = (id) => {
     const newRows = products.map((row) => {
       if (row.id === id) {
-        console.log('previous', previous[id]);
         return previous[id];
       }
       return row;
     });
-    console.log(onToggleEditMode(id));
     onToggleEditMode(id);
-    console.log('newRows', newRows.filter((row) => row.id === id));
     setProducts(newRows);
-    console.log('product', products.filter((row) => row.id === id));
 
     // setPrevious((state) => {
     //   // eslint-disable-next-line no-param-reassign
@@ -125,7 +119,6 @@ const ProductTable = ({
   */
   const onClickEdit = (product) => {
     if (!isToggled) {
-      console.log('onClick productID', product.id);
       setPrevious((state) => ({ ...state, [product.id]: product }));
       onToggleEditMode(product.id);
     }
@@ -210,11 +203,10 @@ const ProductTable = ({
    */
   const formattedData = (attribute, value) => {
     if (typeof value === 'boolean') {
-      console.log('boolean value', value);
       return isActiveCheckbox(value);
     }
     if (attribute === 'price') {
-      console.log('price value', value);
+      console.log('value', value);
       return `$${value}`;
     }
     if (attribute.toLowerCase().includes('color')) {
@@ -225,11 +217,8 @@ const ProductTable = ({
 
   const validateFormData = (input) => {
     emptyFields.current = getFieldsNotEmpty(input);
-    console.log('emptyFields', emptyFields.current);
     priceIsInvalid.current = validatePriceTwoDecimals(input);
-    console.log('priceIsInvalid', priceIsInvalid.current);
     quantityInvalid.current = validateQuantityNotNegative(input);
-    console.log('quantityInvalid', quantityInvalid.current);
     if ((emptyFields.current.length !== 0) || priceIsInvalid.current || quantityInvalid.current) {
       formHasError.current = true;
     } else {
@@ -288,7 +277,7 @@ const ProductTable = ({
         }
         offToggleEditMode(product.id, products);
       });
-    } else { console.log('formHasError', formHasError.current); }
+    }
   };
 
   // Map the row data for each product
