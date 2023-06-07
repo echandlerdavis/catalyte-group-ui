@@ -67,7 +67,6 @@ const ProductPage = () => {
     });
     if (activeReviewList.length !== 0) {
       if (activeReviewList.includes(user.email)) {
-        console.log(activeReviewList);
         return false;
       }
       return true;
