@@ -53,7 +53,7 @@ const NewReviewPage = ({
 
   useEffect(() => {
     if (!user) {
-      setUserErrorMessage('You must be logged in to write a review.');
+      setUserErrorMessage(constants.REVIEW_NOT_LOGGED_IN);
     }
   }, [user]);
 

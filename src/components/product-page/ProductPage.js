@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '@material-ui/core';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import ProductCard from '../product-card/ProductCard';
@@ -11,6 +11,25 @@ import Toast from '../toast/Toast';
 import NewReviewPage from '../review-form/NewReviewPage';
 import { useUser } from '../app/userContext';
 
+export const validateUserHasNotReviewed = (user, modalProduct) => {
+  const reviewList = modalProduct.reviews;
+  const activeReviewList = [];
+  if (!user) {
+    return false;
+  }
+  reviewList.forEach((review) => {
+    if (review.active) {
+      activeReviewList.push(review.userEmail);
+    }
+  });
+  if (activeReviewList.length !== 0) {
+    if (activeReviewList.includes(user.email)) {
+      return false;
+    }
+    return true;
+  }
+  return true;
+};
 /**
  * @name ProductPage
  * @description fetches products from API and displays products as product cards
@@ -54,34 +73,11 @@ const ProductPage = () => {
     fetchProducts(setProducts, setApiError);
   }, []);
 
-  const validateUserCanReview = useCallback(() => {
-    const reviewList = modalProduct.reviews;
-    const activeReviewList = [];
-    if (!user) {
-      setHasNotReviewed(false);
-    } else {
-      reviewList.forEach((review) => {
-        if (review.active) {
-          activeReviewList.push(review.userEmail);
-        }
-      });
-      if (activeReviewList.length !== 0) {
-        if (activeReviewList.includes(user.email)) {
-          setHasNotReviewed(false);
-        } else {
-          setHasNotReviewed(true);
-        }
-      } else {
-        setHasNotReviewed(true);
-      }
-    }
-  }, [modalProduct, user]);
-
   useEffect(() => {
-    if (modalProduct) {
-      validateUserCanReview();
+    if (modalProduct && validateUserHasNotReviewed(user, modalProduct)) {
+      setHasNotReviewed(true);
     }
-  }, [validateUserCanReview, modalProduct]);
+  }, [user, modalProduct]);
 
   const mainComponent = (
     <>
@@ -122,8 +118,8 @@ const ProductPage = () => {
       {apiError && <AppAlert severity="error" title="Error" message={Constants.API_ERROR} />}
       <BrowserRouter>
         <Switch>
-          <Route path="/:productId/new/review" render={() => <NewReviewPage reviewProduct={modalProduct} openToast={openToast} setToastData={setToastData} setHasNotReviewed={setHasNotReviewed} />} />
-          <Route path="" render={() => mainComponent} />
+          <Route exact path="/:productId/new/review" render={() => <NewReviewPage reviewProduct={modalProduct} openToast={openToast} setToastData={setToastData} setHasNotReviewed={setHasNotReviewed} />} />
+          <Route exact path="" render={() => mainComponent} />
         </Switch>
       </BrowserRouter>
     </article>
