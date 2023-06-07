@@ -32,11 +32,12 @@ const MaintenancePage = () => {
   const [openPromoModal, setOpenPromoModal] = useState(false);
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [deletingProductWithPurchases, setDeletingProductWithPurchases] = useState([]);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const openModal = () => setOpenPromoModal(true);
   const closeModal = () => setOpenPromoModal(false);
 
-  const openDeleteModal = (product) => {
+  const openProductDeleteModal = (product) => {
     setDeletingProduct(product);
     // Check if the product has any purchases
     const productPurchases = getPurchasesByProduct(product.id);
@@ -70,31 +71,6 @@ const MaintenancePage = () => {
   const history = useHistory();
   const { url, path } = useRouteMatch();
 
-
-  const handleDeleteConfirmed = () => {
-    if (deletingProductPurchases.length > 0) {
-      // If the product is associated with purchases, mark it inactive
-      // Replace with your own logic to mark the product inactive
-      setDeletingProduct(null);
-      setDeletingProductWithPurchases([]);
-      closeDeleteModal();
-      openToast();
-      setToastData({ MESSAGE: 'Product marked as inactive', SEVERITY: 'success' });
-    } else {
-      // If the product is not associated with any purchases, delete it
-      // Replace with your own logic to delete the product
-      setDeletingProduct(null);
-      setDeletingProductWithPurchases([]);
-      closeDeleteModal();
-      openToast();
-      setToastData({ MESSAGE: 'Product deleted successfully', SEVERITY: 'success' });
-    }
-  };
-
-  const handleDeleteCancelled = () => {
-    closeDeleteModal();
-  };
-
   const handleDelete = (productId) => {
     const product = products.find((product) => product.id === productId);
     if (product) {
@@ -113,7 +89,7 @@ const MaintenancePage = () => {
         <h2>Products</h2>
         <ProductTable products={products} handleDelete={handleDelete} />
       </section>
-      </>
+    </>
   );
 
   /**
@@ -163,6 +139,14 @@ const MaintenancePage = () => {
           setApiError={setApiError}
           openToastSuccess={openToast}
           setToastSuccessData={setToastData}
+        />
+      </Modal>
+      <Modal open={openDeleteModal} onClose={closeDeleteModal}>
+        <DeleteProductModal
+          open={openDeleteModal}
+          onClose={closeDeleteModal}
+          deletingProduct={deletingProduct}
+          deletingProductWithPurchases={deletingProductWithPurchases}
         />
       </Modal>
       <div className={styles.maintenanceHeader}>

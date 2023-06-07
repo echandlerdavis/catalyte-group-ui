@@ -78,11 +78,14 @@ const ProductTable = ({ products, handleDelete }) => {
   );
 
   // Map each product attribute to a table header
-  const tableHeaders = productAttributes.map((attribute) => {
-    const firstLetter = attribute.charAt(0).toUpperCase();
-    const restOfWord = attribute.slice(1);
-    return <TableCell key={attribute}>{firstLetter + restOfWord}</TableCell>;
-  });
+  const tableHeaders = [
+    productAttributes.map((attribute) => {
+      const firstLetter = attribute.charAt(0).toUpperCase();
+      const restOfWord = attribute.slice(1);
+      return <TableCell key={attribute}>{firstLetter + restOfWord}</TableCell>;
+    }),
+    <TableCell key="actions">Delete</TableCell>
+  ];
 
   /**
    * Checks the attribute name and value of a product and formats it accordingly
@@ -100,6 +103,19 @@ const ProductTable = ({ products, handleDelete }) => {
     }
     if (attribute.toLowerCase().includes('color')) {
       return colorBox(value);
+    }
+    if (attribute === 'reviews') {
+      if (!value.length) {
+        return (
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDelete(product.id)}
+          >
+            <DeleteOutlineIcon />
+          </IconButton>
+        );
+      }
+      return value.length;
     }
     return value;
   };
@@ -127,7 +143,7 @@ const ProductTable = ({ products, handleDelete }) => {
     const deleteButton = (
       <TableCell>
         {product.reviews.length === 0 && (
-          <IconButton onClick={() => handleDeleteClick(product.id)} color="secondary">
+          <IconButton onClick={() => handleDeleteClick(product)} color="secondary">
             <DeleteOutlineIcon />
           </IconButton>
         )}
