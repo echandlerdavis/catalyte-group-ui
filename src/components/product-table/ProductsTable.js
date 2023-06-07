@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Table,
   TableBody,
@@ -20,22 +20,24 @@ import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
 import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  UpdateProduct
+  UpdateProduct, validatePriceTwoDecimals, validateQuantityNotNegative, getFieldsNotEmpty
 } from './ProductsTableService';
 import constants from '../../utils/constants';
 
-const CustomTableCell = ({ row, name, onChange }) => {
-  const { isEditMode } = row;
+const CustomTableCell = ({
+  product, attribute, onChange, data, formattedData
+}) => {
+  const { isEditMode } = product;
   return (
-    <TableCell key={row.id} align="left">
+    <TableCell key={product.id} align="left">
       {isEditMode ? (
         <Input
-          value={row[name]}
-          name={name}
-          onChange={(e) => onChange(e, row)}
+          value={product[attribute]}
+          name={attribute}
+          onChange={(e) => onChange(e, product)}
         />
       ) : (
-        row[name]
+        formattedData(attribute, data)
       )}
     </TableCell>
   );
@@ -47,7 +49,7 @@ const CustomTableCell = ({ row, name, onChange }) => {
  * @returns component
  */
 const ProductTable = ({
-  products, setProducts, setApiError, setToastData, openToast
+  products, setProducts, setApiError, setToastData, openToast, setFormErrorMessage
 }) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
@@ -56,10 +58,10 @@ const ProductTable = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [previous, setPrevious] = React.useState({});
   const [isToggled, setIsToggled] = React.useState(false);
-  // const formHasError = useRef(false);
-  // const emptyFields = useRef([]);
-  // const priceIsInvalid = useRef(false);
-  // const quantityInvalid = useRef(false);
+  const formHasError = useRef(false);
+  const emptyFields = useRef([]);
+  const priceIsInvalid = useRef(false);
+  const quantityInvalid = useRef(false);
   // const [displayInputData, setDisplayInputData] = useState([]);
 
   /**
@@ -208,9 +210,11 @@ const ProductTable = ({
    */
   const formattedData = (attribute, value) => {
     if (typeof value === 'boolean') {
+      console.log('boolean value', value);
       return isActiveCheckbox(value);
     }
     if (attribute === 'price') {
+      console.log('price value', value);
       return `$${value}`;
     }
     if (attribute.toLowerCase().includes('color')) {
@@ -219,36 +223,72 @@ const ProductTable = ({
     return value;
   };
 
-  // const validateFormData = (input) => {
-  //   // emptyFields.current = getFieldsNotEmpty(input);
-  //   priceIsInvalid.current = validatePriceTwoDecimals(input);
-  //   quantityInvalid.current = validateQuantityNotNegative(input);
-  //   if (priceIsInvalid.current || quantityInvalid.current) {
-  //     formHasError.current = true;
-  //   } else {
-  //     formHasError.current = false;
-  //   }
-  // };
+  const validateFormData = (input) => {
+    emptyFields.current = getFieldsNotEmpty(input);
+    console.log('emptyFields', emptyFields.current);
+    priceIsInvalid.current = validatePriceTwoDecimals(input);
+    console.log('priceIsInvalid', priceIsInvalid.current);
+    quantityInvalid.current = validateQuantityNotNegative(input);
+    console.log('quantityInvalid', quantityInvalid.current);
+    if ((emptyFields.current.length !== 0) || priceIsInvalid.current || quantityInvalid.current) {
+      formHasError.current = true;
+    } else {
+      formHasError.current = false;
+    }
+  };
+
+  const generateError = (product) => {
+    // Start with blank form error message to remove previous errors
+    setFormErrorMessage(null);
+    validateFormData(product);
+    let errorMessage = null;
+    // If fields are empty get list with empty fields and join the list in a string
+    if (emptyFields.current.length) {
+      errorMessage = constants.FORM_FIELDS_EMPTY(emptyFields.current);
+    }
+    // Build the error message string checking if error message has a previous error
+    // If previous error join the prev error message with the next error
+    if (priceIsInvalid.current) {
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_PRICE);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
+      }
+    }
+    if (quantityInvalid.current) {
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_QUANTITY);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_QUANTITY;
+      }
+    }
+    setFormErrorMessage(errorMessage);
+  };
 
   const handleSave = (product) => {
-    const resultsPromise = UpdateProduct(product, setApiError);
-    resultsPromise.then((results) => {
-      if (results.SUCCESS) {
-        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
-        openToast(true);
-      } else if (results.MESSAGE === constants.API_ERROR) {
-        // revert but no toast
-        onRevert(product.id);
-        return;
-      } else {
-        // rever and toast
-        onRevert(product.id);
-        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
-        openToast(true);
-        return;
-      }
-      offToggleEditMode(product.id, products);
-    });
+    formHasError.current = false;
+    generateError(product);
+
+    if (!formHasError.current) {
+      const resultsPromise = UpdateProduct(product, setApiError);
+      resultsPromise.then((results) => {
+        if (results.SUCCESS) {
+          setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
+          openToast(true);
+        } else if (results.MESSAGE === constants.API_ERROR) {
+          // revert but no toast
+          onRevert(product.id);
+          return;
+        } else {
+          // rever and toast
+          onRevert(product.id);
+          setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+          openToast(true);
+          return;
+        }
+        offToggleEditMode(product.id, products);
+      });
+    } else { console.log('formHasError', formHasError.current); }
   };
 
   // Map the row data for each product
@@ -274,7 +314,12 @@ const ProductTable = ({
         );
       }
       return (
-        <CustomTableCell {...{ row: product, name: attribute, key: `${product.id} - ${attribute}` }} onChange={onChange} />
+        <CustomTableCell
+          {...{
+            product, attribute, data, key: `${product.id} - ${attribute}`, formattedData
+          }}
+          onChange={onChange}
+        />
       );
     });
     productColumns.unshift(
