@@ -222,59 +222,59 @@ const NewProductPage = ({
       <form className="Card" onSubmit={handleSubmit}>
         <div className={styles.fieldContainer}>
           { // Map the form inputs to form items
-          Object.keys(formInputTypes).map((attribute) => {
-            let styleClass = null;
-            // If the form attribute is listed as an empty field when errors are generated...
-            // Change the style of the input box
-            if (emptyFields.current.length && emptyFields.current.includes(attribute)) {
-              styleClass = styles.invalidField;
-            }
-            // If the price is invalid change its input box style to an invalid field style
-            if (attribute === 'price' && priceIsInvalid.current) {
-              styleClass = styles.invalidField;
-            }
-            // If the attribute has a distinct list of options map to an input with data list
-            if (distinctAttributes && Object.keys(distinctAttributes).includes(attribute)) {
-              if (attribute === 'demographic') {
+            Object.keys(formInputTypes).map((attribute) => {
+              let styleClass = null;
+              // If the form attribute is listed as an empty field when errors are generated...
+              // Change the style of the input box
+              if (emptyFields.current.length && emptyFields.current.includes(attribute)) {
+                styleClass = styles.invalidField;
+              }
+              // If the price is invalid change its input box style to an invalid field style
+              if (attribute === 'price' && priceIsInvalid.current) {
+                styleClass = styles.invalidField;
+              }
+              // If the attribute has a distinct list of options map to an input with data list
+              if (distinctAttributes && Object.keys(distinctAttributes).includes(attribute)) {
+                if (attribute === 'demographic') {
+                  return (
+                    <FormItemDropdown
+                      key={attribute}
+                      onChange={handleFormChange}
+                      value={formData[attribute]}
+                      id={attribute}
+                      label={attribute}
+                      options={distinctAttributes[attribute]}
+                    />
+                  );
+                }
                 return (
-                  <FormItemDropdown
+                  <FormItemDataList
                     key={attribute}
                     onChange={handleFormChange}
                     value={formData[attribute]}
                     id={attribute}
+                    type={formInputTypes[attribute]}
                     label={attribute}
                     options={distinctAttributes[attribute]}
+                    className={styleClass}
                   />
                 );
               }
+              // Else return a regular form item
               return (
-                <FormItemDataList
+                <FormItem
                   key={attribute}
                   onChange={handleFormChange}
                   value={formData[attribute]}
                   id={attribute}
                   type={formInputTypes[attribute]}
                   label={attribute}
-                  options={distinctAttributes[attribute]}
                   className={styleClass}
+                  min={1.00}
+                  step={attribute === 'price' ? 0.01 : 1}
                 />
               );
-            }
-            // Else return a regular form item
-            return (
-              <FormItem
-                key={attribute}
-                onChange={handleFormChange}
-                value={formData[attribute]}
-                id={attribute}
-                type={formInputTypes[attribute]}
-                label={attribute}
-                className={styleClass}
-                min={1.00}
-                step={attribute === 'price' ? 0.01 : 1}
-              />
-            );
-          })
+            })
           }
           <div className={styles.formButtonContainer}>
             <Button
