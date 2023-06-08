@@ -3,3 +3,19 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.span span {
+    margin-left: 0!important;
+    margin-right: 0!important;
+}
+.review {
+  margin-bottom: 1em!important;
+}
+
+.writtenDate {
+  flex-basis: 95%;
+}
+
+.trashcan:hover {
+  cursor: pointer
+}

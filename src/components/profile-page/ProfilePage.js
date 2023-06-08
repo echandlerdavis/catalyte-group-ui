@@ -12,7 +12,7 @@ import { fetchUser, parseCookies, saveUserData } from './ProfilePageService';
 import styles from './ProfilePage.module.css';
 import Toast from '../toast/Toast';
 
-const ProfilePage = ({ user, setUser }) => {
+const ProfilePage = () => {
   const [initialUser, setInitialUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
@@ -20,6 +20,7 @@ const ProfilePage = ({ user, setUser }) => {
   const history = useHistory();
   const formHasError = useRef(false);
   const emptyFields = useRef([]);
+  const [user, setUser] = useState(null);
 
   const setApiError = () => {
     // Handle the API error
