@@ -314,13 +314,6 @@ const ProductTable = ({
           </TableCell>
         );
       }
-      if (attribute === 'releaseDate') {
-        return (
-          <TableCell key={`${product.releaseDate} - ${attribute}`}>
-            {formattedData(attribute, data)}
-          </TableCell>
-        );
-      }
       return (
         <CustomTableCell
           {...{
