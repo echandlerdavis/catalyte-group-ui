@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Table,
   TableBody,
@@ -7,36 +7,149 @@ import {
   TablePagination,
   TableHead,
   TableRow,
-  Checkbox
+  Checkbox,
+  Input
 } from '@material-ui/core';
-import { Lens, TripOrigin } from '@material-ui/icons';
+import {
+  Lens,
+  TripOrigin
+} from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/EditOutlined';
 import './ProductsTable.module.css';
+import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
+import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
+import IconButton from '@material-ui/core/IconButton';
+import {
+  UpdateProduct, validatePriceTwoDecimals, validateQuantityNotNegative, getFieldsNotEmpty
+} from './ProductsTableService';
+import constants from '../../utils/constants';
 
+const CustomTableCell = ({
+  product, attribute, onChange, data, formattedData
+}) => {
+  const { isEditMode } = product;
+  if (isEditMode) {
+    if (attribute === 'active') {
+      return (
+        <TableCell key={product.id} align="left">
+          <Checkbox
+            checked={product[attribute]}
+            onChange={(e) => onChange(e, product)}
+            name={attribute}
+            color="primary"
+            type="checkbox"
+            icon={<TripOrigin />}
+            checkedIcon={<Lens style={{ color: 'green' }} />}
+          />
+        </TableCell>
+      );
+    }
+    return (
+      <TableCell key={product.id} align="left">
+        <Input
+          value={data}
+          name={attribute}
+          onChange={(e) => onChange(e, product)}
+          placeholder={attribute === 'price' ? Number(data).toFixed(2) : data}
+        />
+      </TableCell>
+    );
+  }
+  return (
+    <TableCell>
+      {(formattedData(attribute, data))}
+    </TableCell>
+  );
+};
 /**
  * @name ProductTable
  * @description Renders table of product data
  * @param {*} props products
  * @returns component
  */
-const ProductTable = ({ products }) => {
+const ProductTable = ({
+  products, setProducts, setApiError, setToastData, openToast, setFormErrorMessage
+}) => {
   // Use state to set the attributes of a product to be displayed in the table
   const [productAttributes, setProductAttributes] = useState([]);
   // Use state to set pagination options for the table
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [previous, setPrevious] = React.useState({});
+  const [isToggled, setIsToggled] = React.useState(false);
+  const formHasError = useRef(false);
+  const emptyFields = useRef([]);
+  const priceIsInvalid = useRef(false);
+  const quantityInvalid = useRef(false);
+  // const [displayInputData, setDisplayInputData] = useState([]);
+
+  /**
+   * Toggles edit mode for the selected product row
+   */
+  const onToggleEditMode = (id) => {
+    if (!isToggled) {
+      setProducts(() => products.map((row) => {
+        if (row.id === id) {
+          setPrevious(() => ({ [row.id]: row }));
+          setIsToggled(!isToggled);
+          return { ...row, isEditMode: !row.isEditMode };
+        }
+        return row;
+      }));
+    }
+  };
+  const offToggleEditMode = (id, updatedProducts) => {
+    if (isToggled) {
+      setProducts(() => updatedProducts.map((row) => {
+        if (row.id === id) {
+          setPrevious(() => ({}));
+          setIsToggled(false);
+          return { ...row, isEditMode: false };
+        }
+        return row;
+      }));
+    }
+  };
+
+  /**
+   * Reverts the changes made to the product row
+   */
+  const onRevert = (id) => {
+    const newRows = products.map((row) => {
+      if (row.id === id) {
+        return previous[id];
+      }
+      return row;
+    });
+    onToggleEditMode(id);
+    setProducts(newRows);
+
+    offToggleEditMode(id, newRows);
+    setIsToggled(false);
+  };
+
+  /**
+   * sets previous state of product row and enables edit mode
+  */
+  const onClickEdit = (product) => {
+    if (!isToggled) {
+      setPrevious((state) => ({ ...state, [product.id]: product }));
+      onToggleEditMode(product.id);
+    }
+  };
 
   // When products are passed set the attributes of a product to be displayed
   useEffect(() => {
     if (products.length) {
       const attributes = [];
       Object.keys(products[0]).forEach((key) => {
-        if (key !== 'reviews') {
+        if (key !== 'reviews' && key !== 'isEditMode') {
           attributes.push(key);
         }
       });
       setProductAttributes(attributes);
     }
-  }, [products]);
+  }, [products, setProducts]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -81,6 +194,7 @@ const ProductTable = ({ products }) => {
     const restOfWord = attribute.slice(1);
     return <TableCell key={attribute}>{firstLetter + restOfWord}</TableCell>;
   });
+  tableHeaders.unshift(<TableCell key="edit">Edit</TableCell>);
 
   /**
    * Checks the attribute name and value of a product and formats it accordingly
@@ -90,16 +204,99 @@ const ProductTable = ({ products }) => {
    * @returns component, or value passed
    */
   const formattedData = (attribute, value) => {
-    if (typeof value === 'boolean') {
+    if (attribute === 'active') {
       return isActiveCheckbox(value);
     }
     if (attribute === 'price') {
-      return `$${value}`;
+      return `$${Number(value).toFixed(2)}`;
     }
     if (attribute.toLowerCase().includes('color')) {
       return colorBox(value);
     }
     return value;
+  };
+
+  const validateFormData = (input) => {
+    emptyFields.current = getFieldsNotEmpty(input);
+    priceIsInvalid.current = validatePriceTwoDecimals(input);
+    quantityInvalid.current = validateQuantityNotNegative(input);
+    if ((emptyFields.current.length !== 0) || priceIsInvalid.current || quantityInvalid.current) {
+      formHasError.current = true;
+    } else {
+      formHasError.current = false;
+    }
+  };
+
+  const generateError = (product) => {
+    // Start with blank form error message to remove previous errors
+    formHasError.current = false;
+    setFormErrorMessage(null);
+    validateFormData(product);
+    let errorMessage = null;
+    // If fields are empty get list with empty fields and join the list in a string
+    if (emptyFields.current.length) {
+      errorMessage = constants.FORM_FIELDS_EMPTY(emptyFields.current);
+    }
+    // Build the error message string checking if error message has a previous error
+    // If previous error join the prev error message with the next error
+    if (priceIsInvalid.current) {
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_PRICE);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_PRICE;
+      }
+    }
+    if (quantityInvalid.current) {
+      if (errorMessage) {
+        errorMessage = errorMessage.concat(' ** AND ** ', constants.PRODUCT_FORM_INVALID_QUANTITY);
+      } else {
+        errorMessage = constants.PRODUCT_FORM_INVALID_QUANTITY;
+      }
+    }
+    setFormErrorMessage(errorMessage);
+  };
+
+  const handleSave = (product) => {
+    formHasError.current = false;
+    generateError(product);
+
+    if (formHasError.current) {
+      return;
+    }
+
+    const resultsPromise = UpdateProduct(product, setApiError);
+    resultsPromise.then((results) => {
+      if (results.SUCCESS) {
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
+        offToggleEditMode(product.id, products);
+      } else if (results.MESSAGE === constants.API_ERROR) {
+        // revert but no toast
+        onRevert(product.id);
+      } else {
+        // revert and toast
+        onRevert(product.id);
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+        return;
+      }
+      openToast(true);
+    });
+  };
+
+  const onChange = (e, row) => {
+    const { name, type } = e.target;
+    let { value } = e.target;
+    const { id } = row;
+    if (type === 'checkbox') {
+      value = !row[name];
+    }
+    const newRows = products.map((r) => {
+      if (r.id === id) {
+        return { ...r, [name]: value };
+      }
+      return r;
+    });
+    formattedData(name, value);
+    setProducts(newRows);
   };
 
   // Map the row data for each product
@@ -108,14 +305,60 @@ const ProductTable = ({ products }) => {
     // ex: products brand, price, qty etc
     const productColumns = productAttributes.map((attribute) => {
       const data = product[attribute];
+      // setDisplayInputData(data);
       // If the value is a boolean get the string of the boolean
+      if (attribute === 'id') {
+        return (
+          <TableCell key={`${product.id} - ${attribute}`}>
+            {formattedData(attribute, data)}
+          </TableCell>
+        );
+      }
+      if (attribute === 'releaseDate') {
+        return (
+          <TableCell key={`${product.releaseDate} - ${attribute}`}>
+            {formattedData(attribute, data)}
+          </TableCell>
+        );
+      }
       return (
-        <TableCell key={`${product.id} - ${attribute}`}>
-          {formattedData(attribute, data)}
-        </TableCell>
+        <CustomTableCell
+          {...{
+            product, attribute, data, key: `${product.id} - ${attribute}`, formattedData
+          }}
+          onChange={onChange}
+        />
       );
     });
+    productColumns.unshift(
+      <TableCell>
+        {product.isEditMode ? (
+          <>
+            <IconButton
+              aria-label="done"
+              onClick={() => handleSave(product)}
+            >
+              <DoneIcon />
+            </IconButton>
+            <IconButton
+              aria-label="revert"
+              onClick={() => onRevert(product.id)}
+            >
+              <RevertIcon />
+            </IconButton>
+          </>
+        ) : (
+          <IconButton
+            aria-label="edit"
+            onClick={() => onClickEdit(product)}
+          >
+            <EditIcon align="left" />
+          </IconButton>
+        )}
+      </TableCell>
+    );
     // Return the row with each data column
+
     return <TableRow key={product.id}>{productColumns}</TableRow>;
   }));
 

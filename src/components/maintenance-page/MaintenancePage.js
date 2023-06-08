@@ -26,6 +26,7 @@ import CreatePromoModal from './CreatePromoModalCard';
 const MaintenancePage = () => {
   const [products, setProducts] = useState([]);
   const [apiError, setApiError] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastData, setToastData] = useState({ MESSAGE: '', SEVERITY: '' });
   const [openPromoModal, setOpenPromoModal] = useState(false);
@@ -56,7 +57,14 @@ const MaintenancePage = () => {
     <>
       <section>
         <h2>Products</h2>
-        <ProductTable products={products} />
+        <ProductTable
+          products={products}
+          setProducts={setProducts}
+          setApiError={setApiError}
+          setToastData={setToastData}
+          openToast={openToast}
+          setFormErrorMessage={setFormErrorMessage}
+        />
       </section>
     </>
   );
@@ -115,6 +123,7 @@ const MaintenancePage = () => {
         {headerButtons}
       </div>
       {apiError && <AppAlert severity="error" title="Error" message={constants.API_ERROR} />}
+      {formErrorMessage && <AppAlert severity="error" title="Error" message={formErrorMessage} />}
       {/* add nested routes to allow for other routes
         * in relation to the maintenance route to appear with maintenance header and error alert
         * If you add to more routes be sure to keep main path at the bottom

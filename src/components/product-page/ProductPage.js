@@ -95,7 +95,7 @@ const ProductPage = () => {
         />
       </Modal>
       <section className={styles.app}>
-        {products.map((product) => (
+        {products.filter((p) => p.active).map((product) => (
           <div key={product.id}>
             <ProductCard
               product={product}
