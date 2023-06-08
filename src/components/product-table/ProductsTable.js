@@ -47,7 +47,7 @@ const CustomTableCell = ({
     return (
       <TableCell key={product.id} align="left">
         <Input
-          value={product[attribute]}
+          value={formattedData(attribute, data)}
           name={attribute}
           onChange={(e) => onChange(e, product)}
         />
@@ -59,20 +59,6 @@ const CustomTableCell = ({
       {(formattedData(attribute, data))}
     </TableCell>
   );
-
-  // return (
-  //   <TableCell key={product.id} align="left">
-  //     {isEditMode ? (
-  //       <Input
-  //         value={product[attribute]}
-  //         name={attribute}
-  //         onChange={(e) => onChange(e, product)}
-  //       />
-  //     ) : (
-  //       formattedData(attribute, data)
-  //     )}
-  //   </TableCell>
-  // );
 };
 /**
  * @name ProductTable
@@ -137,11 +123,6 @@ const ProductTable = ({
     onToggleEditMode(id);
     setProducts(newRows);
 
-    // setPrevious((state) => {
-    //   // eslint-disable-next-line no-param-reassign
-    //   delete state[id];
-    //   return state;
-    // });
     offToggleEditMode(id, newRows);
     setIsToggled(false);
   };
@@ -154,22 +135,6 @@ const ProductTable = ({
       setPrevious((state) => ({ ...state, [product.id]: product }));
       onToggleEditMode(product.id);
     }
-  };
-
-  const onChange = (e, row) => {
-    const { name, type } = e.target;
-    let { value } = e.target;
-    const { id } = row;
-    if (type === 'checkbox') {
-      value = !row[name];
-    }
-    const newRows = products.map((r) => {
-      if (r.id === id) {
-        return { ...r, [name]: value };
-      }
-      return r;
-    });
-    setProducts(newRows);
   };
 
   // When products are passed set the attributes of a product to be displayed
@@ -242,8 +207,7 @@ const ProductTable = ({
       return isActiveCheckbox(value);
     }
     if (attribute === 'price') {
-      console.log('value', value);
-      return `$${value}`;
+      return `$${Number(value).toFixed(2)}`;
     }
     if (attribute.toLowerCase().includes('color')) {
       return colorBox(value);
@@ -315,6 +279,23 @@ const ProductTable = ({
       }
       openToast(true);
     });
+  };
+
+  const onChange = (e, row) => {
+    const { name, type } = e.target;
+    let { value } = e.target;
+    const { id } = row;
+    if (type === 'checkbox') {
+      value = !row[name];
+    }
+    const newRows = products.map((r) => {
+      if (r.id === id) {
+        return { ...r, [name]: value };
+      }
+      return r;
+    });
+    formattedData(name, value);
+    setProducts(newRows);
   };
 
   // Map the row data for each product
