@@ -264,6 +264,7 @@ const ProductTable = ({
 
   const generateError = (product) => {
     // Start with blank form error message to remove previous errors
+    formHasError.current = false;
     setFormErrorMessage(null);
     validateFormData(product);
     let errorMessage = null;
@@ -294,28 +295,26 @@ const ProductTable = ({
     formHasError.current = false;
     generateError(product);
 
-    if (!formHasError.current) {
-      const resultsPromise = UpdateProduct(product, setApiError);
-      resultsPromise.then((results) => {
-        if (results.SUCCESS) {
-          setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
-          openToast(true);
-        } else if (results.MESSAGE === constants.API_ERROR) {
-          // revert but no toast
-          onRevert(product.id);
-          return;
-        } else {
-          // rever and toast
-          onRevert(product.id);
-          setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
-          openToast(true);
-          return;
-        }
-        offToggleEditMode(product.id, products);
-      });
+    if (formHasError.current) {
+      return;
     }
-    setToastData({ MESSAGE: 'Product not updated, check to make sure all fields are valid', SEVERITY: constants.SEVERITY_LEVELS.ERROR });
-    openToast(true);
+
+    const resultsPromise = UpdateProduct(product, setApiError);
+    resultsPromise.then((results) => {
+      if (results.SUCCESS) {
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.SUCCESS });
+        offToggleEditMode(product.id, products);
+      } else if (results.MESSAGE === constants.API_ERROR) {
+        // revert but no toast
+        onRevert(product.id);
+      } else {
+        // revert and toast
+        onRevert(product.id);
+        setToastData({ MESSAGE: results.MESSAGE, SEVERITY: constants.SEVERITY_LEVELS.ERROR });
+        return;
+      }
+      openToast(true);
+    });
   };
 
   // Map the row data for each product
