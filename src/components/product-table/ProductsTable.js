@@ -47,9 +47,10 @@ const CustomTableCell = ({
     return (
       <TableCell key={product.id} align="left">
         <Input
-          value={formattedData(attribute, data)}
+          value={data}
           name={attribute}
           onChange={(e) => onChange(e, product)}
+          placeholder={attribute === 'price' ? Number(data).toFixed(2) : data}
         />
       </TableCell>
     );
