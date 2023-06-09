@@ -47,15 +47,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 export default function SingleReview({
-  review, updateActive, toastData, toastDataSetter, toastOpener, setHasNotReviewed
+  review, updateActive, toastData, toastDataSetter, toastOpener, countSetter, reviewCount
 }) {
   const [showModal, setShowModal] = useState(false);
   const { user } = useUser();
   const classes = useStyles();
   const removeReview = () => {
     deleteReview(review, user, toastDataSetter, toastOpener);
+    countSetter(reviewCount - 1);
     setShowModal(false);
-    setHasNotReviewed(true);
   };
   useEffect(() => {
     if (toastData.SEVERITY === SEVERITY_LEVELS.SUCCESS && toastData.reviewId === review.id) {

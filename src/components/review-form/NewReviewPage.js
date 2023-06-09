@@ -15,7 +15,7 @@ import styles from './ReviewPage.module.css';
 import { useUser } from '../app/userContext';
 
 const NewReviewPage = ({
-  reviewProduct, openToast, setToastData, setHasNotReviewed
+  reviewProduct, openToast, setToastData
 }) => {
   const { productId } = useParams();
   const { user } = useUser();
@@ -123,13 +123,13 @@ const NewReviewPage = ({
     if (!formHasError.current) {
       const newReview = await saveReview(formData, setApiError, productId);
       if (newReview && !newReview.error) {
+        reviewProduct.reviews.push(newReview);
         setToastData(constants.SAVE_REVIEW_SUCCESS);
         history.push('/');
       } else {
         setToastData(constants.SAVE_REVIEW_FAILURE);
       }
       openToast();
-      setHasNotReviewed(false);
     }
   };
 

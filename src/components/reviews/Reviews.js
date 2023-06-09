@@ -1,25 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Grid, TextField
+  Grid, TextField,
+  Button, makeStyles
 } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import SingleReview from './SingleReview';
 import fetchReviews from './ReviewService';
 import AppAlert from '../alert/Alert';
 import constants, { SEVERITY_LEVELS } from '../../utils/constants';
 import styles from './Review.module.css';
 import Toast from '../toast/Toast';
+import { useUser } from '../app/userContext';
+import { fetchProductIdsPurchased } from '../review-form/ReviewPageService';
+/**
+ * @name useStyles
+ * @description Material-ui styling for ProductCard component
+ * @return styling
+ */
+const useStyles = makeStyles(() => ({
+  reviewButtonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  reviewButton: {
+    margin: '1em',
+    backgroundColor: '#EE3710',
+    color: 'white'
+  }
+}));
 
-export default function Reviews({ productId, setHasNotReviewed }) {
+export default function Reviews({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [apiError, setApiError] = useState(false);
   const [reviewOrder, setReviewOrder] = useState('');
   const [openToast, setOpenToast] = useState(false);
+  const [hasMadePurchase, setHasMadePurchase] = useState(false);
   const DEFAULT_TOAST_DATA = { MESSAGE: '', SEVERITY: SEVERITY_LEVELS.INFO, reviewId: 0 };
   const [toastData, setToastData] = useState(DEFAULT_TOAST_DATA);
+  const history = useHistory();
+  const classes = useStyles();
+  const { user } = useUser();
+  const [activeReviewsByUser, setActiveReviewsByUser] = useState(0);
+
+  const addReviewButton = (
+    <div className={classes.reviewButtonContainer}>
+      <Button
+        disabled={false}
+        startIcon={<Add />}
+        onClick={() => history.push(`/${productId}/new/review`)}
+        className={classes.reviewButton}
+      >
+        New Review
+      </Button>
+    </div>
+  );
 
   useEffect(() => {
     fetchReviews(setReviews, setApiError, productId);
   }, [productId]);
+
+  useEffect(() => {
+    if (user) {
+      fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, productId);
+    }
+  }, [user, setHasMadePurchase, setApiError, productId]);
+
+  useEffect(() => {
+    let count = 0;
+    reviews.filter((r) => r.active).forEach((r) => {
+      if (user && r.userEmail === user.email) {
+        count += 1;
+      }
+    });
+    setActiveReviewsByUser(count);
+  }, [setActiveReviewsByUser, reviews, user]);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -52,6 +107,7 @@ export default function Reviews({ productId, setHasNotReviewed }) {
     reviews[updateIndex] = copy;
     setReviews([...reviews]);
   };
+
   /**
    * If review is active, display
    */
@@ -63,11 +119,11 @@ export default function Reviews({ productId, setHasNotReviewed }) {
         toastData={toastData}
         toastDataSetter={setToastData}
         toastOpener={setOpenToast}
-        setHasNotReviewed={setHasNotReviewed}
+        reviewCount={activeReviewsByUser}
+        countSetter={setActiveReviewsByUser}
       />
     </Grid>
   ));
-
   return (
     <>
       <Toast
@@ -117,6 +173,7 @@ export default function Reviews({ productId, setHasNotReviewed }) {
           {listReviews}
         </Grid>
       )}
+      {user && !apiError && activeReviewsByUser === 0 && hasMadePurchase && addReviewButton}
     </>
   );
 }

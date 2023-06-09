@@ -12,10 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Box from '@material-ui/core/Box';
 import {
-  ClickAwayListener, TextField, Button
+  ClickAwayListener, TextField
 } from '@material-ui/core';
-import { Close, Add } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
+import { Close } from '@material-ui/icons';
 import Constants from '../../utils/constants';
 import { useCart } from '../checkout-page/CartContext';
 import styles from './ProductCard.module.css';
@@ -23,8 +22,6 @@ import { validateOrder, inOrder } from './ProductCard';
 import Toast from '../toast/Toast';
 import updateLastActive from '../../utils/UpdateLastActive';
 import Reviews from '../reviews/Reviews';
-import { fetchProductIdsPurchased } from '../review-form/ReviewPageService';
-import { useUser } from '../app/userContext';
 
 /**
  * @name useStyles
@@ -126,7 +123,7 @@ const colorDot = (hexColor) => (
  * @return component
  */
 const ProductModalCard = React.forwardRef((props, ref) => {
-  const { product, hasNotReviewed, setHasNotReviewed } = props;
+  const { product } = props;
   const { setToastCallback, openToastCallback } = props;
   const classes = useStyles();
   const { dispatch } = useCart();
@@ -140,17 +137,7 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     MESSAGE: '',
     SEVERITY: Constants.SEVERITY_LEVELS.INFO
   });
-  // add Review content
-  const { user } = useUser();
-  const [hasMadePurchase, setHasMadePurchase] = useState(false);
-  const [apiError, setApiError] = useState(false);
-  const history = useHistory();
-
-  useEffect(() => {
-    if (user) {
-      fetchProductIdsPurchased(user.email, setHasMadePurchase, setApiError, product.id);
-    }
-  }, [user, setHasMadePurchase, setApiError, product]);
+  // const [apiError, setApiError] = useState(false);
 
   const closeToast = () => {
     setOpenToast(false);
@@ -251,19 +238,6 @@ const ProductModalCard = React.forwardRef((props, ref) => {
     updateLastActive();
   };
 
-  const addReviewButton = (
-    <div className={classes.reviewButtonContainer}>
-      <Button
-        disabled={false}
-        startIcon={<Add />}
-        onClick={() => history.push(`/${product.id}/new/review`)}
-        className={classes.reviewButton}
-      >
-        New Review
-      </Button>
-    </div>
-  );
-
   return (
     <ClickAwayListener onClickAway={onClose}>
       <Box ref={{ ref }} className={classes.box}>
@@ -340,8 +314,9 @@ const ProductModalCard = React.forwardRef((props, ref) => {
                   </IconButton>
                 </CardActions>
               </div>
-              <Reviews productId={product.id} setHasNotReviewed={setHasNotReviewed} />
-              {hasMadePurchase && hasNotReviewed && !apiError && addReviewButton}
+              <Reviews
+                productId={product.id}
+              />
             </CardContent>
 
           </div>
